@@ -92,7 +92,7 @@ Bagi developer baru, urutan membaca dokumentasi adalah sebagai berikut:
 ## Phase 1 — Foundation
 
 1. Project Charter
-2. AI Context
+2. Project Context
 3. Project Status
 4. Roadmap
 5. Glossary
@@ -178,7 +178,7 @@ Berisi dokumen yang mendefinisikan identitas proyek.
 Contoh:
 
 - Charter
-- AI Context
+- Project Context
 - Roadmap
 
 ---

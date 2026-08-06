@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "f361db4e15e6bfd562a9282b1dccda513910a50061f9e838ce017be9c69dde3f"
+    },
+    "software-architecture-design": {
+      "source": "vasilyu1983/ai-agents-public",
+      "sourceType": "github",
+      "skillPath": "frameworks/shared-skills/skills/software-architecture-design/SKILL.md",
+      "computedHash": "1290c3fe3055e6d207a42cf0dd62d7cd279eac43b2f546af056108e3d03e5b4d"
+    },
+    "tdd": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/tdd/SKILL.md",
+      "computedHash": "614ac2e45fb0ec02f6ce422d26bd9aa4e33aa4867323f5a3a5c0c20b96f78ff4"
+    }
+  }
+}
