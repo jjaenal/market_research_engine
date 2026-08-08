@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.2.5
+version: 1.2.6
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -330,12 +330,12 @@ No pending Foundation documents.
 Priority order:
 
 ```text
-1. Define User Personas (PRD-002)
+1. Define User Personas (PRD-002)  (done)
 2. Define Core Workflow (PRD-003)  (done)
 3. Define Functional Requirements (PRD-004)  (done)
 4. Define Non-Functional Requirements (PRD-005)  (done)
 5. Define MVP (PRD-006)  (done)
-6. Define Feature Specification (PRD-007)
+6. Define Feature Specification (PRD-007)  (done)
 ```
 
 ---
@@ -391,7 +391,7 @@ Planned activities:
 ```text
 Product Vision            (PRD-001, done)
       ↓
-User Personas             (PRD-002)
+User Personas             (PRD-002, done)
       ↓
 Core Workflow             (PRD-003, done)
       ↓
@@ -401,7 +401,7 @@ Non-Functional Requirements (PRD-005, done)
       ↓
 MVP Definition            (PRD-006, done)
       ↓
-Feature Specification     (PRD-007)
+Feature Specification     (PRD-007, done)
 ```
 
 ---
@@ -1053,12 +1053,12 @@ Output:
 
 ```text
 PRD-001  Product Vision          (done)
-PRD-002  User Personas
+PRD-002  User Personas          (done)
 PRD-003  Core Workflow          (done)
 PRD-004  Functional Requirements          (done)
 PRD-005  Non-Functional Requirements          (done)
 PRD-006  MVP Definition          (done)
-PRD-007  Feature Specification
+PRD-007  Feature Specification          (done)
 ```
 
 ---
@@ -1076,12 +1076,12 @@ Expected outputs:
 
 ```text
 PRD-001  Product Vision
-PRD-002  User Personas
+PRD-002  User Personas          (done)
 PRD-003  Core Workflow
 PRD-004  Functional Requirements          (done)
 PRD-005  Non-Functional Requirements          (done)
 PRD-006  MVP Definition          (done)
-PRD-007  Feature Specification
+PRD-007  Feature Specification          (done)
 ```
 
 ---
@@ -1420,6 +1420,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.2.5
+**Version:** 1.2.6
 
 **End of Document**

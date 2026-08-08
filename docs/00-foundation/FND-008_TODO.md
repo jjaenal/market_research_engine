@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.2.6
+version: 1.2.7
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1082,12 +1082,12 @@ Candidate tasks:
 
 ```text
 PRD-001  Product Vision          (done)
-PRD-002  User Personas
+PRD-002  User Personas          (done)
 PRD-003  Core Workflow           (done)
 PRD-004  Functional Requirements (done)
 PRD-005  Non-Functional Requirements (done)
 PRD-006  MVP Definition          (done)
-PRD-007  Feature Specification
+PRD-007  Feature Specification          (done)
 ```
 
 Exact scope ditentukan
@@ -1766,6 +1766,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.2.6
+**Version:** 1.2.7
 
 **End of Document**
