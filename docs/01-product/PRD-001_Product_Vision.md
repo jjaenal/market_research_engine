@@ -1,7 +1,7 @@
 ---
 title: Product Vision
 document_id: PRD-001
-version: 1.0.0
+version: 1.0.1
 status: Draft
 category: Product
 owner: Market Research Engine Core Team
@@ -15,6 +15,11 @@ depends_on:
 
 referenced_by:
   - PRD-002
+  - PRD-003
+  - PRD-004
+  - PRD-005
+  - PRD-006
+  - PRD-007
   - ARC-001
 
 purpose: Translate the MRE project vision into a product-level statement that answers who uses MRE, what problem it solves, why it is useful, and what the primary workflow is
@@ -55,10 +60,12 @@ Scope PRD-001:
 
 Di luar scope PRD-001:
 
-- detail fitur (PRD-002 — Product Requirements);
-- user stories (PRD-003);
-- use cases (PRD-004);
-- feature specification (PRD-005);
+- user personas (PRD-002);
+- core workflow (PRD-003);
+- functional requirements (PRD-004);
+- non-functional requirements (PRD-005);
+- MVP definition (PRD-006);
+- feature specification (PRD-007);
 - detail arsitektur (Fase M2 — Architecture).
 
 ---
@@ -239,9 +246,10 @@ PRD-001 konsisten dengan:
 
 # 15. Revision History
 
-| Version | Date       | Changes                    |
-| ------- | ---------- | -------------------------- |
-| 1.0.0   | 2026-08-08 | Initial product vision     |
+| Version | Date       | Changes                                                    |
+| ------- | ---------- | ---------------------------------------------------------- |
+| 1.0.1   | 2026-08-08 | Align PRD series with FND-007 (User Personas, Core Workflow, Functional/NFR, MVP, Feature Spec) |
+| 1.0.0   | 2026-08-08 | Initial product vision                                     |
 
 ---
 
@@ -249,6 +257,6 @@ PRD-001 konsisten dengan:
 
 **Document ID:** PRD-001
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

@@ -1,7 +1,7 @@
 ---
 title: Document ID Standard
 document_id: FND-003
-version: 1.0.1
+version: 1.0.2
 status: Approved
 category: Foundation
 owner: Market Research Engine Core Team
@@ -224,10 +224,12 @@ Contoh:
 
 ```text
 PRD-001 Product Vision
-PRD-002 Product Requirements Document
-PRD-003 User Stories
-PRD-004 Use Cases
-PRD-005 Feature Specification
+PRD-002 User Personas
+PRD-003 Core Workflow
+PRD-004 Functional Requirements
+PRD-005 Non-Functional Requirements
+PRD-006 MVP Definition
+PRD-007 Feature Specification
 ```
 
 Product document tidak boleh mendefinisikan
@@ -1324,6 +1326,6 @@ dan dapat berkembang dalam jangka panjang.
 
 **Document ID:** FND-003
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**

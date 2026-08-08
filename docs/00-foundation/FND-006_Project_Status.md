@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.2.0
+version: 1.2.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -330,11 +330,12 @@ No pending Foundation documents.
 Priority order:
 
 ```text
-1. Define Product Vision (PRD-001)
-2. Define Product Requirements (PRD-002)
-3. Define User Stories (PRD-003)
-4. Define Use Cases (PRD-004)
-5. Define Feature Specification (PRD-005)
+1. Define User Personas (PRD-002)
+2. Define Core Workflow (PRD-003)
+3. Define Functional Requirements (PRD-004)
+4. Define Non-Functional Requirements (PRD-005)
+5. Define MVP (PRD-006)
+6. Define Feature Specification (PRD-007)
 ```
 
 ---
@@ -382,21 +383,25 @@ overall product development progress.
 Status:
 
 ```text
-NOT STARTED
+IN PROGRESS
 ```
 
 Planned activities:
 
 ```text
-Product Vision
+Product Vision            (PRD-001, done)
       ↓
-Product Requirements
+User Personas             (PRD-002)
       ↓
-User Stories
+Core Workflow             (PRD-003)
       ↓
-Use Cases
+Functional Requirements   (PRD-004)
       ↓
-Feature Specification
+Non-Functional Requirements (PRD-005)
+      ↓
+MVP Definition            (PRD-006)
+      ↓
+Feature Specification     (PRD-007)
 ```
 
 ---
@@ -851,7 +856,7 @@ Current health:
 | ------------------ | -------------- |
 | Documentation      | 🟢 Healthy     |
 | Governance         | 🟢 Healthy     |
-| Product Definition | 🟡 Not Started |
+| Product Definition | 🟢 In Progress |
 | Architecture       | 🟡 Not Started |
 | Engineering        | 🟡 Not Started |
 | Research           | 🟡 Not Started |
@@ -1019,8 +1024,8 @@ Major milestones:
 
 | Milestone                  | Status         |
 | -------------------------- | -------------- |
-| M0 — Foundation            | 🟡 In Progress |
-| M1 — Product Definition    | ⚪ Planned     |
+| M0 — Foundation            | ✅ Done        |
+| M1 — Product Definition    | 🟡 In Progress |
 | M2 — Architecture          | ⚪ Planned     |
 | M3 — Research Core         | ⚪ Planned     |
 | M4 — Engine Implementation | ⚪ Planned     |
@@ -1031,14 +1036,12 @@ Major milestones:
 
 # 33. Current Milestone
 
-## M0 — Foundation
+## M1 — Product Definition
 
 Objective:
 
-> Establish project knowledge,
-> governance,
-> documentation,
-> and execution structure.
+> Transform project context
+> into explicit product requirements.
 
 Status:
 
@@ -1046,12 +1049,16 @@ Status:
 IN PROGRESS
 ```
 
-Remaining:
+Output:
 
 ```text
-FND-007
-FND-008
-FND-009
+PRD-001  Product Vision          (done)
+PRD-002  User Personas
+PRD-003  Core Workflow
+PRD-004  Functional Requirements
+PRD-005  Non-Functional Requirements
+PRD-006  MVP Definition
+PRD-007  Feature Specification
 ```
 
 ---
@@ -1068,11 +1075,13 @@ into explicit product requirements.
 Expected outputs:
 
 ```text
-PRD-001
-PRD-002
-PRD-003
-PRD-004
-PRD-005
+PRD-001  Product Vision
+PRD-002  User Personas
+PRD-003  Core Workflow
+PRD-004  Functional Requirements
+PRD-005  Non-Functional Requirements
+PRD-006  MVP Definition
+PRD-007  Feature Specification
 ```
 
 ---
@@ -1411,6 +1420,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.2.0
+**Version:** 1.2.1
 
 **End of Document**

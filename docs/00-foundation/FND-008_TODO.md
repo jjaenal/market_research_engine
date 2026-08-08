@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.2.1
+version: 1.2.2
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1071,7 +1071,7 @@ Objective:
 
 # 49. Sprint 1 Preview
 
-Sprint 1 belum dimulai.
+Sprint 1 — Product Definition berjalan.
 
 Candidate objective:
 
@@ -1081,15 +1081,18 @@ Candidate objective:
 Candidate tasks:
 
 ```text
-PRD-001
-PRD-002
-PRD-003
-PRD-004
-PRD-005
+PRD-001  Product Vision          (done)
+PRD-002  User Personas
+PRD-003  Core Workflow
+PRD-004  Functional Requirements
+PRD-005  Non-Functional Requirements
+PRD-006  MVP Definition
+PRD-007  Feature Specification
 ```
 
 Exact scope ditentukan
-setelah Foundation Review.
+setelah Foundation Review
+dan direvisi pada `FND-006 — Project Status`.
 
 ---
 
@@ -1763,6 +1766,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.2.1
+**Version:** 1.2.2
 
 **End of Document**

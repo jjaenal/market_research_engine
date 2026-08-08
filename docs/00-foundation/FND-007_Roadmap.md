@@ -1,7 +1,7 @@
 ---
 title: Project Roadmap
 document_id: FND-007
-version: 1.0.1
+version: 1.1.0
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -230,9 +230,9 @@ M1 harus menjawab:
 
 ---
 
-## Planned Documents
+## Product Documents (M1)
 
-Contoh:
+Seri dokumen PRD pada M1 — Product Definition:
 
 ```text
 PRD-001  Product Vision
@@ -244,8 +244,10 @@ PRD-006  MVP Definition
 PRD-007  Feature Specification
 ```
 
-Nomor final mengikuti
-`FND-003 — Document ID Standard`.
+Nomor dan nama mengikuti
+`FND-003 — Document ID Standard`
+dan terdaftar pada
+`FND-004 — Document Index`.
 
 ---
 
@@ -1719,6 +1721,6 @@ Begin Product Definition.
 
 **Document ID:** FND-007
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 
 **End of Document**
