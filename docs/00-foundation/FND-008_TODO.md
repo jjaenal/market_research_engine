@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.2.7
+version: 1.2.8
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -110,16 +110,16 @@ Current:
 
 ```text
 Phase:
-M1 — Product Definition
+M1 — Product Definition (complete)
 
 Sprint:
 Sprint 1
 
 Focus:
-Product Requirements
+Product Definition Review
 
 Status:
-READY
+APPROVED — READY FOR M2
 ```
 
 ---
@@ -177,6 +177,7 @@ M1 Product Definition
 | TODO-029 | Strategy Expansion                    |       P3 | DEFERRED    |
 | TODO-030 | Market Expansion                      |       P3 | DEFERRED    |
 | TODO-031 | ML Research Layer                     |       P3 | DEFERRED    |
+| TODO-032 | M1 Product Definition Review          |       P1 | DONE        |
 
 ---
 
@@ -1429,28 +1430,21 @@ Saat ini:
 
 ```text
 CURRENT
-FND-008 — Project TODO
-```
-
-Setelah selesai:
-
-```text
-NEXT
-FND-009 — Project Glossary
+M1 Product Definition Review (PRD-008)
 ```
 
 Setelah itu:
 
 ```text
-NEXT
-Foundation Review
+NEXT MAJOR PHASE
+M2 — Architecture
 ```
 
 Kemudian:
 
 ```text
-NEXT MAJOR PHASE
-M1 — Product Definition
+NEXT TASK
+TODO-009 Define System Architecture
 ```
 
 ---
@@ -1664,6 +1658,32 @@ FND-008 is complete when:
 
 ---
 
+# 75. TODO-032 — M1 Product Definition Review
+
+**Priority:** P1
+
+**Status:** DONE
+
+## Objective
+
+Review M1 Product Definition
+sebelum transisi ke M2 — Architecture.
+
+## Deliverable
+
+- `docs/01-product/PRD-008_Product_Definition_Review.md`
+
+## Result
+
+```text
+Status   : APPROVED (PASS WITH ACTIONS)
+Blockers : 0
+Actions  : PRD-ACT-001..003
+Readiness: 95%
+```
+
+---
+
 # Appendix A — Quick TODO
 
 ```text
@@ -1766,6 +1786,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.2.7
+**Version:** 1.2.8
 
 **End of Document**
