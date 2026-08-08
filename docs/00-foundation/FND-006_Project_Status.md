@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.2.8
+version: 1.2.9
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -331,7 +331,7 @@ Priority order:
 
 ```text
 1. Define System Architecture (TODO-009)  (done)
-2. Define Domain Model (TODO-010)
+2. Define Domain Model (TODO-010)  (done)
 3. Define Data Model (TODO-011)
 4. Define Engine Interfaces (TODO-012)
 ```
@@ -1051,7 +1051,7 @@ Output:
 
 ```text
 ARC-001  System Architecture          (done)
-ARC-002  Domain Model
+ARC-002  Domain Model          (done)
 ARC-003  Event Architecture
 ARC-004  Data Architecture
 ARC-005  Plugin Architecture
@@ -1412,6 +1412,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.2.8
+**Version:** 1.2.9
 
 **End of Document**
