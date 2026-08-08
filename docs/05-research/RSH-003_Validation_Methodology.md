@@ -1,8 +1,8 @@
 ---
 title: Validation Methodology
 document_id: RSH-003
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -222,14 +222,15 @@ minimum trade count) ditetapkan pada RSH-004.
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial validation methodology   |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** RSH-003
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

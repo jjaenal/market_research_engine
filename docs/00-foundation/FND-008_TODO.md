@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.8
+version: 1.3.9
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -110,16 +110,16 @@ Current:
 
 ```text
 Phase:
-M2 — Architecture (complete)
+M3 — Research Methodology (complete)
 
 Sprint:
-Sprint 2
+Sprint 3
 
 Focus:
-Research Methodology (M3)
+Engine Implementation (M4)
 
 Status:
-APPROVED — READY FOR M3
+APPROVED — READY FOR M4
 ```
 
 ---
@@ -179,7 +179,7 @@ M1 Product Definition
 | TODO-031 | ML Research Layer                     |       P3 | DEFERRED    |
 | TODO-032 | M1 Product Definition Review          |       P1 | DONE        |
 | TODO-033 | M2 Architecture Review                |       P1 | DONE        |
-| TODO-034 | M3 Research Review                    |       P1 | IN_PROGRESS |
+| TODO-034 | M3 Research Review                    |       P1 | DONE        |
 
 ---
 
@@ -1716,7 +1716,7 @@ Readiness: 95%
 
 **Priority:** P1
 
-**Status:** IN_PROGRESS
+**Status:** DONE
 
 ## Objective
 
@@ -1840,6 +1840,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.8
+**Version:** 1.3.9
 
 **End of Document**

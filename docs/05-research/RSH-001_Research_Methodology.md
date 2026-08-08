@@ -1,8 +1,8 @@
 ---
 title: Research Methodology
 document_id: RSH-001
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -317,14 +317,15 @@ dan dilaporkan (PRD-003 §7.8).
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial research methodology     |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** RSH-001
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**
