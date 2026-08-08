@@ -1,8 +1,8 @@
 ---
 title: Non-Functional Requirements
 document_id: PRD-005
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Product
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -197,14 +197,15 @@ Kode harus mengikuti standar engineering: type hints, dataclasses, docstring, mo
 
 | Version | Date       | Changes                         |
 | ------- | ---------- | ------------------------------- |
+| 1.1.0    | 2026-08-08 | Approved via M1 Product Definition Review (PRD-008) |
 | 1.0.0   | 2026-08-08 | Initial non-functional requirements |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** PRD-005
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

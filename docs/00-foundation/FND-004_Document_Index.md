@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.10
+version: 1.1.11
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -106,14 +106,14 @@ docs/01-product/
 
 | ID      | Document                      | Path                                               | Version | Status  |
 | ------- | ----------------------------- | -------------------------------------------------- | ------- | ------- |
-| PRD-001 | Product Vision                | `docs/01-product/PRD-001_Product_Vision.md`        | 1.0.1   | Draft   |
-| PRD-002 | User Personas                 | `docs/01-product/PRD-002_User_Personas.md`         | 1.0.0   | Draft   |
-| PRD-003 | Core Workflow                 | `docs/01-product/PRD-003_Core_Workflow.md`         | 1.0.0   | Draft   |
-| PRD-004 | Functional Requirements       | `docs/01-product/PRD-004_Functional_Requirements.md` | 1.0.0   | Draft   |
-| PRD-005 | Non-Functional Requirements   | `docs/01-product/PRD-005_Non_Functional_Requirements.md` | 1.0.0   | Draft   |
-| PRD-006 | MVP Definition                | `docs/01-product/PRD-006_MVP_Definition.md`        | 1.0.0   | Draft   |
-| PRD-007 | Feature Specification         | `docs/01-product/PRD-007_Feature_Specification.md` | 1.0.0   | Draft   |
-| PRD-008 | Product Definition Review     | `docs/01-product/PRD-008_Product_Definition_Review.md` | 1.0.0 | Draft   |
+| PRD-001 | Product Vision                | `docs/01-product/PRD-001_Product_Vision.md`        | 1.1.0   | Approved |
+| PRD-002 | User Personas                 | `docs/01-product/PRD-002_User_Personas.md`         | 1.1.0   | Approved |
+| PRD-003 | Core Workflow                 | `docs/01-product/PRD-003_Core_Workflow.md`         | 1.1.1   | Approved |
+| PRD-004 | Functional Requirements       | `docs/01-product/PRD-004_Functional_Requirements.md` | 1.1.0   | Approved |
+| PRD-005 | Non-Functional Requirements   | `docs/01-product/PRD-005_Non_Functional_Requirements.md` | 1.1.0   | Approved |
+| PRD-006 | MVP Definition                | `docs/01-product/PRD-006_MVP_Definition.md`        | 1.1.0   | Approved |
+| PRD-007 | Feature Specification         | `docs/01-product/PRD-007_Feature_Specification.md` | 1.1.0   | Approved |
+| PRD-008 | Product Definition Review     | `docs/01-product/PRD-008_Product_Definition_Review.md` | 1.1.0 | Approved |
 
 ---
 
@@ -793,6 +793,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.10
+**Version:** 1.1.11
 
 **End of Document**

@@ -1,8 +1,8 @@
 ---
 title: Feature Specification
 document_id: PRD-007
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Product
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -237,14 +237,15 @@ FEAT-012  Logging
 
 | Version | Date       | Changes                    |
 | ------- | ---------- | -------------------------- |
+| 1.1.0    | 2026-08-08 | Approved via M1 Product Definition Review (PRD-008) |
 | 1.0.0   | 2026-08-08 | Initial feature specification |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** PRD-007
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**
