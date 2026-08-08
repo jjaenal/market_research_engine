@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.1.0
+version: 1.2.0
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -110,16 +110,16 @@ Current:
 
 ```text
 Phase:
-M0 — Foundation
+M1 — Product Definition
 
 Sprint:
-Sprint 0
+Sprint 1
 
 Focus:
-Documentation Foundation
+Product Requirements
 
 Status:
-IN_PROGRESS
+READY
 ```
 
 ---
@@ -148,7 +148,7 @@ M1 Product Definition
 | -------- | ------------------------------------- | -------: | ----------- |
 | TODO-001 | Complete Foundation Documentation     |       P0 | DONE        |
 | TODO-002 | Create FND-009 Glossary               |       P0 | DONE        |
-| TODO-003 | Foundation Review                     |       P0 | PLANNED     |
+| TODO-003 | Foundation Review                     |       P0 | DONE        |
 | TODO-004 | Define Product Vision                 |       P1 | PLANNED     |
 | TODO-005 | Define Core Research Workflow         |       P1 | PLANNED     |
 | TODO-006 | Define Functional Requirements        |       P1 | PLANNED     |
@@ -281,7 +281,7 @@ FND-007
 
 **Priority:** P0
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Objective
 
@@ -290,15 +290,15 @@ form a coherent system.
 
 ## Review Checklist
 
-- [ ] Charter consistent with Context
-- [ ] Context consistent with Roadmap
-- [ ] Roadmap consistent with Status
-- [ ] TODO consistent with Roadmap
-- [ ] Document IDs consistent
-- [ ] No duplicated responsibilities
-- [ ] No contradictory principles
-- [ ] Current status accurate
-- [ ] Next phase clearly defined
+- [x] Charter consistent with Context
+- [x] Context consistent with Roadmap
+- [x] Roadmap consistent with Status
+- [x] TODO consistent with Roadmap
+- [x] Document IDs consistent
+- [x] No duplicated responsibilities
+- [x] No contradictory principles
+- [x] Current status accurate
+- [x] Next phase clearly defined
 
 ## Definition of Done
 
@@ -1763,6 +1763,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

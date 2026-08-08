@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.1.0
+version: 1.2.0
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -56,14 +56,14 @@ FND-006 fokus pada:
 | ---------------------- | ------------------------------------- |
 | Project                | Market Research Engine                |
 | Project Status         | Active                                |
-| Current Phase          | Foundation                            |
-| Current Stage          | Documentation                         |
-| Current Sprint         | Sprint 0 — Foundation                 |
+| Current Phase          | Product Definition                    |
+| Current Stage          | Product Documentation                 |
+| Current Sprint         | Sprint 1 — Product Definition         |
 | Repository             | `jjaenal/market_research_engine`      |
 | Primary Goal           | Build research/backtesting foundation |
 | Initial Research Case  | RSI Trendline Breakout                |
-| Current Priority       | Complete Foundation Documentation     |
-| Next Major Phase       | Product Definition                    |
+| Current Priority       | Define Product Requirements (PRD)     |
+| Next Major Phase       | Architecture (M2)                     |
 | Overall Risk           | Low                                   |
 | Development Status     | Not Started                           |
 | Research Engine Status | Not Started                           |
@@ -77,13 +77,26 @@ FND-006 fokus pada:
 Status:
 
 ```text
-████████░░  Foundation In Progress
+██████████  Foundation Complete
 ```
 
 Objective:
 
 > Establish a stable project foundation before
 > implementation begins.
+
+## Phase 1 — Product Definition
+
+Status:
+
+```text
+████████░░  Product Definition Ready
+```
+
+Objective:
+
+> Determine exactly what MRE should build
+> for the MVP.
 
 Foundation includes:
 
@@ -128,7 +141,7 @@ Architecture work.
 ### Sprint Status
 
 ```text
-IN PROGRESS
+COMPLETE
 ```
 
 ---
@@ -305,7 +318,7 @@ used across the project.
 Current active work:
 
 ```text
-Foundation Review
+M1 — Product Definition
 ```
 
 No pending Foundation documents.
@@ -317,8 +330,11 @@ No pending Foundation documents.
 Priority order:
 
 ```text
-1. Review Foundation Set
-2. Begin Product Documentation
+1. Define Product Vision (PRD-001)
+2. Define Product Requirements (PRD-002)
+3. Define User Stories (PRD-003)
+4. Define Use Cases (PRD-004)
+5. Define Feature Specification (PRD-005)
 ```
 
 ---
@@ -1395,6 +1411,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

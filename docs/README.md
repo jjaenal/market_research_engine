@@ -1,10 +1,10 @@
 ---
 title: Documentation Home
 project: Market Research Engine
-version: 1.0.0
+version: 1.1.0
 status: Active
 owner: Project Team
-last_updated: 2026-08-04
+last_updated: 2026-08-08
 ---
 
 # 📚 Market Research Engine Documentation
@@ -80,7 +80,13 @@ docs/
 
 ├── 05-research/
 
-└── adr/
+├── 06-decisions/
+
+├── 07-experiments/
+
+├── 08-templates/
+
+└── 09-reference/
 ```
 
 ---
@@ -96,6 +102,7 @@ Bagi developer baru, urutan membaca dokumentasi adalah sebagai berikut:
 3. Project Status
 4. Roadmap
 5. Glossary
+6. Foundation Review
 
 ---
 
@@ -279,17 +286,17 @@ Setiap dokumen wajib memiliki:
 Gunakan format:
 
 ```
-NN_Document_Name.md
+FND-NNN_Name.md
 ```
 
 Contoh:
 
 ```
-00_Project_Charter.md
+FND-001_Project_Charter.md
 
-01_Product_Vision.md
+FND-003_Document_ID_Standard.md
 
-02_PRD.md
+PRD-001_Product_Vision.md
 ```
 
 ---
@@ -310,6 +317,10 @@ Approved
 
 ↓
 
+Active
+
+↓
+
 Deprecated
 
 ---
@@ -319,7 +330,7 @@ Deprecated
 Seluruh keputusan arsitektur dicatat pada folder:
 
 ```
-docs/adr/
+docs/06-decisions/
 ```
 
 Tidak diperbolehkan mengambil keputusan arsitektur besar tanpa ADR.

@@ -15,6 +15,8 @@ depends_on:
 referenced_by:
   - FND-004_Document_Index.md
   - All Project Documentation
+
+purpose: Govern document identification, file naming, versioning, and cross-referencing for all project documents
 ---
 
 # Document ID Standard
