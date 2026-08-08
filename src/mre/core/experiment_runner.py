@@ -60,17 +60,21 @@ class ExperimentConfig:
             raise ValueError("signal_definition must not be empty")
 
 
-def run_experiment(config: ExperimentConfig) -> Report:
-    """Run the full pipeline from raw CSV to a rendered Report.
+def compute_report(config: ExperimentConfig, dataset_path: Path | None = None) -> Report:
+    """Run the pipeline from a normalized CSV to a rendered Report (no file writes).
 
     Steps (ARC-006 §7): normalize → load → indicators → events →
     signals → simulate → statistics → render. Pure orchestration:
     every stage is deterministic (Article 7) and the dataset is
-    immutable (Article 13).
+    immutable (Article 13). The normalized dataset is materialized
+    only if ``dataset_path`` does not already exist, so sensitivity
+    and robustness runs can reuse one normalized file.
     """
-    normalize_raw_csv(config.raw_dataset, config.normalized_dataset, RawCsvConfig())
+    normalized = dataset_path if dataset_path is not None else config.normalized_dataset
+    if not normalized.exists():
+        normalize_raw_csv(config.raw_dataset, normalized, RawCsvConfig())
 
-    dataset = load_dataset(config.normalized_dataset, config.data_config)
+    dataset = load_dataset(normalized, config.data_config)
 
     closes = [c.close for c in dataset.candles]
     rsi_values = rsi(closes, config.indicator_config.rsi_period)
@@ -99,9 +103,14 @@ def run_experiment(config: ExperimentConfig) -> Report:
         ),
     )
 
+    return report
+
+
+def run_experiment(config: ExperimentConfig) -> Report:
+    """Run the full pipeline from raw CSV to a rendered Report written to disk."""
+    report = compute_report(config)
     config.report_path.parent.mkdir(parents=True, exist_ok=True)
     config.report_path.write_text(report.to_markdown(), encoding="utf-8")
-
     return report
 
 

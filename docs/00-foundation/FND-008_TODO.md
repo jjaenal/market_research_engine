@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.18
+version: 1.3.19
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -169,7 +169,7 @@ M1 Product Definition
 | TODO-021 | Build Reporting Engine                |       P1 | DONE        |
 | TODO-022 | Create EXP-001                        |       P1 | DONE        |
 | TODO-023 | Run Baseline Experiment               |       P1 | DONE        |
-| TODO-024 | Perform Sensitivity Analysis          |       P1 | PLANNED     |
+| TODO-024 | Perform Sensitivity Analysis          |       P1 | DONE        |
 | TODO-025 | Perform Out-of-Sample Testing         |       P1 | PLANNED     |
 | TODO-026 | Perform Robustness Analysis           |       P1 | PLANNED     |
 | TODO-027 | Produce Research Conclusion           |       P1 | PLANNED     |
@@ -878,7 +878,7 @@ before baseline is recorded.
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Objective
 
@@ -894,6 +894,15 @@ RR = 2.0
 RR = 2.5
 RR = 3.0
 ```
+
+## Output
+
+- EXP-001 §16 — grid sensitivity (6 parameter × 3 nilai) tercatat;
+- report: `experiments/EXP-001/EXP-001_sensitivity.md` (gitignored);
+- edge tidak fragile secara arah (seluruh variasi expectancy positif),
+  namun `price_lookback=10`, `rsi_period=21`, `swing_left=1` sensitif;
+- sinyal peningkatan (`hold_bars=20`, `swing_left=3`, `signal_window=3`)
+  tidak dipakai untuk optimasi baseline (RSH-001 §12, FND-008 §36).
 
 ---
 
@@ -1840,6 +1849,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.18
+**Version:** 1.3.19
 
 **End of Document**
