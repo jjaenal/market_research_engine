@@ -1,7 +1,7 @@
 ---
 title: Project Context
 document_id: FND-005
-version: 1.0.0
+version: 1.0.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -626,7 +626,7 @@ dari initial scope.
 
 Current scope:
 
-### Data
+## Data
 
 - CSV historical market data;
 - OHLCV;
@@ -634,7 +634,7 @@ Current scope:
 - symbol;
 - timeframe.
 
-### Research
+## Research
 
 - Event detection;
 - Signal generation;
@@ -643,7 +643,7 @@ Current scope:
 - Statistics;
 - Experiment comparison.
 
-### Output
+## Output
 
 - Trade log;
 - Summary statistics;
@@ -789,31 +789,31 @@ Hipotesis harus diuji.
 
 Pertanyaan awal yang ingin dijawab:
 
-### Q1
+## Q1
 
 Berapa win probability strategy?
 
-### Q2
+## Q2
 
 Bagaimana hubungan win probability
 dengan Risk/Reward?
 
-### Q3
+## Q3
 
 RR berapa yang menghasilkan
 expectancy terbaik?
 
-### Q4
+## Q4
 
 Apakah hasil konsisten
 di berbagai market condition?
 
-### Q5
+## Q5
 
 Apakah hasil bertahan
 di out-of-sample data?
 
-### Q6
+## Q6
 
 Seberapa sensitif hasil
 terhadap perubahan parameter?
@@ -983,29 +983,29 @@ Detail governance berada pada
 
 MRE harus menjaga constraint berikut:
 
-### Constraint 1 — Reproducibility
+## Constraint 1 — Reproducibility
 
 Experiment harus dapat diulang.
 
-### Constraint 2 — Determinism
+## Constraint 2 — Determinism
 
 Same input harus menghasilkan
 same logical output.
 
-### Constraint 3 — Modularity
+## Constraint 3 — Modularity
 
 Komponen harus loosely coupled.
 
-### Constraint 4 — Explainability
+## Constraint 4 — Explainability
 
 Signal dan Decision harus dapat dijelaskan.
 
-### Constraint 5 — Traceability
+## Constraint 5 — Traceability
 
 Result harus dapat ditelusuri
 ke dataset dan configuration.
 
-### Constraint 6 — Immutability
+## Constraint 6 — Immutability
 
 Historical dataset tidak boleh
 diubah secara destructive.
@@ -1355,6 +1355,6 @@ sebelum Sprint 1.
 
 **Document ID:** FND-005
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**
