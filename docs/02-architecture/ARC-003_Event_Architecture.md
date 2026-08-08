@@ -1,8 +1,8 @@
 ---
 title: Event Architecture
 document_id: ARC-003
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Architecture
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -253,14 +253,15 @@ mengikuti kontrak detektor (ARC-005).
 
 | Version | Date       | Changes                     |
 | ------- | ---------- | --------------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M2 Architecture Review (ARC-007) |
 | 1.0.0   | 2026-08-08 | Initial event architecture  |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** ARC-003
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

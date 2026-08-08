@@ -1,8 +1,8 @@
 ---
 title: Domain Model
 document_id: ARC-002
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Architecture
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -298,14 +298,15 @@ sebagai execution rules pada SIMULATION module.
 
 | Version | Date       | Changes                |
 | ------- | ---------- | ---------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M2 Architecture Review (ARC-007) |
 | 1.0.0   | 2026-08-08 | Initial domain model   |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** ARC-002
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.18
+version: 1.1.20
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -88,9 +88,9 @@ Status dokumen menggunakan nilai berikut.
 | FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.2   | Approved |
 | FND-004 | Document Index         | `docs/00-foundation/FND-004_Document_Index.md`         | 1.0.3   | Active   |
 | FND-005 | Project Context        | `docs/00-foundation/FND-005_Project_Context.md`        | 1.0.1   | Active   |
-| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.3.3   | Active   |
+| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.3.4   | Active   |
 | FND-007 | Roadmap             | `docs/00-foundation/FND-007_Roadmap.md`             | 1.1.0   | Active   |
-| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.3.4   | Active   |
+| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.3.5   | Active   |
 | FND-009 | Glossary               | `docs/00-foundation/FND-009_Project_Glossary.md`        | 1.0.0   | Active   |
 | FND-010 | Foundation Review      | `docs/00-foundation/FND-010_Foundation_Review.md`       | 1.0.0   | Approved |
 
@@ -127,13 +127,13 @@ docs/02-architecture/
 
 | ID      | Document            | Path                                                  | Version | Status  |
 | ------- | ------------------- | ----------------------------------------------------- | ------- | ------- |
-| ARC-001 | System Architecture | `docs/02-architecture/ARC-001_System_Architecture.md` | 1.0.0   | Draft   |
-| ARC-002 | Domain Model        | `docs/02-architecture/ARC-002_Domain_Model.md`        | 1.0.0   | Draft   |
-| ARC-003 | Event Architecture  | `docs/02-architecture/ARC-003_Event_Architecture.md`  | 1.0.0   | Draft |
-| ARC-004 | Data Architecture   | `docs/02-architecture/ARC-004_Data_Architecture.md`   | 1.0.0   | Draft   |
-| ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | 1.0.0   | Draft |
-| ARC-006 | Module Architecture | `docs/02-architecture/ARC-006_Module_Architecture.md` | 1.0.0   | Draft |
-| ARC-007 | Architecture Review | `docs/02-architecture/ARC-007_Architecture_Review.md` | 1.0.0   | Draft |
+| ARC-001 | System Architecture | `docs/02-architecture/ARC-001_System_Architecture.md` | 1.1.0   | Approved |
+| ARC-002 | Domain Model        | `docs/02-architecture/ARC-002_Domain_Model.md`        | 1.1.0   | Approved |
+| ARC-003 | Event Architecture  | `docs/02-architecture/ARC-003_Event_Architecture.md`  | 1.1.0   | Approved |
+| ARC-004 | Data Architecture   | `docs/02-architecture/ARC-004_Data_Architecture.md`   | 1.1.0   | Approved |
+| ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | 1.1.0   | Approved |
+| ARC-006 | Module Architecture | `docs/02-architecture/ARC-006_Module_Architecture.md` | 1.1.0   | Approved |
+| ARC-007 | Architecture Review | `docs/02-architecture/ARC-007_Architecture_Review.md` | 1.1.0   | Approved |
 
 ---
 
@@ -168,7 +168,7 @@ docs/04-development/
 | ID      | Document          | Path                                               | Version | Status  |
 | ------- | ----------------- | -------------------------------------------------- | ------- | ------- |
 | DEV-001 | Coding Standard   | `docs/04-development/DEV-001_Coding_Standard.md`   | —       | Planned |
-| DEV-002 | Testing Strategy  | `docs/04-development/DEV-002_Testing_Strategy.md`  | —       | Planned |
+| DEV-002 | Testing Strategy  | `docs/04-development/DEV-002_Testing_Strategy.md`  | 1.0.0   | Draft |
 | DEV-003 | Git Workflow      | `docs/04-development/DEV-003_Git_Workflow.md`      | —       | Planned |
 | DEV-004 | Development Guide | `docs/04-development/DEV-004_Development_Guide.md` | —       | Planned |
 | DEV-005 | Release Process   | `docs/04-development/DEV-005_Release_Process.md`   | —       | Planned |
@@ -795,6 +795,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.18
+**Version:** 1.1.20
 
 **End of Document**

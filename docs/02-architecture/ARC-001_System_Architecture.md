@@ -1,8 +1,8 @@
 ---
 title: System Architecture
 document_id: ARC-001
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Architecture
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -371,14 +371,15 @@ Per Article 15, keputusan berikut wajib memiliki ADR
 
 | Version | Date       | Changes                     |
 | ------- | ---------- | --------------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M2 Architecture Review (ARC-007) |
 | 1.0.0   | 2026-08-08 | Initial system architecture |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** ARC-001
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

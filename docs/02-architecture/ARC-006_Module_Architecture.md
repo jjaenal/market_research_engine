@@ -1,8 +1,8 @@
 ---
 title: Module Architecture
 document_id: ARC-006
-version: 1.0.0
-status: Draft
+version: 1.1.0
+status: Approved
 category: Architecture
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -261,14 +261,15 @@ Konsekuensi:
 
 | Version | Date       | Changes                 |
 | ------- | ---------- | ----------------------- |
+| 1.1.0   | 2026-08-08 | Approved via M2 Architecture Review (ARC-007) |
 | 1.0.0   | 2026-08-08 | Initial module architecture |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** ARC-006
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**
