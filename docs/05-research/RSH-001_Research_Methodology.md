@@ -199,7 +199,7 @@ Setiap experiment wajib memiliki baseline pembanding:
 - **No Trade** — reference tanpa aktivitas;
 - perbandingan diukur pada rentang data yang sama.
 
-Baseline didefinisikan di RSH-002 (Backtest Protocol).
+Baseline didefinisikan di RSH-002 (Experiment Specification).
 
 ---
 
