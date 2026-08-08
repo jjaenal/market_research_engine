@@ -14,6 +14,8 @@ depends_on:
 
 referenced_by:
   - All Documentation
+
+purpose: Govern the structure, metadata, and writing standards for all project documentation
 ---
 
 # Documentation Standard

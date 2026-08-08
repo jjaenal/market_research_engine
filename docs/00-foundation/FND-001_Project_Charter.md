@@ -17,6 +17,8 @@ referenced_by:
   - PRD
   - System Architecture
   - All Project Documentation
+
+purpose: Define the mission, principles, scope, governance, and long-term direction of Market Research Engine
 ---
 
 # Project Charter
