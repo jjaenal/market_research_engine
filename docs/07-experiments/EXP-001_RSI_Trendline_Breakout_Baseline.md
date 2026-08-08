@@ -1,8 +1,8 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -158,6 +158,10 @@ CSV → Loader → Candle
 
 Deteksi mengikuti ADR-003 (Swing) dan ADR-004 (Trendline).
 
+Strategi **LONG-only**: arah breakout (bullish/bearish) dipilih di
+Signal Engine via `trigger_payload` (ENG-003 §7), bukan di detector
+(ENG-002 §8). Deteksi detil pada §9.3.
+
 ---
 
 # 9. Configuration (Frozen)
@@ -180,13 +184,22 @@ Konfigurasi dikunci (frozen) sebelum run (RSH-002 §9).
 
 ## 9.3 Signal Definition (ENG-003)
 
-| Field        | Value             |
-| ------------ | ----------------- |
-| signal_type  | RSI_TRENDLINE_BREAKOUT |
-| trigger      | RSI_TRENDLINE_BROKEN  |
-| confirmations| (PRICE_CONFIRMATION)  |
-| window       | 5                 |
-| source_strategy | rsi_trendline_breakout |
+| Field           | Value                       |
+| --------------- | --------------------------- |
+| signal_type     | LONG                        |
+| trigger         | RSI_TRENDLINE_BROKEN        |
+| trigger_payload | `{ "slope__lt": 0.0 }`      |
+| confirmations   | (PRICE_CONFIRMATION)        |
+| window          | 5                           |
+| source_strategy | rsi_trendline_breakout      |
+
+`trigger_payload` memilih arah bullish saja: break ke atas pada
+down-trendline (slope < 0) — ENG-003 §10. Pemilihan arah terjadi di
+Signal Engine, bukan detector (ENG-002 §8).
+
+Baseline bersifat **LONG-only**: detector PRICE_CONFIRMATION saat ini
+hanya bullish (close > highest high lookback); SHORT membutuhkan
+price confirmation arah bawah yang belum ada pada MVP (PRD-006 §8).
 
 ## 9.4 Execution (ENG-005)
 
@@ -284,11 +297,11 @@ sebagai report terstruktur dengan Experiment ID.
 # 14. Record Lifecycle
 
 ```text
-Defined (dokumen ini — spesifikasi + konfigurasi frozen)
+Defined (spesifikasi + konfigurasi frozen)
     ↓ (TODO-023 Run Baseline Experiment)
 Run
     ↓
-Result (metrics dicatat)
+Result (metrics dicatat)   ← saat ini
     ↓
 Conclusion (interpretasi evidence — peneliti, PRD-006 §9)
     ↓
@@ -299,8 +312,42 @@ Reviewed (validasi, RSH-003)
 
 # 15. Result
 
-Diisi setelah experiment dijalankan (TODO-023).
-Belum ada data.
+Diisi dari run baseline (TODO-023) menggunakan Experiment Runner
+(`mre.core.experiment_runner`). Report: `experiments/EXP-001/EXP-001_report.md`.
+
+Dataset: XAUUSD H1, 2009-09-11 → 2026-05-26 (100.000 candle).
+
+| Metric           | Value   |
+| ---------------- | ------- |
+| Trade Count      | 1403    |
+| Win Count        | 695     |
+| Loss Count       | 708     |
+| Win Rate         | 0.4954  |
+| Loss Rate        | 0.5046  |
+| Average Win      | 10.152  |
+| Average Loss     | 8.245   |
+| Risk/Reward      | 1.231   |
+| Expectancy       | 0.868   |
+| Profit Factor    | 1.209   |
+| Gross Profit     | 7055.65 |
+| Gross Loss       | 5837.42 |
+| Net P&L          | 1218.23 |
+| Maximum Drawdown | 402.24  |
+| Winning Streak   | 11      |
+| Losing Streak    | 12      |
+| Evidence Sufficient | True (n=1403 ≥ 30) |
+
+Observasi:
+
+- trade count 1403 memenuhi syarat sampel minimum (min_sample 30);
+- win rate < 0.5 namun RR > 1 → expectancy positif (+0.868);
+- **signal overlap**: banyak Trade duplikat/identik (trigger RSI_TRENDLINE_BROKEN
+  berdekatan memakai konfirmasi yang sama) — artefak semantik `combine()`
+  (ENG-003 §8), bukan keputusan strategy. Didokumentasikan untuk iterasi
+  (kemungkinan deduplikasi Signal pada M6/M7), bukan dioptimasi sebelum
+  baseline tercatat (FND-008 §36).
+
+Code Version (git commit) tercatat di report (`130f3f8`).
 
 ---
 
@@ -366,14 +413,15 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.1   | 2026-08-08 | Run baseline (TODO-023); signal definition diarahkan LONG via trigger_payload |
 | 1.0.0   | 2026-08-08 | Initial EXP-001 definition (TODO-022) |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

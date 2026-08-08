@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 from mre.models.event import Event
 from mre.models.signal import Signal
-from mre.models.signal_rule import SignalRule
+from mre.models.signal_rule import SignalRule, payload_matches
 
 
 def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) -> tuple[Signal, ...]:
@@ -27,7 +27,10 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
 
     signals: list[Signal] = []
     for rule in signal_definition:
-        triggers = [e for e in sorted_events if e.event_type == rule.trigger]
+        triggers = [
+            e for e in sorted_events
+            if e.event_type == rule.trigger and payload_matches(e.payload, rule.trigger_payload)
+        ]
         confirmations_by_type = {
             event_type: [e for e in sorted_events if e.event_type == event_type]
             for event_type in rule.confirmations
