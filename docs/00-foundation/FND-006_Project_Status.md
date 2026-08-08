@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.14
+version: 1.3.15
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1083,7 +1083,7 @@ ENG-001  Data Engine  (done)
 ENG-002  Event Engine  (done)
 ENG-003  Signal Engine  (done)
 ENG-004  Probability Engine
-ENG-005  Simulation Engine
+ENG-005  Simulation Engine  (done)
 ENG-006  Statistics Engine
 ENG-007  Reporting Engine  (spec)
 ENG-008  Indicator Layer  (done)
@@ -1425,6 +1425,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.14
+**Version:** 1.3.15
 
 **End of Document**
