@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.9
+version: 1.3.10
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1069,21 +1069,23 @@ ADR-002  Adopt Plugin-Based Architecture  (Accepted)
 
 # 34. Next Major Milestone
 
-## M3 — Research Core
+## M4 — Engine Implementation
 
 Objective:
 
-Formalize experiment methodology
-dan research integrity.
+Membangun engine sesuai ARC-006
+dan spesifikasi ENG-001..007.
 
 Expected outputs:
 
 ```text
-RSH-001  Research Methodology  (done)
-RSH-002  Experiment Specification  (done)
-RSH-003  Validation Methodology  (done)
-RSH-004  Statistical Methodology  (done)
-RSH-005  Research Reporting  (done)
+ENG-001  Data Engine
+ENG-002  Event Engine
+ENG-003  Signal Engine
+ENG-004  Probability Engine
+ENG-005  Simulation Engine
+ENG-006  Statistics Engine
+ENG-007  Reporting Engine  (spec)
 ```
 
 ---
@@ -1422,6 +1424,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.9
+**Version:** 1.3.10
 
 **End of Document**
