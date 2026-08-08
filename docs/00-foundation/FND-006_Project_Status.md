@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.2
+version: 1.3.3
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1054,7 +1054,7 @@ ARC-001  System Architecture          (done)
 ARC-002  Domain Model          (done)
 ARC-003  Event Architecture          (done)
 ARC-004  Data Architecture          (done)
-ARC-005  Plugin Architecture
+ARC-005  Plugin Architecture          (done)
 ARC-006  Module Architecture          (done)
 ```
 
@@ -1062,6 +1062,7 @@ ADR (dictated by ARC-001 §14):
 
 ```text
 ADR-001  Adopt Event-Driven Architecture  (Accepted)
+ADR-002  Adopt Plugin-Based Architecture  (Accepted)
 ```
 
 ---
@@ -1418,6 +1419,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.2
+**Version:** 1.3.3
 
 **End of Document**
