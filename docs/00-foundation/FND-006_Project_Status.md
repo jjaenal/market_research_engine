@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.0.1
+version: 1.1.0
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -143,9 +143,9 @@ IN PROGRESS
 | Document Index         | Complete |
 | Project Context        | Complete |
 | Project Status         | Complete |
-| Project Roadmap        | Planned  |
-| Project TODO           | Planned  |
-| Project Glossary       | Planned  |
+| Project Roadmap        | Complete |
+| Project TODO           | Complete |
+| Project Glossary       | Complete |
 
 ---
 
@@ -236,21 +236,79 @@ and conceptual model.
 
 ---
 
+### FND-006 — Project Status
+
+Status:
+
+```text
+Complete
+```
+
+Purpose:
+
+Tracks the current phase,
+sprint,
+milestones,
+and next steps.
+
+---
+
+### FND-007 — Roadmap
+
+Status:
+
+```text
+Complete
+```
+
+Purpose:
+
+Defines the phased roadmap
+from M0 Foundation
+to M8 Expansion.
+
+---
+
+### FND-008 — TODO
+
+Status:
+
+```text
+Complete
+```
+
+Purpose:
+
+Maintains the prioritized
+execution backlog
+and TODO definitions.
+
+---
+
+### FND-009 — Project Glossary
+
+Status:
+
+```text
+Complete
+```
+
+Purpose:
+
+Establishes the controlled vocabulary
+used across the project.
+
+---
+
 # 8. Current Work
 
 Current active work:
 
 ```text
-FND-006 — Project Status
+Foundation Review
 ```
 
-Following documents:
-
-```text
-FND-007 — Roadmap
-FND-008 — TODO
-FND-009 — Glossary
-```
+No pending Foundation documents.
 
 ---
 
@@ -259,12 +317,8 @@ FND-009 — Glossary
 Priority order:
 
 ```text
-1. Complete FND-006
-2. Create FND-007
-3. Create FND-008
-4. Create FND-009
-5. Review Foundation Set
-6. Begin Product Documentation
+1. Review Foundation Set
+2. Begin Product Documentation
 ```
 
 ---
@@ -293,10 +347,10 @@ FND-009  Glossary
 Current estimated progress:
 
 ```text
-Completed: 6 / 9
+Completed: 9 / 9
 
 Progress:
-█████████████░░░░░░░ 67%
+████████████████████ 100%
 ```
 
 This percentage represents
@@ -1341,6 +1395,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 
 **End of Document**

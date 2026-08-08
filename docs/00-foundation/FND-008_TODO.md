@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.0.1
+version: 1.1.0
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -146,8 +146,8 @@ M1 Product Definition
 
 | ID       | Task                                  | Priority | Status      |
 | -------- | ------------------------------------- | -------: | ----------- |
-| TODO-001 | Complete Foundation Documentation     |       P0 | IN_PROGRESS |
-| TODO-002 | Create FND-009 Glossary               |       P0 | PLANNED     |
+| TODO-001 | Complete Foundation Documentation     |       P0 | DONE        |
+| TODO-002 | Create FND-009 Glossary               |       P0 | DONE        |
 | TODO-003 | Foundation Review                     |       P0 | PLANNED     |
 | TODO-004 | Define Product Vision                 |       P1 | PLANNED     |
 | TODO-005 | Define Core Research Workflow         |       P1 | PLANNED     |
@@ -186,7 +186,7 @@ M1 Product Definition
 
 **Priority:** P0
 
-**Status:** IN_PROGRESS
+**Status:** DONE
 
 ### Objective
 
@@ -223,7 +223,7 @@ FND-009
 
 **Priority:** P0
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Objective
 
@@ -1763,6 +1763,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 
 **End of Document**
