@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.15
+version: 1.3.16
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -166,7 +166,7 @@ M1 Product Definition
 | TODO-018 | Build Signal Engine                   |       P1 | DONE        |
 | TODO-019 | Build Simulation Engine               |       P1 | DONE        |
 | TODO-020 | Build Statistics Engine               |       P1 | DONE        |
-| TODO-021 | Build Reporting Engine                |       P1 | PLANNED     |
+| TODO-021 | Build Reporting Engine                |       P1 | DONE        |
 | TODO-022 | Create EXP-001                        |       P1 | PLANNED     |
 | TODO-023 | Run Baseline Experiment               |       P1 | PLANNED     |
 | TODO-024 | Perform Sensitivity Analysis          |       P1 | PLANNED     |
@@ -806,7 +806,7 @@ Calculate:
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Outputs
 
@@ -1840,6 +1840,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.15
+**Version:** 1.3.16
 
 **End of Document**
