@@ -1,8 +1,8 @@
 ---
 title: Product Vision
 document_id: PRD-001
-version: 1.0.1
-status: Draft
+version: 1.1.0
+status: Approved
 category: Product
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -248,15 +248,16 @@ PRD-001 konsisten dengan:
 
 | Version | Date       | Changes                                                    |
 | ------- | ---------- | ---------------------------------------------------------- |
+| 1.1.0    | 2026-08-08 | Approved via M1 Product Definition Review (PRD-008) |
 | 1.0.1   | 2026-08-08 | Align PRD series with FND-007 (User Personas, Core Workflow, Functional/NFR, MVP, Feature Spec) |
 | 1.0.0   | 2026-08-08 | Initial product vision                                     |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** PRD-001
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 
 **End of Document**

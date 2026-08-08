@@ -1,8 +1,8 @@
 ---
 title: Core Workflow
 document_id: PRD-003
-version: 1.0.0
-status: Draft
+version: 1.1.1
+status: Approved
 category: Product
 owner: Market Research Engine Core Team
 created: 2026-08-08
@@ -228,6 +228,18 @@ Workflow tunduk pada prinsip berikut:
 - **Pure functions** — setiap step deterministik dan dapat direproduksi;
 - **Backtest ≠ proof** — report adalah evidence, bukan keputusan.
 
+## 9.1 Event Semantics
+
+Terdapat dua makna "Event" yang berbeda dan tidak boleh dicampur:
+
+- **Event arsitektur** (mekanisme): fakta atomik yang dihasilkan detektor
+  pada step 7.4. Ini adalah unit dasar dari pipeline MRE.
+- **"Event Detection"** (capability produk): kemampuan calon masa depan
+  yang tercantum pada FND-010 §32 (Portfolio Scanner, Market Regime, dsb).
+
+Kandidat capability tersebut tidak otomatis menjadi MVP feature
+(lihat PRD-006 §9 dan PRD-008 §7).
+
 ---
 
 # 10. Explicitly Out of Scope
@@ -269,14 +281,16 @@ PRD-003 mendefinisikan pipeline operasional yang menjalankan alur tersebut dari 
 
 | Version | Date       | Changes                   |
 | ------- | ---------- | ------------------------- |
+| 1.1.1   | 2026-08-08 | Clarify Event semantics (PRD-ACT-003)                   |
+| 1.1.0   | 2026-08-08 | Approved via M1 Product Definition Review (PRD-008)     |
 | 1.0.0   | 2026-08-08 | Initial core workflow     |
 
 ---
 
-**Document Status:** Draft
+**Document Status:** Approved
 
 **Document ID:** PRD-003
 
-**Version:** 1.0.0
+**Version:** 1.1.1
 
 **End of Document**
