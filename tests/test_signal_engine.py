@@ -23,6 +23,16 @@ def _ev(event_type: str, ref: int) -> Event:
     )
 
 
+def _ev_slope(event_type: str, ref: int, slope: float) -> Event:
+    return Event(
+        event_type=event_type,
+        timestamp=_ts(ref),
+        source_detector="test",
+        reference=ref,
+        payload={"value": float(ref), "slope": slope},
+    )
+
+
 def _long_rule(window: int = 5) -> SignalRule:
     return SignalRule(
         signal_type="LONG",
@@ -118,3 +128,39 @@ def test_combine_ignores_other_event_types() -> None:
     ]
     (signal,) = combine(events, [_long_rule()])
     assert {e.event_type for e in signal.events} == {RSI_TRENDLINE_BROKEN, PRICE_CONFIRMATION}
+
+
+def test_combine_filters_triggers_by_payload() -> None:
+    rule = SignalRule(
+        signal_type="LONG",
+        trigger=RSI_TRENDLINE_BROKEN,
+        confirmations=(PRICE_CONFIRMATION,),
+        window=5,
+        trigger_payload={"slope__lt": 0.0},
+    )
+    bullish = _ev_slope(RSI_TRENDLINE_BROKEN, 10, slope=-1.0)
+    bearish = _ev_slope(RSI_TRENDLINE_BROKEN, 20, slope=1.0)
+    confirm = _ev(PRICE_CONFIRMATION, 12)
+    events = [bullish, bearish, confirm]
+
+    signals = combine(events, [rule])
+
+    assert len(signals) == 1
+    (signal,) = signals
+    assert signal.signal_type == "LONG"
+    assert signal.timestamp == _ts(12)
+    assert bullish in signal.events
+    assert bearish not in signal.events
+
+
+def test_combine_trigger_filter_excludes_without_confirm() -> None:
+    rule = SignalRule(
+        signal_type="LONG",
+        trigger=RSI_TRENDLINE_BROKEN,
+        confirmations=(PRICE_CONFIRMATION,),
+        window=5,
+        trigger_payload={"slope__gt": 0.0},
+    )
+    bullish = _ev_slope(RSI_TRENDLINE_BROKEN, 10, slope=-1.0)
+    confirm = _ev(PRICE_CONFIRMATION, 12)
+    assert combine([bullish, confirm], [rule]) == ()

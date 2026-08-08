@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.18
+version: 1.3.19
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -492,7 +492,7 @@ are sufficiently defined.
 Status:
 
 ```text
-DEFINED (EXP-001)
+RESULT (EXP-001)
 ```
 
 First experiment defined:
@@ -506,8 +506,12 @@ Status detail:
 
 ```text
 Defined (spesifikasi + konfigurasi frozen)
-    ↓ (next: TODO-023 Run Baseline Experiment)
+    ↓ (TODO-023 Run Baseline Experiment)
 Run
+    ↓
+Result (metrics dicatat — lihat EXP-001 §15)
+    ↓ (next: TODO-024 Sensitivity Analysis)
+Conclusion
 ```
 
 Expected research questions:
@@ -1433,6 +1437,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.18
+**Version:** 1.3.19
 
 **End of Document**

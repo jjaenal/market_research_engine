@@ -1,7 +1,7 @@
 ---
 title: Signal Engine
 document_id: ENG-003
-version: 1.0.0
+version: 1.1.0
 status: Draft
 category: Engine
 owner: Market Research Engine Core Team
@@ -138,18 +138,31 @@ Filter C (opsional, iterasi berikutnya)
 LONG
 ```
 
-| Atribut          | Tipe              | Deskripsi                        |
-| ---------------- | ----------------- | -------------------------------- |
-| `signal_type`    | string            | LONG / SHORT                     |
-| `trigger`        | string            | event_type pembuka               |
-| `confirmations`  | tuple[string]     | event_type konfirmasi (unique)   |
-| `window`         | int               | max jarak reference (candle)     |
-| `source_strategy`| string            | plugin strategy asal             |
+| Atribut            | Tipe              | Deskripsi                        |
+| ------------------ | ----------------- | -------------------------------- |
+| `signal_type`      | string            | LONG / SHORT                     |
+| `trigger`          | string            | event_type pembuka               |
+| `confirmations`    | tuple[string]     | event_type konfirmasi (unique)   |
+| `window`           | int               | max jarak reference (candle)     |
+| `source_strategy`  | string            | plugin strategy asal             |
+| `trigger_payload`  | dict              | filter payload trigger (opsional)|
 
 Konstraint:
 
 - `window >= 1`;
-- `confirmations` tidak kosong dan tidak duplikat (anti-ambigu).
+- `confirmations` tidak kosong dan tidak duplikat (anti-ambigu);
+- kunci `trigger_payload` harus string dengan operator dikenali:
+  `eq`, `neq`, `lt`, `le`, `gt`, `ge` (sufiks `__<op>`), default `eq`.
+
+Filter payload memungkinkan pemilihan arah break di Signal Engine
+(bukan di detector), konsisten dengan ENG-002 §8 — integrasi hanya
+terjadi pada Signal Engine.
+
+Contoh: down-trendline ditembus ke atas (bullish):
+
+```text
+trigger_payload: { "slope__lt": 0.0 }
+```
 
 ---
 
@@ -160,11 +173,13 @@ Konstraint:
 Per rule:
 
 1. urutkan trigger events;
-2. untuk tiap trigger, cari konfirmasi terawal tiap tipe
+2. untuk tiap trigger, terapkan `trigger_payload` bila ada
+   (trigger yang tidak lolos filter diabaikan);
+3. untuk trigger lolos, cari konfirmasi terawal tiap tipe
    dalam window: `confirmation.reference - trigger.reference <= window`;
-3. bila semua konfirmasi ada → emit Signal di timestamp
+4. bila semua konfirmasi ada → emit Signal di timestamp
    terakhir (konfirmasi valid, FND-009 §13.5);
-4. bila trigger tidak memenuhi → tanpa Signal (NO SIGNAL).
+5. bila trigger tidak memenuhi → tanpa Signal (NO SIGNAL).
 
 Determinisme (Article 7): konfirmasi terawal dipilih.
 
@@ -181,17 +196,21 @@ Per PRD-003 §7.5:
 
 # 10. Initial Signal Definition (MVP)
 
-Experiment pertama (RSI Trendline Breakout):
+Experiment pertama (RSI Trendline Breakout) — LONG baseline:
 
 ```text
-RSI_TRENDLINE_BROKEN (trigger)
+RSI_TRENDLINE_BROKEN (trigger, slope < 0 → down-trendline ditembus ke atas)
 +
 PRICE_CONFIRMATION (confirmation)
 =
 LONG
 ```
 
-window dikonfigurasi pada experiment config (FR-012).
+`window` dan `trigger_payload` dikonfigurasi pada
+experiment config (FR-012).
+
+SHORT (break bearish, slope > 0) membutuhkan price confirmation
+arah bawah; belum ada detector-nya pada MVP (PRD-006 §8).
 
 ---
 
@@ -246,6 +265,7 @@ window dikonfigurasi pada experiment config (FR-012).
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.1.0   | 2026-08-08 | Add SignalRule trigger_payload filter (direction selection in Signal Engine) |
 | 1.0.0   | 2026-08-08 | Initial signal engine spec       |
 
 ---
@@ -254,6 +274,6 @@ window dikonfigurasi pada experiment config (FR-012).
 
 **Document ID:** ENG-003
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**
