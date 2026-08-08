@@ -1,7 +1,7 @@
 ---
 title: Project Roadmap
 document_id: FND-007
-version: 1.0.0
+version: 1.0.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1170,30 +1170,30 @@ memvalidasi architecture.
 
 MVP berhasil apabila:
 
-### Data
+## Data
 
 Historical dataset dapat
 dimasukkan dan divalidasi.
 
-### Strategy
+## Strategy
 
 Strategy dapat didefinisikan
 secara deterministic.
 
-### Simulation
+## Simulation
 
 Trade dapat disimulasikan
 tanpa lookahead bias.
 
-### Statistics
+## Statistics
 
 Core metrics dapat dihitung.
 
-### Reproducibility
+## Reproducibility
 
 Experiment dapat diulang.
 
-### Reporting
+## Reporting
 
 Result dapat dibaca dan
 ditelusuri kembali.
@@ -1335,13 +1335,13 @@ dicatat dalam decision log.
 
 Perbedaan:
 
-### Roadmap
+## Roadmap
 
 Menjawab:
 
 > **Where are we going?**
 
-### TODO
+## TODO
 
 Menjawab:
 
@@ -1363,7 +1363,7 @@ TODO:
 
 # 57. Roadmap vs Project Status
 
-### Roadmap
+## Roadmap
 
 Future-oriented.
 
@@ -1371,7 +1371,7 @@ Future-oriented.
 Where are we going?
 ```
 
-### FND-006
+## FND-006
 
 Current-state oriented.
 
@@ -1719,6 +1719,6 @@ Begin Product Definition.
 
 **Document ID:** FND-007
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

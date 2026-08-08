@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.0.0
+version: 1.0.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -600,7 +600,7 @@ dari Definition of Done.
 
 Decisions already established:
 
-### Decision 001
+## Decision 001
 
 MRE dibangun sebagai
 research framework,
@@ -608,7 +608,7 @@ bukan trading execution platform.
 
 ---
 
-### Decision 002
+## Decision 002
 
 Initial input format:
 
@@ -618,7 +618,7 @@ CSV Historical OHLCV
 
 ---
 
-### Decision 003
+## Decision 003
 
 Initial implementation language:
 
@@ -628,7 +628,7 @@ Python
 
 ---
 
-### Decision 004
+## Decision 004
 
 Initial research strategy:
 
@@ -638,7 +638,7 @@ RSI Trendline Breakout
 
 ---
 
-### Decision 005
+## Decision 005
 
 Research priority:
 
@@ -658,43 +658,43 @@ sebelum feature complexity.
 
 Keputusan yang belum final:
 
-### PD-001
+## PD-001
 
 Exact data schema.
 
-### PD-002
+## PD-002
 
 Event representation.
 
-### PD-003
+## PD-003
 
 Signal interface.
 
-### PD-004
+## PD-004
 
 Trade simulation model.
 
-### PD-005
+## PD-005
 
 Position sizing model.
 
-### PD-006
+## PD-006
 
 Transaction cost model.
 
-### PD-007
+## PD-007
 
 Slippage model.
 
-### PD-008
+## PD-008
 
 Experiment configuration format.
 
-### PD-009
+## PD-009
 
 Statistical validation methodology.
 
-### PD-010
+## PD-010
 
 Storage strategy.
 
@@ -1341,6 +1341,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

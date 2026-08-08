@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.0.0
+version: 1.0.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -225,12 +225,12 @@ FND-009
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Create a controlled vocabulary
 for MRE.
 
-### Minimum Terms
+## Minimum Terms
 
 ```text
 Experiment
@@ -260,7 +260,7 @@ Indicator
 Market Regime
 ```
 
-### Dependency
+## Dependency
 
 ```text
 FND-003
@@ -268,7 +268,7 @@ FND-005
 FND-007
 ```
 
-### Definition of Done
+## Definition of Done
 
 - terms documented;
 - definitions unambiguous;
@@ -283,12 +283,12 @@ FND-007
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Verify Foundation documents
 form a coherent system.
 
-### Review Checklist
+## Review Checklist
 
 - [ ] Charter consistent with Context
 - [ ] Context consistent with Roadmap
@@ -300,7 +300,7 @@ form a coherent system.
 - [ ] Current status accurate
 - [ ] Next phase clearly defined
 
-### Definition of Done
+## Definition of Done
 
 Foundation can be used by a new
 developer/researcher to understand:
@@ -325,12 +325,12 @@ Next Action
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Translate project vision into
 a product-level statement.
 
-### Must Answer
+## Must Answer
 
 - Who uses MRE?
 - What problem does it solve?
@@ -346,7 +346,7 @@ a product-level statement.
 
 **Status:** PLANNED
 
-### Initial Workflow
+## Initial Workflow
 
 ```text
 Import Dataset
@@ -368,7 +368,7 @@ Generate Report
 Evaluate Evidence
 ```
 
-### Definition of Done
+## Definition of Done
 
 Every major step has:
 
@@ -385,7 +385,7 @@ Every major step has:
 
 **Status:** PLANNED
 
-### Initial Requirements
+## Initial Requirements
 
 System must be able to:
 
@@ -407,7 +407,7 @@ System must be able to:
 
 **Status:** PLANNED
 
-### MVP Principle
+## MVP Principle
 
 MVP:
 
@@ -417,7 +417,7 @@ Not:
 
 > Many features.
 
-### MVP Boundary
+## MVP Boundary
 
 ```text
 CSV
@@ -443,7 +443,7 @@ Report
 
 **Status:** PLANNED
 
-### Initial Areas
+## Initial Areas
 
 - determinism;
 - reproducibility;
@@ -466,7 +466,7 @@ Report
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Define major system boundaries.
 
@@ -491,7 +491,7 @@ Experiment
 
 **Status:** PLANNED
 
-### Initial Entities
+## Initial Entities
 
 ```text
 Dataset
@@ -519,7 +519,7 @@ concepts that are semantically different.
 
 **Status:** PLANNED
 
-### Initial OHLCV
+## Initial OHLCV
 
 ```text
 timestamp
@@ -551,7 +551,7 @@ in Architecture documentation.
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Define contracts between engines.
 
@@ -573,7 +573,7 @@ StatisticsEngine
 ReportingEngine
 ```
 
-### Critical Requirement
+## Critical Requirement
 
 Strategy implementation must not
 directly depend on unrelated
@@ -591,7 +591,7 @@ infrastructure.
 
 **Status:** PLANNED
 
-### Must Define
+## Must Define
 
 - hypothesis;
 - baseline;
@@ -665,7 +665,7 @@ after the baseline engine is stable.
 
 **Status:** PLANNED
 
-### Responsibilities
+## Responsibilities
 
 - load CSV;
 - detect schema;
@@ -675,7 +675,7 @@ after the baseline engine is stable.
 - handle missing data;
 - reject invalid data.
 
-### Tests
+## Tests
 
 - valid CSV;
 - missing columns;
@@ -693,7 +693,7 @@ after the baseline engine is stable.
 
 **Status:** PLANNED
 
-### Initial Indicators
+## Initial Indicators
 
 ```text
 RSI
@@ -701,7 +701,7 @@ EMA
 ATR
 ```
 
-### Critical Requirement
+## Critical Requirement
 
 Indicator calculations must not
 use future candles.
@@ -714,7 +714,7 @@ use future candles.
 
 **Status:** PLANNED
 
-### Responsibilities
+## Responsibilities
 
 Transform raw indicator/state
 information into explicit events.
@@ -735,7 +735,7 @@ Price Confirmation
 
 **Status:** PLANNED
 
-### Responsibilities
+## Responsibilities
 
 Convert event combinations
 into trade signals.
@@ -760,7 +760,7 @@ LONG
 
 **Status:** PLANNED
 
-### Responsibilities
+## Responsibilities
 
 - entry;
 - order state;
@@ -772,7 +772,7 @@ LONG
 - transaction costs;
 - slippage assumptions.
 
-### Critical Requirement
+## Critical Requirement
 
 No future information may influence
 past execution.
@@ -785,7 +785,7 @@ past execution.
 
 **Status:** PLANNED
 
-### Responsibilities
+## Responsibilities
 
 Calculate:
 
@@ -805,7 +805,7 @@ Calculate:
 
 **Status:** PLANNED
 
-### Outputs
+## Outputs
 
 ```text
 summary
@@ -828,14 +828,14 @@ experiment_metadata
 
 **Status:** PLANNED
 
-### Experiment
+## Experiment
 
 ```text
 EXP-001
 RSI Trendline Breakout Baseline
 ```
 
-### Objective
+## Objective
 
 Establish baseline performance.
 
@@ -847,7 +847,7 @@ Establish baseline performance.
 
 **Status:** PLANNED
 
-### Output
+## Output
 
 ```text
 Trade Count
@@ -860,7 +860,7 @@ Equity Curve
 Trade Log
 ```
 
-### Important
+## Important
 
 Do not optimize parameters
 before baseline is recorded.
@@ -877,7 +877,7 @@ before baseline is recorded.
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Determine whether results depend
 too heavily on a narrow parameter.
@@ -900,7 +900,7 @@ RR = 3.0
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Evaluate whether observed edge
 generalizes to unseen data.
@@ -913,7 +913,7 @@ generalizes to unseen data.
 
 **Status:** PLANNED
 
-### Dimensions
+## Dimensions
 
 ```text
 Parameter
@@ -933,7 +933,7 @@ RR
 
 **Status:** PLANNED
 
-### Possible Outcomes
+## Possible Outcomes
 
 ```text
 SUPPORTED
@@ -958,7 +958,7 @@ strategy yang profitable.
 
 **Status:** PLANNED
 
-### Objective
+## Objective
 
 Review architecture berdasarkan
 pengalaman experiment nyata.
@@ -996,7 +996,7 @@ Trend Following
 Mean Reversion
 ```
 
-### Rule
+## Rule
 
 Tidak dikerjakan sebelum
 core research workflow stabil.
@@ -1036,7 +1036,7 @@ Probability Modeling
 Prediction
 ```
 
-### Critical Rule
+## Critical Rule
 
 ML tidak boleh menjadi
 jalan pintas untuk menggantikan
@@ -1763,6 +1763,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

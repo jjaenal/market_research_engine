@@ -1,7 +1,7 @@
 ---
 title: Document ID Standard
 document_id: FND-003
-version: 1.0.0
+version: 1.0.1
 status: Approved
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1317,3 +1317,11 @@ terlacak,
 dan dapat berkembang dalam jangka panjang.
 
 ---
+
+**Document Status:** Approved
+
+**Document ID:** FND-003
+
+**Version:** 1.0.1
+
+**End of Document**

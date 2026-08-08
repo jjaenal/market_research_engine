@@ -1,12 +1,12 @@
 ---
 title: Documentation Standard
-document_id: DOC-0002
-version: 1.0.0
+document_id: FND-002
+version: 1.0.1
 status: Approved
 category: Foundation
 owner: Market Research Engine
 created: 2026-08-07
-last_updated: 2026-08-07
+last_updated: 2026-08-08
 
 depends_on:
   - README.md
@@ -327,3 +327,13 @@ Gunakan code block.
 ```python
 ```
 ````
+
+---
+
+**Document Status:** Approved
+
+**Document ID:** FND-002
+
+**Version:** 1.0.1
+
+**End of Document**
