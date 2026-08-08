@@ -2,3 +2,15 @@
 .venv/
 __pycache__/
 *.pyc
+
+.DS_Store
+*.log
+
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+datasets/
+experiments/
+reports/
