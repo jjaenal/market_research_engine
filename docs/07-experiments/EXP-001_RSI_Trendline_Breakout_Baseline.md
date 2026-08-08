@@ -347,7 +347,9 @@ Observasi:
   (kemungkinan deduplikasi Signal pada M6/M7), bukan dioptimasi sebelum
   baseline tercatat (FND-008 §36).
 
-Code Version (git commit) tercatat di report (`130f3f8`).
+Code Version (git commit) tercatat di report (`9564eee`).
+Run direproduksi deterministik: dua run (130f3f8-dirty, 9564eee)
+menghasilkan metrik identik (FR-010, NFR-001).
 
 ---
 
