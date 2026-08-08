@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.2.6
+version: 1.2.7
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -330,12 +330,9 @@ No pending Foundation documents.
 Priority order:
 
 ```text
-1. Define User Personas (PRD-002)  (done)
-2. Define Core Workflow (PRD-003)  (done)
-3. Define Functional Requirements (PRD-004)  (done)
-4. Define Non-Functional Requirements (PRD-005)  (done)
-5. Define MVP (PRD-006)  (done)
-6. Define Feature Specification (PRD-007)  (done)
+1. M1 Product Definition Review (PRD-008)  (done)
+2. Define System Architecture (TODO-009)
+3. Define Domain Model (TODO-010)
 ```
 
 ---
@@ -856,7 +853,7 @@ Current health:
 | ------------------ | -------------- |
 | Documentation      | 🟢 Healthy     |
 | Governance         | 🟢 Healthy     |
-| Product Definition | 🟢 In Progress |
+| Product Definition | 🟢 Healthy    |
 | Architecture       | 🟡 Not Started |
 | Engineering        | 🟡 Not Started |
 | Research           | 🟡 Not Started |
@@ -1025,7 +1022,7 @@ Major milestones:
 | Milestone                  | Status         |
 | -------------------------- | -------------- |
 | M0 — Foundation            | ✅ Done        |
-| M1 — Product Definition    | 🟡 In Progress |
+| M1 — Product Definition    | ✅ Done        |
 | M2 — Architecture          | ⚪ Planned     |
 | M3 — Research Core         | ⚪ Planned     |
 | M4 — Engine Implementation | ⚪ Planned     |
@@ -1046,7 +1043,7 @@ Objective:
 Status:
 
 ```text
-IN PROGRESS
+COMPLETE — APPROVED (PRD-008)
 ```
 
 Output:
@@ -1059,29 +1056,29 @@ PRD-004  Functional Requirements          (done)
 PRD-005  Non-Functional Requirements          (done)
 PRD-006  MVP Definition          (done)
 PRD-007  Feature Specification          (done)
+PRD-008  Product Definition Review      (done)
 ```
 
 ---
 
 # 34. Next Major Milestone
 
-## M1 — Product Definition
+## M2 — Architecture
 
 Objective:
 
-Transform project context
-into explicit product requirements.
+Define system boundaries,
+domain model, dan interface engine.
 
 Expected outputs:
 
 ```text
-PRD-001  Product Vision
-PRD-002  User Personas          (done)
-PRD-003  Core Workflow
-PRD-004  Functional Requirements          (done)
-PRD-005  Non-Functional Requirements          (done)
-PRD-006  MVP Definition          (done)
-PRD-007  Feature Specification          (done)
+ARC-001  System Architecture
+ARC-002  Domain Model
+ARC-003  Event Architecture
+ARC-004  Data Architecture
+ARC-005  Plugin Architecture
+ARC-006  Module Architecture
 ```
 
 ---
@@ -1420,6 +1417,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.2.6
+**Version:** 1.2.7
 
 **End of Document**
