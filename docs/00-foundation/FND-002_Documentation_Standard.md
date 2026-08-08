@@ -1,7 +1,7 @@
 ---
 title: Documentation Standard
 document_id: FND-002
-version: 1.0.1
+version: 1.0.2
 status: Approved
 category: Foundation
 owner: Market Research Engine
@@ -10,7 +10,7 @@ last_updated: 2026-08-08
 
 depends_on:
   - README.md
-  - Project_Charter.md
+  - FND-001_Project_Charter.md
 
 referenced_by:
   - All Documentation
@@ -334,6 +334,6 @@ Gunakan code block.
 
 **Document ID:** FND-002
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**
