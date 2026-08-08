@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.5
+version: 1.3.6
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -158,7 +158,7 @@ M1 Product Definition
 | TODO-010 | Define Domain Model                   |       P1 | DONE        |
 | TODO-011 | Define Data Model                     |       P1 | DONE        |
 | TODO-012 | Define Engine Interfaces              |       P1 | DONE        |
-| TODO-013 | Define Research Methodology           |       P1 | PLANNED     |
+| TODO-013 | Define Research Methodology           |       P1 | DONE        |
 | TODO-014 | Define Experiment Specification       |       P1 | PLANNED     |
 | TODO-015 | Build Data Engine                     |       P1 | PLANNED     |
 | TODO-016 | Build Indicator Layer                 |       P1 | PLANNED     |
@@ -591,7 +591,7 @@ infrastructure.
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Must Define
 
@@ -1813,6 +1813,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.5
+**Version:** 1.3.6
 
 **End of Document**
