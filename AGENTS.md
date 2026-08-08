@@ -10,11 +10,12 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 - `datasets/` is where CSV inputs go (per YAML config, e.g. `datasets/XAUUSD_H1.csv`); `experiments/` and `reports/` are for run output. All three are empty.
 
 ## Documentation-Driven Development
-- `docs/` is the source of truth. Per `docs/README.md`: when docs and code conflict, **docs take precedence** until officially updated.
-- `docs/context/PROJECT_CONTEXT.md` declares the current phase (Sprint 1, documentation only) and an AI-rule: **do not implement Python code until its requirements are documented**. Read it before proposing architecture/code.
-- Docs are written in **Indonesian**; follow that language and the `NN_Document_Name.md` naming convention for new docs.
-- New docs go in the numbered category folders under `docs/` (`00-foundation`, `01-product`, `02-architecture`, `03-engine`, `04-development`, `05-research`); ADRs go in `docs/adr/`.
-- Every document has metadata (title, project, version, status, owner, last_updated) and required sections (Purpose, Scope, Dependencies, References, Changelog).
+- `docs/` is the source of truth: when docs and code conflict, **docs take precedence**. Decision priority is FND-001 Project Charter > its Architecture Constitution > ADRs > experiment data.
+- **Read `docs/00-foundation/FND-001_Project_Charter.md` before proposing architecture/code.** It defines the Architecture Constitution and Ubiquitous Language; code must change, never the constitution. Key rules: Event is the atomic unit (Signal aggregates Events); Detectors emit facts (Events), never recommendations; Indicators never produce trades; data is immutable; configuration over hardcode; new terms/architecture require an ADR.
+- `docs/context/PROJECT_CONTEXT.md` declares the current phase (Sprint 1, documentation only): **do not implement Python code until its requirements are documented**.
+- `docs/00-foundation/FND-002_Documentation_Standard.md` (Approved) governs doc structure: front-matter (title, document_id, version, status, category, owner, created, last_updated, depends_on, referenced_by); structure (Purpose, Scope, Audience, Background, Definitions, Main Content, Examples, References, Revision History). Docs are written in **Indonesian**.
+- `docs/00-foundation/FND-003_Document_ID_Standard.md` (Approved) governs document IDs: format `<PREFIX>-<NNN>` with prefixes FND/PRD/ARC/ENG/DEV/RSH/ADR/EXP/TMP/REF. Numbers are 3-digit, sequential per category, **immutable and never reused**. File names are `<PREFIX>-<NNN>_<PascalCase>.md` (e.g. `FND-003_Document_ID_Standard.md`); the front-matter `document_id` is the identity, the filename may change. Cross-reference other docs by ID (e.g. "See FND-003"). Register every new ID in FND-004 (Document Index) once it exists.
+- New docs go in the numbered category folders under `docs/` (`00-foundation`, `01-product`, `02-architecture`, `03-engine`, `04-development`, `05-research`); ADRs go in `docs/adr/`. (The `NN_Document_Name.md` example in `docs/README.md` is outdated.)
 - Major architectural decisions must be recorded in `docs/adr/` before implementation.
 
 ## Architecture (per docs/Market_Research_Engine_PRD_Sprint1.md)
