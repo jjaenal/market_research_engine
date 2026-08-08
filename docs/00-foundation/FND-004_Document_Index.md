@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.1
+version: 1.1.2
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -90,7 +90,7 @@ Status dokumen menggunakan nilai berikut.
 | FND-005 | Project Context        | `docs/00-foundation/FND-005_Project_Context.md`        | 1.0.1   | Active   |
 | FND-006 | Project Status         | `docs/00-foundation/FND-006_Project_Status.md`         | 1.2.0   | Active   |
 | FND-007 | Roadmap                | `docs/00-foundation/FND-007_Roadmap.md`                | 1.0.1   | Active   |
-| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.2.0   | Active   |
+| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.2.1   | Active   |
 | FND-009 | Glossary               | `docs/00-foundation/FND-009_Project_Glossary.md`        | 1.0.0   | Active   |
 | FND-010 | Foundation Review      | `docs/00-foundation/FND-010_Foundation_Review.md`       | 1.0.0   | Approved |
 
@@ -106,7 +106,7 @@ docs/01-product/
 
 | ID      | Document                      | Path                                               | Version | Status  |
 | ------- | ----------------------------- | -------------------------------------------------- | ------- | ------- |
-| PRD-001 | Product Vision                | `docs/01-product/PRD-001_Product_Vision.md`        | —       | Planned |
+| PRD-001 | Product Vision                | `docs/01-product/PRD-001_Product_Vision.md`        | 1.0.0   | Draft   |
 | PRD-002 | Product Requirements Document | `docs/01-product/PRD-002_Product_Requirements.md`  | —       | Planned |
 | PRD-003 | User Stories                  | `docs/01-product/PRD-003_User_Stories.md`          | —       | Planned |
 | PRD-004 | Use Cases                     | `docs/01-product/PRD-004_Use_Cases.md`             | —       | Planned |
@@ -790,6 +790,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.1
+**Version:** 1.1.2
 
 **End of Document**
