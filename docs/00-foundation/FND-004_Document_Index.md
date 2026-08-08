@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.4
+version: 1.1.5
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -88,9 +88,9 @@ Status dokumen menggunakan nilai berikut.
 | FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.2   | Approved |
 | FND-004 | Document Index         | `docs/00-foundation/FND-004_Document_Index.md`         | 1.0.3   | Active   |
 | FND-005 | Project Context        | `docs/00-foundation/FND-005_Project_Context.md`        | 1.0.1   | Active   |
-| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.2.2   | Active   |
+| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.2.3   | Active   |
 | FND-007 | Roadmap             | `docs/00-foundation/FND-007_Roadmap.md`             | 1.1.0   | Active   |
-| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.2.3   | Active   |
+| FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.2.4   | Active   |
 | FND-009 | Glossary               | `docs/00-foundation/FND-009_Project_Glossary.md`        | 1.0.0   | Active   |
 | FND-010 | Foundation Review      | `docs/00-foundation/FND-010_Foundation_Review.md`       | 1.0.0   | Approved |
 
@@ -109,7 +109,7 @@ docs/01-product/
 | PRD-001 | Product Vision                | `docs/01-product/PRD-001_Product_Vision.md`        | 1.0.1   | Draft   |
 | PRD-002 | User Personas                 | `docs/01-product/PRD-002_User_Personas.md`         | —       | Planned |
 | PRD-003 | Core Workflow                 | `docs/01-product/PRD-003_Core_Workflow.md`         | 1.0.0   | Draft   |
-| PRD-004 | Functional Requirements       | `docs/01-product/PRD-004_Functional_Requirements.md` | —     | Planned |
+| PRD-004 | Functional Requirements       | `docs/01-product/PRD-004_Functional_Requirements.md` | 1.0.0   | Draft   |
 | PRD-005 | Non-Functional Requirements   | `docs/01-product/PRD-005_Non_Functional_Requirements.md` | — | Planned |
 | PRD-006 | MVP Definition                | `docs/01-product/PRD-006_MVP_Definition.md`        | —       | Planned |
 | PRD-007 | Feature Specification         | `docs/01-product/PRD-007_Feature_Specification.md` | —      | Planned |
@@ -792,6 +792,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.4
+**Version:** 1.1.5
 
 **End of Document**
