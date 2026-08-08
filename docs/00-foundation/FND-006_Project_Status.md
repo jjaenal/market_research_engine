@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.5
+version: 1.3.6
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1080,7 +1080,7 @@ Expected outputs:
 
 ```text
 RSH-001  Research Methodology  (done)
-RSH-002  Experiment Specification
+RSH-002  Experiment Specification  (done)
 ```
 
 ---
@@ -1419,6 +1419,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.5
+**Version:** 1.3.6
 
 **End of Document**
