@@ -83,7 +83,7 @@ Status dokumen menggunakan nilai berikut.
 
 | ID      | Document               | Path                                                   | Version | Status   |
 | ------- | ---------------------- | ------------------------------------------------------ | ------- | -------- |
-| FND-001 | Project Charter        | `docs/00-foundation/FND-001_Project_Charter.md`        | 1.0.0   | Draft    |
+| FND-001 | Project Charter        | `docs/00-foundation/FND-001_Project_Charter.md`        | 1.0.1   | Draft    |
 | FND-002 | Documentation Standard | `docs/00-foundation/FND-002_Documentation_Standard.md` | 1.0.1   | Approved |
 | FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.1   | Approved |
 | FND-004 | Document Index         | `docs/00-foundation/FND-004_Document_Index.md`         | 1.0.1   | Active   |

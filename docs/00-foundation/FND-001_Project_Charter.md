@@ -1,12 +1,12 @@
 ---
 title: Project Charter
 document_id: FND-001
-version: 1.0.0
+version: 1.0.1
 status: Draft
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-07
-last_updated: 2026-08-07
+last_updated: 2026-08-08
 
 depends_on:
   - docs/README.md
@@ -559,9 +559,9 @@ Bukan konstitusinya.
 
 ---
 
-# Article 1
+## Article 1
 
-## Event Is The Atomic Unit
+### Event Is The Atomic Unit
 
 Dalam Market Research Engine,
 unit informasi terkecil bukan Signal.
@@ -617,9 +617,9 @@ melanggar konstitusi.
 
 ---
 
-# Article 2
+## Article 2
 
-## Event Must Be Independent
+### Event Must Be Independent
 
 Setiap Event harus dapat dihasilkan
 secara independen.
@@ -642,9 +642,9 @@ oleh Signal Engine.
 
 ---
 
-# Article 3
+## Article 3
 
-## Detector Produces Facts
+### Detector Produces Facts
 
 Detector bukan pengambil keputusan.
 
@@ -690,9 +690,9 @@ Bukan rekomendasi.
 
 ---
 
-# Article 4
+## Article 4
 
-## Signal Is Evidence Aggregation
+### Signal Is Evidence Aggregation
 
 Signal merupakan hasil
 penggabungan beberapa Event.
@@ -723,9 +723,9 @@ BUY SIGNAL
 
 ---
 
-# Article 5
+## Article 5
 
-## Decision Must Be Explainable
+### Decision Must Be Explainable
 
 Seluruh keputusan trading
 harus dapat dijelaskan.
@@ -747,9 +747,9 @@ yang menyusunnya.
 
 ---
 
-# Article 6
+## Article 6
 
-## Business Logic Must Be Stateless
+### Business Logic Must Be Stateless
 
 Business Logic tidak boleh
 bergantung pada state global.
@@ -768,9 +768,9 @@ Historical Data
 
 ---
 
-# Article 7
+## Article 7
 
-## Deterministic Processing
+### Deterministic Processing
 
 Input yang sama.
 
@@ -784,9 +784,9 @@ Framework dianggap cacat.
 
 ---
 
-# Article 8
+## Article 8
 
-## Indicators Never Execute Trades
+### Indicators Never Execute Trades
 
 Indicator hanya menghasilkan data.
 
@@ -797,9 +797,9 @@ melakukan evaluasi trading.
 
 ---
 
-# Article 9
+## Article 9
 
-## Report Engine Is Read Only
+### Report Engine Is Read Only
 
 Report Engine
 tidak boleh mengubah data.
@@ -812,9 +812,9 @@ Menyajikan.
 
 ---
 
-# Article 10
+## Article 10
 
-## Probability Engine Is Independent
+### Probability Engine Is Independent
 
 Probability Engine
 tidak boleh mengetahui
@@ -829,9 +829,9 @@ untuk strategi apa pun.
 
 ---
 
-# Article 11
+## Article 11
 
-## Plugin First Architecture
+### Plugin First Architecture
 
 Seluruh detector.
 
@@ -850,9 +850,9 @@ Closed for Modification.
 
 ---
 
-# Article 12
+## Article 12
 
-## Configuration Over Hardcoding
+### Configuration Over Hardcoding
 
 Seluruh parameter.
 
@@ -872,9 +872,9 @@ Bukan hardcode.
 
 ---
 
-# Article 13
+## Article 13
 
-## Data Is Immutable
+### Data Is Immutable
 
 Historical Data
 tidak boleh dimodifikasi.
@@ -884,9 +884,9 @@ dataset baru.
 
 ---
 
-# Article 14
+## Article 14
 
-## Every Module Has One Responsibility
+### Every Module Has One Responsibility
 
 Framework mengikuti
 Single Responsibility Principle.
@@ -923,9 +923,9 @@ Tidak boleh bercampur.
 
 ---
 
-# Article 15
+## Article 15
 
-## Every Major Decision Requires ADR
+### Every Major Decision Requires ADR
 
 Seluruh keputusan besar
 harus memiliki
@@ -985,7 +985,7 @@ maka definisi pada dokumen ini memiliki prioritas tertinggi.
 
 ---
 
-# Principle
+## Principle
 
 One Concept
 
@@ -1008,7 +1008,7 @@ untuk konsep inti.
 
 ---
 
-# Observation
+## Observation
 
 Observation adalah fakta mentah
 yang diperoleh langsung dari market.
@@ -1029,7 +1029,7 @@ Observation bukan Event.
 
 ---
 
-# Event
+## Event
 
 Event adalah interpretasi
 terhadap Observation.
@@ -1055,7 +1055,7 @@ Event hanya menyatakan fakta.
 
 ---
 
-# Detector
+## Detector
 
 Detector adalah module
 yang mengubah Observation
@@ -1069,7 +1069,7 @@ Detector hanya menghasilkan Event.
 
 ---
 
-# Indicator
+## Indicator
 
 Indicator adalah alat bantu
 untuk menghasilkan Observation.
@@ -1093,7 +1093,7 @@ menghasilkan BUY atau SELL.
 
 ---
 
-# Signal
+## Signal
 
 Signal adalah hasil
 agregasi beberapa Event.
@@ -1110,7 +1110,7 @@ Signal adalah kandidat keputusan.
 
 ---
 
-# Confirmation
+## Confirmation
 
 Confirmation adalah Event tambahan
 yang meningkatkan tingkat keyakinan
@@ -1123,7 +1123,7 @@ mendukung Signal.
 
 ---
 
-# Decision
+## Decision
 
 Decision adalah proses
 mengevaluasi Signal.
@@ -1145,7 +1145,7 @@ setelah seluruh Signal selesai dievaluasi.
 
 ---
 
-# Trade
+## Trade
 
 Trade adalah simulasi
 dari Decision.
@@ -1168,7 +1168,7 @@ Trade merupakan hasil Decision.
 
 ---
 
-# Position
+## Position
 
 Position adalah status
 Trade setelah dieksekusi.
@@ -1185,7 +1185,7 @@ Expired.
 
 ---
 
-# Outcome
+## Outcome
 
 Outcome adalah hasil akhir
 Position.
@@ -1209,7 +1209,7 @@ untuk analisis statistik.
 
 ---
 
-# Experiment
+## Experiment
 
 Experiment adalah proses
 menguji satu hipotesis
@@ -1229,7 +1229,7 @@ Experiment harus reproducible.
 
 ---
 
-# Hypothesis
+## Hypothesis
 
 Hypothesis merupakan dugaan
 yang dapat diuji.
@@ -1245,7 +1245,7 @@ atau ditolak.
 
 ---
 
-# Strategy
+## Strategy
 
 Strategy adalah kumpulan aturan
 yang menghubungkan Event,
@@ -1259,7 +1259,7 @@ Strategy menggunakan Indicator.
 
 ---
 
-# Configuration
+## Configuration
 
 Configuration adalah parameter
 yang mengontrol perilaku framework.
@@ -1269,7 +1269,7 @@ berisi Business Logic.
 
 ---
 
-# Dataset
+## Dataset
 
 Dataset adalah kumpulan
 historical market data.
@@ -1280,7 +1280,7 @@ Dataset tidak boleh dimodifikasi.
 
 ---
 
-# Scenario
+## Scenario
 
 Scenario merupakan kombinasi.
 
@@ -1297,7 +1297,7 @@ untuk reproduksi penelitian.
 
 ---
 
-# Result
+## Result
 
 Result merupakan keluaran
 Experiment.
@@ -1318,7 +1318,7 @@ Result bersifat read-only.
 
 ---
 
-# Knowledge
+## Knowledge
 
 Knowledge adalah kesimpulan
 yang diperoleh dari
@@ -1333,7 +1333,7 @@ Knowledge harus tetap terjaga.
 
 ---
 
-# Relationship
+## Relationship
 
 Market
 
@@ -1640,7 +1640,7 @@ bukan sebagai penghambat inovasi.
 
 ---
 
-# Part 5
+# Part 6
 
 ---
 
@@ -2018,3 +2018,13 @@ Measure the Market.
 Discover the Edge.
 
 Build Knowledge.
+
+---
+
+**Document Status:** Draft
+
+**Document ID:** FND-001
+
+**Version:** 1.0.1
+
+**End of Document**
