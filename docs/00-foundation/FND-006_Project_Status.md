@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.8
+version: 1.3.9
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1025,8 +1025,8 @@ Major milestones:
 | M0 — Foundation            | ✅ Done        |
 | M1 — Product Definition    | ✅ Done        |
 | M2 — Architecture          | ✅ Done        |
-| M3 — Research Core         | 🟡 In Progress |
-| M4 — Engine Implementation | ⚪ Planned     |
+| M3 — Research Core         | ✅ Done        |
+| M4 — Engine Implementation | 🟡 In Progress |
 | M5 — Baseline Experiment   | ⚪ Planned     |
 | M6 — Validation            | ⚪ Planned     |
 
@@ -1422,6 +1422,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.8
+**Version:** 1.3.9
 
 **End of Document**
