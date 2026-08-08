@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.19
+version: 1.3.20
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -510,7 +510,9 @@ Defined (spesifikasi + konfigurasi frozen)
 Run
     ↓
 Result (metrics dicatat — lihat EXP-001 §15)
-    ↓ (next: TODO-024 Sensitivity Analysis)
+    ↓ (TODO-024 Sensitivity Analysis — EXP-001 §16)
+Sensitivity (grid 6×3 tercatat; edge tidak fragile secara arah)
+    ↓ (next: TODO-025 Out-of-Sample Testing)
 Conclusion
 ```
 
@@ -1038,9 +1040,9 @@ Major milestones:
 | M1 — Product Definition    | ✅ Done        |
 | M2 — Architecture          | ✅ Done        |
 | M3 — Research Core         | ✅ Done        |
-| M4 — Engine Implementation | 🟡 In Progress |
-| M5 — Baseline Experiment   | ⚪ Planned     |
-| M6 — Validation            | ⚪ Planned     |
+| M4 — Engine Implementation | ✅ Done        |
+| M5 — Baseline Experiment   | ✅ Done        |
+| M6 — Validation            | 🟡 In Progress |
 
 ---
 
@@ -1437,6 +1439,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.19
+**Version:** 1.3.20
 
 **End of Document**

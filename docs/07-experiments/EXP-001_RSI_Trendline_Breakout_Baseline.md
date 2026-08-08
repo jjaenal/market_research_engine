@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.1
+version: 1.0.2
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -11,6 +11,7 @@ last_updated: 2026-08-08
 depends_on:
   - RSH-001
   - RSH-002
+  - RSH-003
   - RSH-004
   - RSH-005
   - ENG-002
@@ -353,14 +354,74 @@ menghasilkan metrik identik (FR-010, NFR-001).
 
 ---
 
-# 16. Conclusion
+# 16. Sensitivity Analysis (TODO-024)
+
+Metodologi per **RSH-003 §9**: satu parameter divariasikan,
+parameter lain tetap (control); variasi dilakukan pada dataset
+immutable yang sama dan signal definition LONG yang sama (ENG-003 §10).
+
+Report: `experiments/EXP-001/EXP-001_sensitivity.md`
+(Code Version `136fb14` — commit baseline, setelah merge PR #39).
+
+Semua variasi memenuhi syarat sampel (n ≥ 30) dan tetap
+expectancy positif, namun magnitude edge bervariasi.
+
+| Parameter      | Value | Trades | Win Rate | Expectancy | PF    | Net P&L  | Max DD  |
+| -------------- | ----- | ------ | -------- | ---------- | ----- | -------- | ------- |
+| rsi_period     | 7     | 1411   | 0.4961   | 0.8517     | 1.2121| 1201.79  | 388.14  |
+| rsi_period     | 14    | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| rsi_period     | 21    | 1398   | 0.4857   | 0.5741     | 1.1296| 802.54   | 607.90  |
+| price_lookback | 10    | 2368   | 0.4992   | 0.3824     | 1.0876| 905.60   | 627.94  |
+| price_lookback | 20    | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| price_lookback | 30    | 1132   | 0.4938   | 0.7402     | 1.1708| 837.89   | 414.50  |
+| signal_window  | 3     | 1026   | 0.4951   | 1.3354     | 1.3325| 1370.09  | 222.12  |
+| signal_window  | 5     | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| signal_window  | 10    | 2279   | 0.4967   | 0.8184     | 1.1977| 1865.05  | 496.16  |
+| hold_bars      | 5     | 1403   | 0.5118   | 0.8867     | 1.2774| 1244.07  | 336.18  |
+| hold_bars      | 10    | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| hold_bars      | 20    | 1403   | 0.5153   | 2.0075     | 1.3854| 2816.59  | 416.43  |
+| swing_left     | 1     | 1937   | 0.4930   | 0.5365     | 1.1285| 1039.17  | 527.64  |
+| swing_left     | 2     | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| swing_left     | 3     | 1131   | 0.5049   | 1.3704     | 1.3469| 1549.93  | 256.31  |
+| swing_right    | 1     | 1673   | 0.5057   | 0.7081     | 1.1711| 1184.57  | 500.37  |
+| swing_right    | 2     | 1403   | 0.4954   | 0.8683     | 1.2087| 1218.23  | 402.24  |
+| swing_right    | 3     | 1274   | 0.5008   | 0.8263     | 1.2073| 1052.70  | 425.52  |
+
+Interpretasi:
+
+- **edge tidak fragile secara arah**: tidak ada variasi yang
+  menghasilkan expectancy negatif atau PF < 1 — seluruh grid
+  tetap positif (RSH-003 §9);
+- **parameter paling sensitif** (expectancy menyimpang dari baseline):
+  - `price_lookback=10` → expectancy turun ke 0.3824 (−56%)
+    dan trade count naik ke 2368 (noise harga → banyak konfirmasi palsu);
+  - `rsi_period=21` → expectancy turun ke 0.5741 (−34%);
+  - `swing_left=1` → expectancy turun ke 0.5365 (−38%);
+- **parameter yang justru memperkuat edge** (tidak dipilih sebagai
+  baseline — sensitivity bersifat deskriptif, bukan optimasi
+  in-sample, RSH-001 §12):
+  - `hold_bars=20` → expectancy 2.0075 (+131%), PF 1.3854;
+  - `swing_left=3` → expectancy 1.3704 (+58%), max DD turun ke 256;
+  - `signal_window=3` → expectancy 1.3354 (+54%), max DD turun ke 222;
+- sinyal peningkatan ini **tidak boleh dipakai untuk optimasi
+  baseline** (FND-008 §36 — jangan mengoptimasi sebelum seluruh
+  validasi selesai); dieksplorasi pada iterasi lanjutan (M7);
+- trade count bervariasi karena jumlah trigger/konfirmasi berubah
+  seiring window dan lookback; semua variasi tetap ≥ 1026 (n besar).
+
+Determinisme diverifikasi: run control (nilai baseline) pada setiap
+parameter menghasilkan metrik identik dengan baseline (FR-010).
+
+---
+
+# 17. Conclusion
 
 Ditentukan oleh peneliti setelah Result tersedia
 (PRD-006 §9 — conclusion manual, bukan otomatis).
 
 ---
 
-# 17. Traceability
+# 18. Traceability
 
 | Item          | Requirement / TODO           |
 | ------------- | ---------------------------- |
@@ -368,11 +429,12 @@ Ditentukan oleh peneliti setelah Result tersedia
 | Spec fields   | RSH-002 §6, TODO-014         |
 | Metrics       | RSH-002 §8, FND-008 §25      |
 | Reproducibility | FR-010, NFR-001, RSH-002 §9  |
+| Sensitivity   | RSH-003 §9, TODO-024         |
 | Conclusion    | FR-011, RSH-001 §13          |
 
 ---
 
-# 18. Compliance
+# 19. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -386,7 +448,7 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 ---
 
-# 19. References
+# 20. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -400,6 +462,7 @@ Ditentukan oleh peneliti setelah Result tersedia
 - `docs/06-decisions/ADR-004_Trendline_Algorithm.md`
 - `docs/05-research/RSH-001_Research_Methodology.md`
 - `docs/05-research/RSH-002_Experiment_Specification.md`
+- `docs/05-research/RSH-003_Validation_Methodology.md`
 - `docs/05-research/RSH-004_Statistical_Methodology.md`
 - `docs/05-research/RSH-005_Research_Reporting.md`
 - `docs/03-engine/ENG-002_Event_Engine.md`
@@ -411,10 +474,11 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 ---
 
-# 20. Revision History
+# 21. Revision History
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.2   | 2026-08-08 | Sensitivity analysis (TODO-024) dicatat (§16) |
 | 1.0.1   | 2026-08-08 | Run baseline (TODO-023); signal definition diarahkan LONG via trigger_payload |
 | 1.0.0   | 2026-08-08 | Initial EXP-001 definition (TODO-022) |
 
@@ -424,6 +488,6 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**
