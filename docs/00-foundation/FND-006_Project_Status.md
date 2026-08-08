@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.2.7
+version: 1.2.8
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -330,9 +330,10 @@ No pending Foundation documents.
 Priority order:
 
 ```text
-1. M1 Product Definition Review (PRD-008)  (done)
-2. Define System Architecture (TODO-009)
-3. Define Domain Model (TODO-010)
+1. Define System Architecture (TODO-009)  (done)
+2. Define Domain Model (TODO-010)
+3. Define Data Model (TODO-011)
+4. Define Engine Interfaces (TODO-012)
 ```
 
 ---
@@ -854,7 +855,7 @@ Current health:
 | Documentation      | 🟢 Healthy     |
 | Governance         | 🟢 Healthy     |
 | Product Definition | 🟢 Healthy    |
-| Architecture       | 🟡 Not Started |
+| Architecture       | 🟢 In Progress |
 | Engineering        | 🟡 Not Started |
 | Research           | 🟡 Not Started |
 | Testing            | 🟡 Not Started |
@@ -1023,7 +1024,7 @@ Major milestones:
 | -------------------------- | -------------- |
 | M0 — Foundation            | ✅ Done        |
 | M1 — Product Definition    | ✅ Done        |
-| M2 — Architecture          | ⚪ Planned     |
+| M2 — Architecture          | 🟡 In Progress |
 | M3 — Research Core         | ⚪ Planned     |
 | M4 — Engine Implementation | ⚪ Planned     |
 | M5 — Baseline Experiment   | ⚪ Planned     |
@@ -1033,52 +1034,46 @@ Major milestones:
 
 # 33. Current Milestone
 
-## M1 — Product Definition
+## M2 — Architecture
 
 Objective:
 
-> Transform project context
-> into explicit product requirements.
+> Define system boundaries,
+> domain model, dan interface engine.
 
 Status:
 
 ```text
-COMPLETE — APPROVED (PRD-008)
+IN PROGRESS
 ```
 
 Output:
 
 ```text
-PRD-001  Product Vision          (done)
-PRD-002  User Personas          (done)
-PRD-003  Core Workflow          (done)
-PRD-004  Functional Requirements          (done)
-PRD-005  Non-Functional Requirements          (done)
-PRD-006  MVP Definition          (done)
-PRD-007  Feature Specification          (done)
-PRD-008  Product Definition Review      (done)
+ARC-001  System Architecture          (done)
+ARC-002  Domain Model
+ARC-003  Event Architecture
+ARC-004  Data Architecture
+ARC-005  Plugin Architecture
+ARC-006  Module Architecture
 ```
 
 ---
 
 # 34. Next Major Milestone
 
-## M2 — Architecture
+## M3 — Research Core
 
 Objective:
 
-Define system boundaries,
-domain model, dan interface engine.
+Formalize experiment methodology
+dan research integrity.
 
 Expected outputs:
 
 ```text
-ARC-001  System Architecture
-ARC-002  Domain Model
-ARC-003  Event Architecture
-ARC-004  Data Architecture
-ARC-005  Plugin Architecture
-ARC-006  Module Architecture
+RSH-001  Research Methodology
+RSH-002  Experiment Specification
 ```
 
 ---
@@ -1417,6 +1412,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.2.7
+**Version:** 1.2.8
 
 **End of Document**
