@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.7
+version: 1.3.8
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1083,6 +1083,7 @@ RSH-001  Research Methodology  (done)
 RSH-002  Experiment Specification  (done)
 RSH-003  Validation Methodology  (done)
 RSH-004  Statistical Methodology  (done)
+RSH-005  Research Reporting  (done)
 ```
 
 ---
@@ -1421,6 +1422,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.7
+**Version:** 1.3.8
 
 **End of Document**
