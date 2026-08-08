@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.17
+version: 1.3.18
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -492,14 +492,22 @@ are sufficiently defined.
 Status:
 
 ```text
-NOT STARTED
+DEFINED (EXP-001)
 ```
 
-First planned experiment:
+First experiment defined:
 
 ```text
 EXP-001
 RSI Trendline Breakout Baseline
+```
+
+Status detail:
+
+```text
+Defined (spesifikasi + konfigurasi frozen)
+    ↓ (next: TODO-023 Run Baseline Experiment)
+Run
 ```
 
 Expected research questions:
@@ -1425,6 +1433,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.17
+**Version:** 1.3.18
 
 **End of Document**
