@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.16
+version: 1.1.17
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -88,7 +88,7 @@ Status dokumen menggunakan nilai berikut.
 | FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.2   | Approved |
 | FND-004 | Document Index         | `docs/00-foundation/FND-004_Document_Index.md`         | 1.0.3   | Active   |
 | FND-005 | Project Context        | `docs/00-foundation/FND-005_Project_Context.md`        | 1.0.1   | Active   |
-| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.3.2   | Active   |
+| FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.3.3   | Active   |
 | FND-007 | Roadmap             | `docs/00-foundation/FND-007_Roadmap.md`             | 1.1.0   | Active   |
 | FND-008 | TODO                   | `docs/00-foundation/FND-008_TODO.md`                   | 1.3.2   | Active   |
 | FND-009 | Glossary               | `docs/00-foundation/FND-009_Project_Glossary.md`        | 1.0.0   | Active   |
@@ -131,7 +131,7 @@ docs/02-architecture/
 | ARC-002 | Domain Model        | `docs/02-architecture/ARC-002_Domain_Model.md`        | 1.0.0   | Draft   |
 | ARC-003 | Event Architecture  | `docs/02-architecture/ARC-003_Event_Architecture.md`  | 1.0.0   | Draft |
 | ARC-004 | Data Architecture   | `docs/02-architecture/ARC-004_Data_Architecture.md`   | 1.0.0   | Draft   |
-| ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | —       | Planned |
+| ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | 1.0.0   | Draft |
 | ARC-006 | Module Architecture | `docs/02-architecture/ARC-006_Module_Architecture.md` | 1.0.0   | Draft |
 
 ---
@@ -202,6 +202,7 @@ docs/06-decisions/
 | ID      | Document | Path                             | Version | Status  |
 | ------- | -------- | -------------------------------- | ------- | ------- |
 | ADR-001 | Adopt Event-Driven Architecture | `docs/06-decisions/ADR-001_Adopt_Event_Driven_Architecture.md` | 1.0.0   | Accepted |
+| ADR-002 | Adopt Plugin-Based Architecture | `docs/06-decisions/ADR-002_Adopt_Plugin_Based_Architecture.md` | 1.0.0   | Accepted |
 
 > ADR numbering is sequential and chronological.
 
@@ -793,6 +794,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.16
+**Version:** 1.1.17
 
 **End of Document**
