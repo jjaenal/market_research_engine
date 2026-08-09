@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mre.core.experiment_runner import ExperimentConfig, IndicatorConfig, _exp001_signal_definition
+from mre.core.experiment_runner import ExperimentConfig, IndicatorConfig
 from mre.core.sensitivity import (
     EXP001_GRID,
     SensitivityResult,
@@ -16,6 +16,7 @@ from mre.core.sensitivity import (
     to_markdown,
 )
 from mre.models.execution import ExecutionConfig
+from mre.strategies import EXP001_STRATEGY_ID
 
 
 def _config(tmp_path: Path) -> ExperimentConfig:
@@ -30,7 +31,7 @@ def _config(tmp_path: Path) -> ExperimentConfig:
         normalized_dataset=tmp_path / "XAUUSD_H1_normalized.csv",
         report_path=tmp_path / "report.md",
         indicator_config=IndicatorConfig(rsi_period=14),
-        signal_definition=_exp001_signal_definition(),
+        strategy_id=EXP001_STRATEGY_ID,
         execution_config=ExecutionConfig(hold_bars=10),
     )
 

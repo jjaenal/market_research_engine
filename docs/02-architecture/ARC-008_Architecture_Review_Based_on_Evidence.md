@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.3
+version: 1.0.4
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -182,6 +182,11 @@ engine") dan spirit Article 11 (Plugin First).
 - **Konsekuensi:** EXP-001 hanya mampu menguji satu definisi signal;
   ekspansi strategi (TODO-029) akan terkendala.
 
+> **Resolved by ARC-ACT-010:** `src/mre/strategies/` — registry
+> (`register`/`get`) + `exp001.py`. `ExperimentConfig.strategy_id`
+> me-resolve `signal_definition` dari registry; strategi baru cukup
+> mendaftar, tanpa mengubah engine.
+
 ## 6.2 Config "Over Hardcode" (YAML) Belum Ada
 
 Article 12 / FR-012 menjanjikan config-driven execution (ARC-005 §10).
@@ -244,6 +249,7 @@ bisa dijawab.
 - **Strategi → plugin**: ekstrak `_exp001_signal_definition()` ke package
   `strategies/` per ARC-005 §6, dengan registry/registrasi sehingga
   `ExperimentConfig` menerima strategi terdaftar, bukan fungsi internal.
+  > **Resolved by ARC-ACT-010** (`strategies/registry.py` + `exp001.py`).
 - **Config eksternal**: konfigurasi experiment (frozen params) dipindah ke
   berkas config (YAML per Article 12 / FR-012) yang dibaca CLI —
   reproducibility berbasis berkas, bukan hardcode commit.
@@ -280,6 +286,12 @@ Pola ini **harus dipertahankan** pada iterasi M7.
 Ekstrak `_exp001_signal_definition()` dari `experiment_runner.py` ke
 package `strategies/` dengan registry sederhana (ARC-005 §6). Perlu ADR
 untuk mekanisme registrasi bila mempengaruhi interface engine.
+
+**Status: DONE** (`src/mre/strategies/` — `registry.py` + `exp001.py`).
+`ExperimentConfig.strategy_id` me-resolve `signal_definition` dari
+registry; `combine(events, signal_definition)` tetap tidak berubah —
+plugin hanya menyuplai konfigurasi (Article 12). **ADR tidak diperlukan**
+karena mekanisme registrasi tidak mengubah interface engine.
 
 ## ARC-ACT-011 — Move Experiment Config to External File
 
@@ -399,6 +411,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.4   | 2026-08-09 | ARC-ACT-010 marked DONE (strategies/ package + registry) |
 | 1.0.3   | 2026-08-09 | ARC-ACT-014 marked DONE (markdown utils, exp001_config, mre.cli) |
 | 1.0.2   | 2026-08-09 | ARC-ACT-013 marked DONE (core/segments.py) |
 | 1.0.1   | 2026-08-09 | ARC-ACT-012 marked DONE (ENG-003 §8.1)     |
@@ -410,6 +423,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.3
+**Version:** 1.0.4
 
 **End of Document**
