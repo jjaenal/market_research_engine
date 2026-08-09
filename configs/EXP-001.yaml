@@ -22,6 +22,18 @@ dataset:
 indicator:
   rsi_period: 14
 
+# Volatility regime selection (ARC-008 §14). selected_regime: "" = no filter,
+# "high" / "low" = only trade signals confirmed in that ATR regime.
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: ""
+
+# Signal deduplication: cooldown in bars before a rule can fire again
+# (ENG-003 §8.1). 0 = baseline (no dedup).
+signal:
+  cooldown: 0
+
 event:
   swing_left: 2
   swing_right: 2

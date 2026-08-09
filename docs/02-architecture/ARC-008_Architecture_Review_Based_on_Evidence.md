@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.5
+version: 1.0.6
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -379,6 +379,48 @@ Pertanyaan ini menuntun iterasi: ARC-ACT-012 (deduplikasi) dulu, lalu
 eksperimen ulang pada biaya realistis (EXP-001 §18.3) dengan regime
 selection.
 
+## 14.1 Jawaban — Re-run (M7 Iteration)
+
+Re-run dieksekusi lewat pipeline yang sama (`compute_report()` +
+`combine()` + `simulate()`), dengan:
+
+- **deduplikasi:** `SignalRule.cooldown` (ENG-003 §8.1) — satu keputusan
+  per episode;
+- **regime selection:** ATR volatility regime (`src/mre/indicators/regime.py`)
+  — label "high"/"low" dari perbandingan ATR short (14) vs ATR long (100);
+- **cost grid:** biaya eksekusi realistis per sisi (commission/slippage,
+  0.02%–0.05%, RSH-003 §10).
+
+Expectancy per skenario (n = jumlah signal setelah filter):
+
+| Skenario        | n   | 0.0      | 0.02%    | 0.05%    |
+| --------------- | --- | -------- | -------- | -------- |
+| cooldown 0, all | 1403 | 0.8683 | 0.1539 | −0.9176 |
+| cooldown 0, high| 698  | 1.2506 | 0.5269 | −0.5587 |
+| cooldown 0, low | 704  | 0.5068 | −0.1988| −1.2571 |
+| cooldown 10, all| 1095 | 0.8781 | 0.1679 | −0.8974 |
+| cooldown 10, high| 532 | 1.2276 | 0.5097 | −0.5672 |
+| cooldown 10, low | 562 | 0.5692 | −0.1343| −1.1894 |
+| cooldown 20, all| 992  | 0.7203 | 0.0115 | −1.0516 |
+| cooldown 20, high| 480 | 0.8262 | 0.1158 | −0.9498 |
+| cooldown 20, low | 511 | 0.6447 | −0.0631| −1.1249 |
+
+**Jawaban: TIDAK.** Edge tidak tetap positif setelah biaya eksekusi
+realistis, bahkan dengan deduplikasi + regime selection sekaligus:
+
+- deduplikasi (cooldown > 0) mengurangi trade count (signal overlap,
+  §5.1) namun **tidak memulihkan edge** pada biaya realistis;
+- regime "high" adalah yang paling tahan biaya (expectancy terbaik di
+  tiap tingkat cost), tetapi masih negatif pada 0.05%/sisi (−0.56 s/d
+  −0.95);
+- biaya 0.05% per sisi menghilangkan edge di **semua** kombinasi
+  cooldown × regime.
+
+Kesimpulan research question ini dicatat lebih lengkap di EXP-001 §19.6.
+Slang waktu ini juga menutup data gap "label regime/condition market"
+(§7): arsitektur kini memiliki slot `regime_config` + indicator regime,
+sehingga RQ regime dependency (FND-006 §17) dapat dijawab.
+
 ---
 
 # 15. Approval
@@ -421,6 +463,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.6   | 2026-08-09 | M7 re-run recorded (§14.1): cooldown + ATR regime + cost grid; RQ answered TIDAK; regime slot added (indicators/regime.py, regime_config) |
 | 1.0.5   | 2026-08-09 | ARC-ACT-011 marked DONE (configs/EXP-001.yaml + loader) |
 | 1.0.4   | 2026-08-09 | ARC-ACT-010 marked DONE (strategies/ package + registry) |
 | 1.0.3   | 2026-08-09 | ARC-ACT-014 marked DONE (markdown utils, exp001_config, mre.cli) |
@@ -434,6 +477,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.5
+**Version:** 1.0.6
 
 **End of Document**

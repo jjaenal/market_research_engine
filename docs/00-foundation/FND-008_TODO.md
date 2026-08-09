@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.27
+version: 1.3.28
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1484,22 +1484,23 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (ARC-ACT-010..014 DONE — strategies/, configs/EXP-001.yaml, ENG-003 §8.1, core/segments.py, mre/cli.py)
+M7 — Iteration (ARC-ACT-010..014 DONE; re-run cooldown + regime + biaya realistis — DONE, ARC-008 §14.1/EXP-001 §19.6)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: re-run EXP-001 dengan cooldown > 0)
+M7 — Iteration (lanjutan: jawaban RQ dicatat — TIDAK; edge tidak bertahan
+pada biaya realistis bahkan dengan deduplikasi + regime selection)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-ARC-008 §14 next research question: re-run EXP-001 pada biaya realistis
-dengan cooldown (deduplikasi) + regime selection
+M7 — Iteration (konklusi: edge hanya bertahan pada biaya nol/near-zero;
+mitigasi biaya / transformasi strategi untuk RQ berikutnya)
 ```
 
 ---
@@ -1893,6 +1894,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.27
+**Version:** 1.3.28
 
 **End of Document**
