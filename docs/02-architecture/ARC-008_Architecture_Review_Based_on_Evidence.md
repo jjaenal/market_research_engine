@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.2
+version: 1.0.3
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -230,6 +230,13 @@ bisa dijawab.
   `robustness.py`) dengan pola argparse identik. Bisa dipersatukan dalam
   satu CLI `experiment` dengan subcommand.
 
+> **Resolved by ARC-ACT-014:** helper `mre/utils/markdown.py`
+> (`heading`/`table`) dipakai `report`, `sensitivity`, `out_of_sample`,
+> dan `robustness`; `exp001_config()` satu tempat di
+> `experiment_runner.py`; `src/mre/cli.py` satu entrypoint dengan
+> subcommand `baseline|sensitivity|oos|robustness`, module `main()`
+> menjadi delegasi tipis ke CLI.
+
 ---
 
 # 9. What Should Be Generalized
@@ -303,6 +310,12 @@ period slices kini berbagi satu implementasi slice→CSV→compute.
 
 Satu helper markdown tabel/heading bersama; `_exp001_config()` satu
 tempat; CLI eksperimen satu entrypoint dengan subcommand.
+
+**Status: DONE** (`src/mre/utils/markdown.py` — `heading()`/`table()`;
+`src/mre/core/experiment_runner.py` — `exp001_config()`; `src/mre/cli.py`
+— satu entrypoint dengan subcommand `baseline|sensitivity|oos|robustness`,
+module `main()` delegasi ke CLI). Baseline config & renderer dipakai
+seragam di semua eksperimen.
 
 ---
 
@@ -386,6 +399,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.3   | 2026-08-09 | ARC-ACT-014 marked DONE (markdown utils, exp001_config, mre.cli) |
 | 1.0.2   | 2026-08-09 | ARC-ACT-013 marked DONE (core/segments.py) |
 | 1.0.1   | 2026-08-09 | ARC-ACT-012 marked DONE (ENG-003 §8.1)     |
 | 1.0.0   | 2026-08-09 | Initial evidence-based architecture review (TODO-028) |
@@ -396,6 +410,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.2
+**Version:** 1.0.3
 
 **End of Document**

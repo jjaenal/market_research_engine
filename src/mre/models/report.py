@@ -10,6 +10,7 @@ from mre.models.dataset import DatasetMetadata
 from mre.models.execution import ExecutionConfig
 from mre.models.statistics import TradeStatistics
 from mre.models.trade import Trade
+from mre.utils.markdown import heading, table
 
 
 @dataclass(frozen=True)
@@ -68,10 +69,10 @@ class Report:
     def to_markdown(self) -> str:
         """Render the report as deterministic Markdown (ENG-007 §9)."""
         lines: list[str] = []
-        lines.append("# MRE Experiment Report")
+        lines.append(heading(1, "MRE Experiment Report"))
         lines.append("")
 
-        lines.append("## 1. Header")
+        lines.append(heading(2, "1. Header"))
         lines.append("")
         lines.append(f"- Experiment ID: {self.experiment_id}")
         lines.append(f"- Title: {self.title}")
@@ -79,42 +80,42 @@ class Report:
         lines.append(f"- Code Version: {self.code_version}")
         lines.append("")
 
-        lines.append("## 2. Hypothesis")
+        lines.append(heading(2, "2. Hypothesis"))
         lines.append("")
         lines.append(self.hypothesis)
         lines.append("")
 
-        lines.append("## 3. Dataset")
+        lines.append(heading(2, "3. Dataset"))
         lines.append("")
         _kv_lines(lines, self.dataset)
         lines.append("")
 
-        lines.append("## 4. Configuration")
+        lines.append(heading(2, "4. Configuration"))
         lines.append("")
         _kv_lines(lines, self.configuration)
         lines.append("")
 
-        lines.append("## 5. Assumptions")
+        lines.append(heading(2, "5. Assumptions"))
         lines.append("")
         _kv_lines(lines, self.assumptions)
         lines.append("")
 
-        lines.append("## 6. Summary")
+        lines.append(heading(2, "6. Summary"))
         lines.append("")
         _table(lines, self.summary)
         lines.append("")
 
-        lines.append("## 7. Statistics")
+        lines.append(heading(2, "7. Statistics"))
         lines.append("")
         _table(lines, _statistics_rows(self.statistics))
         lines.append("")
 
-        lines.append("## 8. Trade Log")
+        lines.append(heading(2, "8. Trade Log"))
         lines.append("")
         _trade_log(lines, self.trade_log)
         lines.append("")
 
-        lines.append("## 9. Equity Curve")
+        lines.append(heading(2, "9. Equity Curve"))
         lines.append("")
         lines.append("```")
         for ts, equity in self.equity_curve:
@@ -122,12 +123,12 @@ class Report:
         lines.append("```")
         lines.append("")
 
-        lines.append("## 10. Experiment Metadata")
+        lines.append(heading(2, "10. Experiment Metadata"))
         lines.append("")
         _kv_lines(lines, self.experiment_metadata)
         lines.append("")
 
-        lines.append("## 11. Evidence & Conclusion")
+        lines.append(heading(2, "11. Evidence & Conclusion"))
         lines.append("")
         lines.append(f"- Evidence Sufficient: {str(self.evidence_sufficient).lower()}")
         if self.conclusion:
@@ -153,10 +154,8 @@ def _kv_lines(lines: list[str], mapping: dict[str, Any]) -> None:
 
 
 def _table(lines: list[str], mapping: dict[str, Any]) -> None:
-    lines.append("| Metric | Value |")
-    lines.append("| --- | --- |")
-    for key, value in mapping.items():
-        lines.append(f"| {_label(key)} | {_fmt(value)} |")
+    rows = [[_label(key), _fmt(value)] for key, value in mapping.items()]
+    lines.append(table(["Metric", "Value"], rows))
 
 
 _P_AND_L = "Net P&L"
@@ -191,19 +190,19 @@ def _statistics_rows(stats: TradeStatistics) -> dict[str, Any]:
 
 
 def _trade_log(lines: list[str], trades: tuple[Trade, ...]) -> None:
-    lines.append("| Trade ID | Side | Entry Time | Exit Time | Entry Price | Exit Price | Size | P&L | Result |")
-    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
-    for t in trades:
-        lines.append(
-            "| {tid} | {side} | {entry} | {exit} | {ep} | {xp} | {size} | {pnl} | {result} |".format(
-                tid=t.trade_id,
-                side=t.position.side,
-                entry=t.position.opened_at.isoformat(),
-                exit=t.position.closed_at.isoformat() if t.position.closed_at else "-",
-                ep=_fmt(t.position.entry_price),
-                xp=_fmt(t.exit.price),
-                size=_fmt(t.position.size),
-                pnl=_fmt(t.pnl),
-                result=t.result,
-            )
-        )
+    headers = ["Trade ID", "Side", "Entry Time", "Exit Time", "Entry Price", "Exit Price", "Size", "P&L", "Result"]
+    rows = [
+        [
+            t.trade_id,
+            t.position.side,
+            t.position.opened_at.isoformat(),
+            t.position.closed_at.isoformat() if t.position.closed_at else "-",
+            _fmt(t.position.entry_price),
+            _fmt(t.exit.price),
+            _fmt(t.position.size),
+            _fmt(t.pnl),
+            t.result,
+        ]
+        for t in trades
+    ]
+    lines.append(table(headers, rows))

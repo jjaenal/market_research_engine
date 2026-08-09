@@ -4,7 +4,7 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 
 ## Current state (trust git history + FND-008 §7 TODO table; FND-006 prose lags)
 - **Code and tests exist.** Package is `src/mre/` (`core`, `detectors`, `engines`, `indicators`, `loaders`, `models`, `utils`). There is **no `strategies/` package yet** — the one strategy is `_exp001_signal_definition()` in `src/mre/core/experiment_runner.py` (flagged as a gap in ARC-008 §6.1).
-- Next work is **ARC-ACT-014 Unify Renderers & Config Builder** (M7 iteration). ARC-ACT-012 (Signal Deduplication — `SignalRule.cooldown` in `src/mre/models/signal_rule.py`, implemented in `combine()` at `src/mre/engines/signal_engine.py`, ENG-003 §8.1) and ARC-ACT-013 (Unify Segment Runner — `src/mre/core/segments.py`: `run_on_slice()`, `SegmentRun`, `ensure_normalized()`, shared by OOS + robustness) are DONE. TODO-025..028 and the M7 architecture review (ARC-008 — **CORE HOLDS, PERIPHERY DRIFTS**) are complete; M6 validation done.
+- Next work is **ARC-ACT-010 Extract Strategy Plugin Package** (M7 iteration; `strategies/` package). ARC-ACT-012 (Signal Deduplication — `SignalRule.cooldown` in `src/mre/models/signal_rule.py`, implemented in `combine()` at `src/mre/engines/signal_engine.py`, ENG-003 §8.1), ARC-ACT-013 (Unify Segment Runner — `src/mre/core/segments.py`: `run_on_slice()`, `SegmentRun`, `ensure_normalized()`, shared by OOS + robustness), and ARC-ACT-014 (Unify Renderers & Config Builder — `src/mre/utils/markdown.py` `heading`/`table`, `exp001_config()` in `src/mre/core/experiment_runner.py`, `src/mre/cli.py`) are DONE. TODO-025..028 and the M7 architecture review (ARC-008 — **CORE HOLDS, PERIPHERY DRIFTS**) are complete; M6 validation done.
 - Foundation docs are **locked** (FND-010, approved). Docs are written in **Indonesian**; use FND-009 glossary terms (Event ≠ Signal ≠ Trade).
 - **Docs drift is a known risk (R-005):** FND-006's status snapshot still says "M1 / Not Started" while its milestone table and FND-008 §7 say M6. When they conflict, trust git history and the FND-008 master TODO table.
 - `datasets/`, `experiments/`, `reports/` are **gitignored but populated locally** (XAUUSD_H1.csv ~100k rows; EXP-001 report/sensitivity under `experiments/EXP-001/`). Never commit them. Tests use synthetic sine CSVs, never real data.
@@ -13,6 +13,7 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 - Run all tests: `.venv/bin/python -m pytest` (pyproject.toml sets `testpaths=["tests"]` and `pythonpath=["src"]`; pytest 9.1.1 installed in `.venv`).
 - Run one file: `.venv/bin/python -m pytest tests/test_out_of_sample.py`
 - Run a CLI module — **must** prepend `PYTHONPATH=src`; plain `python -m mre.core.*` raises `ModuleNotFoundError` because the package is not pip-installed (pyproject.toml has no `[project]` section):
+  - **Unified entrypoint (ARC-ACT-014):** `PYTHONPATH=src .venv/bin/python -m mre.cli <subcommand>` where `<subcommand>` ∈ `baseline|sensitivity|oos|robustness`. The old per-module entrypoints still work (they delegate to `mre.cli`):
   - `PYTHONPATH=src .venv/bin/python -m mre.core.experiment_runner` — EXP-001 baseline (M5, done)
   - `PYTHONPATH=src .venv/bin/python -m mre.core.sensitivity` — TODO-024 (done)
   - `PYTHONPATH=src .venv/bin/python -m mre.core.out_of_sample` — TODO-025 (done)
@@ -21,9 +22,9 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 
 ## Architecture notes (not obvious from filenames)
 - Pipeline: `normalize_raw_csv` → `load_dataset` → indicators (`rsi`) → `EventEngine.detect` → `signal_engine.combine` → `simulate` → `calculate` → `render` (markdown). Orchestrated in `compute_report()` (`src/mre/core/experiment_runner.py:63`).
-- **Config is frozen dataclasses, not YAML** (`ExperimentConfig`, `EventEngineConfig`, `ExecutionConfig`, `StatisticsConfig`); parameters are hardcoded in `_exp001_signal_definition()` and CLI defaults. The docs' "config over hardcode (YAML)" is aspirational, not implemented.
+- **Config is frozen dataclasses, not YAML** (`ExperimentConfig`, `EventEngineConfig`, `ExecutionConfig`, `StatisticsConfig`); frozen EXP-001 parameters are centralized in `exp001_config()` (`src/mre/core/experiment_runner.py`), which every CLI subcommand builds from (ARC-ACT-014). The docs' "config over hardcode (YAML)" is aspirational, not implemented (ARC-ACT-011).
 - Engines implemented: event, signal, simulation, statistics, reporting. ENG-004 Probability Engine has no doc or impl (statistics engine covers it). Detectors: swing, price_confirmation, rsi_trendline. Indicators: rsi, ema, atr.
-- Render (`reporting_engine.render`, `sensitivity.to_markdown`, `out_of_sample.to_markdown`, `robustness.to_markdown`) is pure string output; file writes happen only in `run_experiment()` and CLI `main()`s.
+- Renderers (`reporting_engine.render` → `report.to_markdown`, `sensitivity.to_markdown`, `out_of_sample.to_markdown`, `robustness.to_markdown`) are pure string output and share the markdown helpers `heading`/`table` in `src/mre/utils/markdown.py` (ARC-ACT-014); file writes happen only in `run_experiment()` and CLI `main()`s.
 - `mre/core/segments.py` (`run_on_slice`, `SegmentRun`, `ensure_normalized`) is the shared segment runner — OOS train/test and robustness period splits both go through it. It uses `mre/utils/candle_csv.py` (`write_candle_csv`) as the compliant segment CSV writer — reuse `run_on_slice`/`write_candle_csv` instead of hand-writing segment CSVs.
 
 ## Doc governance (when touching docs)

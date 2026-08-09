@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-import argparse
+import sys
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
 from pathlib import Path
 
-from mre.core.experiment_runner import ExperimentConfig, _exp001_signal_definition, _git_head, compute_report
+from mre.core.experiment_runner import ExperimentConfig, compute_report
 from mre.core.segments import ensure_normalized, run_on_slice
 from mre.loaders.csv_loader import load_dataset
 from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
 from mre.models.statistics import TradeStatistics
+from mre.utils.markdown import heading, table
 
 # Cost grid (commission_rate, slippage_rate) as fractions of notional per side:
 # baseline 0 plus two realistic retail levels for XAUUSD H1 (RSH-003 §10).
@@ -188,26 +188,31 @@ def run_robustness(
     )
 
 
-def _stats_row(label: str, s: TradeStatistics) -> str:
-    return (
-        "| %s | %d | %.4f | %.4f | %.4f | %.2f | %.2f | %s |"
-        % (label, s.trade_count, s.win_rate or 0.0, s.expectancy or 0.0,
-           s.profit_factor or 0.0, s.net_pnl, s.max_drawdown, s.sufficient_sample)
-    )
+_METRIC_HEADERS = ["Variation", "Trades", "Win rate", "Expectancy", "PF", "Net P&L", "Max DD", "Sufficient"]
 
 
-def _metrics_table(lines: list[str], heading: str, runs: tuple[RobustnessRun, ...]) -> None:
+def _stats_row(label: str, s: TradeStatistics) -> list[object]:
+    return [
+        label,
+        s.trade_count,
+        "%.4f" % (s.win_rate or 0.0),
+        "%.4f" % (s.expectancy or 0.0),
+        "%.4f" % (s.profit_factor or 0.0),
+        "%.2f" % s.net_pnl,
+        "%.2f" % s.max_drawdown,
+        s.sufficient_sample,
+    ]
+
+
+def _metrics_table(lines: list[str], heading_text: str, runs: tuple[RobustnessRun, ...]) -> None:
     lines.extend(
         [
             "",
-            "## %s" % heading,
+            heading(2, heading_text),
             "",
-            "| Variation | Trades | Win rate | Expectancy | PF | Net P&L | Max DD | Sufficient |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- |",
+            table(_METRIC_HEADERS, [_stats_row(run.label, run.statistics) for run in runs]),
         ]
     )
-    for run in runs:
-        lines.append(_stats_row(run.label, run.statistics))
 
 
 def _positive(runs: tuple[RobustnessRun, ...]) -> int:
@@ -221,7 +226,7 @@ def to_markdown(
 ) -> str:
     """Render the robustness analysis as markdown (deterministic ordering)."""
     lines: list[str] = [
-        "# EXP-001 Robustness Analysis (TODO-026)",
+        heading(1, "EXP-001 Robustness Analysis (TODO-026)"),
         "",
         "Methodology: RSH-003 §10 — stability of the frozen EXP-001 config across",
         "chronological data periods, markets, execution costs, and near-baseline",
@@ -230,17 +235,20 @@ def to_markdown(
         "Code version: %s" % code_version,
         "Generated on: %s" % generated_on,
         "",
-        "## Baseline (EXP-001 frozen config)",
+        heading(2, "Baseline (EXP-001 frozen config)"),
         "",
-        "| Metric | Baseline |",
-        "| --- | --- |",
-        "| Trade count | %d |" % result.baseline.trade_count,
-        "| Win rate | %.4f |" % (result.baseline.win_rate or 0.0),
-        "| Expectancy | %.4f |" % (result.baseline.expectancy or 0.0),
-        "| Profit factor | %.4f |" % (result.baseline.profit_factor or 0.0),
-        "| Net P&L | %.2f |" % result.baseline.net_pnl,
-        "| Max drawdown | %.2f |" % result.baseline.max_drawdown,
-        "| Sufficient sample | %s |" % result.baseline.sufficient_sample,
+        table(
+            ["Metric", "Baseline"],
+            [
+                ["Trade count", result.baseline.trade_count],
+                ["Win rate", "%.4f" % (result.baseline.win_rate or 0.0)],
+                ["Expectancy", "%.4f" % (result.baseline.expectancy or 0.0)],
+                ["Profit factor", "%.4f" % (result.baseline.profit_factor or 0.0)],
+                ["Net P&L", "%.2f" % result.baseline.net_pnl],
+                ["Max drawdown", "%.2f" % result.baseline.max_drawdown],
+                ["Sufficient sample", result.baseline.sufficient_sample],
+            ],
+        ),
     ]
 
     _metrics_table(lines, "Time Period Stability (frozen config per chronological slice)", result.periods)
@@ -284,62 +292,12 @@ def to_markdown(
     return "\n".join(lines)
 
 
-def _exp001_config(out: Path) -> ExperimentConfig:
-    return ExperimentConfig(
-        experiment_id="EXP-001",
-        title="RSI Trendline Breakout Baseline",
-        hypothesis="Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
-        "menghasilkan expectancy positif setelah biaya transaksi.",
-        code_version=_git_head(),
-        generated_on=datetime.now(timezone.utc).date().isoformat(),
-        strategy={
-            "rsi_period": 14,
-            "swing_left": 2,
-            "swing_right": 2,
-            "price_lookback": 20,
-            "signal_window": 5,
-            "hold_bars": 10,
-            "trigger_payload": "RSI_TRENDLINE_BROKEN slope__lt 0.0",
-        },
-        report_path=out,
-        signal_definition=_exp001_signal_definition(),
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
-    """CLI: run EXP-001 robustness analysis and write the markdown report."""
-    parser = argparse.ArgumentParser(description="Run EXP-001 robustness analysis (TODO-026).")
-    parser.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_robustness.md"))
-    parser.add_argument("--periods", type=int, default=4, help="number of chronological slices (default 4)")
-    parser.add_argument(
-        "--market",
-        type=Path,
-        default=Path("datasets/XAGUSD_H1.csv"),
-        help="second market raw CSV to test cross-market robustness",
-    )
-    parser.add_argument("--no-market", action="store_true", help="skip the cross-market dimension")
-    args = parser.parse_args(argv)
+    """CLI: run EXP-001 robustness analysis (PRD-006 §8.7, via ``mre.cli``)."""
+    from mre.cli import main as cli_main
 
-    config = _exp001_config(args.out)
-    out_dir = config.normalized_dataset.parent
-    market_csv = None if args.no_market else args.market
-    result = run_robustness(config, n_periods=args.periods, market_csv=market_csv, out_dir=out_dir)
-
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(to_markdown(result, config.code_version, config.generated_on), encoding="utf-8")
-
-    b = result.baseline
-    print(f"baseline: {b.trade_count} trades, expectancy {b.expectancy:.4f}, PF {b.profit_factor:.4f}")
-    for run in result.periods:
-        s = run.statistics
-        print(f"{run.label}: {s.trade_count} trades, exp {s.expectancy:.4f}, PF {s.profit_factor:.4f}")
-    for run in result.markets:
-        s = run.statistics
-        print(f"market {run.label}: {s.trade_count} trades, exp {s.expectancy:.4f}, PF {s.profit_factor:.4f}")
-    last = result.costs[-1].statistics
-    print(f"highest cost ({result.costs[-1].label}): exp {last.expectancy:.4f}, PF {last.profit_factor:.4f}")
-    print(f"robustness report written to {args.out}")
-    return 0
+    args = argv if argv is not None else sys.argv[1:]
+    return cli_main(["robustness", *args])
 
 
 if __name__ == "__main__":
