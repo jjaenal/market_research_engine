@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import argparse
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -141,24 +141,29 @@ def _exp001_signal_definition() -> tuple[SignalRule, ...]:
     )
 
 
-def main(argv: list[str] | None = None) -> int:
-    """CLI entry point: run EXP-001 baseline (PRD-006 §8.7)."""
-    parser = argparse.ArgumentParser(description="Run an MRE experiment (CSV → report).")
-    parser.add_argument("--source", type=Path, default=Path("datasets/XAUUSD_H1.csv"))
-    parser.add_argument("--experiment-id", default="EXP-001")
-    parser.add_argument("--title", default="RSI Trendline Breakout Baseline")
-    parser.add_argument(
-        "--hypothesis",
-        default="Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
-        "menghasilkan expectancy positif setelah biaya transaksi.",
-    )
-    parser.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_report.md"))
-    args = parser.parse_args(argv)
+_EXP001_HYPOTHESIS = (
+    "Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
+    "menghasilkan expectancy positif setelah biaya transaksi."
+)
 
-    config = ExperimentConfig(
-        experiment_id=args.experiment_id,
-        title=args.title,
-        hypothesis=args.hypothesis,
+
+def exp001_config(
+    out: Path = Path("experiments/EXP-001/EXP-001_report.md"),
+    *,
+    source: Path = Path("datasets/XAUUSD_H1.csv"),
+    experiment_id: str = "EXP-001",
+    title: str = "RSI Trendline Breakout Baseline",
+    hypothesis: str = _EXP001_HYPOTHESIS,
+) -> ExperimentConfig:
+    """Build the frozen EXP-001 config (single source of truth, ARC-008 ARC-ACT-014).
+
+    Shared by the baseline, sensitivity, OOS, and robustness CLIs so the
+    frozen parameters live in exactly one place (RSH-002 §9, FR-012).
+    """
+    return ExperimentConfig(
+        experiment_id=experiment_id,
+        title=title,
+        hypothesis=hypothesis,
         code_version=_git_head(),
         generated_on=datetime.now(timezone.utc).date().isoformat(),
         strategy={
@@ -167,18 +172,21 @@ def main(argv: list[str] | None = None) -> int:
             "swing_right": 2,
             "price_lookback": 20,
             "signal_window": 5,
+            "hold_bars": 10,
             "trigger_payload": "RSI_TRENDLINE_BROKEN slope__lt 0.0",
         },
-        raw_dataset=args.source,
-        report_path=args.out,
+        raw_dataset=source,
+        report_path=out,
         signal_definition=_exp001_signal_definition(),
     )
 
-    report = run_experiment(config)
-    print(f"experiment {report.experiment_id}: {report.statistics.trade_count} trades, "
-          f"net P&L {report.statistics.net_pnl:g}, win rate {report.statistics.win_rate}")
-    print(f"report written to {config.report_path}")
-    return 0
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI entry point: run EXP-001 baseline (PRD-006 §8.7)."""
+    from mre.cli import main as cli_main
+
+    args = argv if argv is not None else sys.argv[1:]
+    return cli_main(["baseline", *args])
 
 
 if __name__ == "__main__":

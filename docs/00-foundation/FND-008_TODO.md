@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.24
+version: 1.3.25
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1482,21 +1482,21 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (ARC-ACT-012/013 DONE — ENG-003 §8.1, core/segments.py)
+M7 — Iteration (ARC-ACT-012/013/014 DONE — ENG-003 §8.1, core/segments.py, mre/cli.py)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: ARC-ACT-014)
+M7 — Iteration (lanjutan: ARC-ACT-010/011)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-ARC-ACT-014 Unify Renderers & Config Builder
+ARC-ACT-010 Extract Strategy Plugin Package (strategies/)
 ```
 
 ---
@@ -1890,6 +1890,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.24
+**Version:** 1.3.25
 
 **End of Document**

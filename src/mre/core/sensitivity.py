@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import argparse
+import sys
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from mre.core.experiment_runner import ExperimentConfig, _exp001_signal_definition, _git_head, compute_report
+from mre.core.experiment_runner import ExperimentConfig, compute_report
 from mre.models.statistics import TradeStatistics
+from mre.utils.markdown import heading, table
 
 # EXP-001 sensitivity grid (RSH-003 §9): one parameter varied, others at baseline.
 # Baseline values are included as control runs (determinism check).
@@ -91,92 +91,69 @@ def to_markdown(
 ) -> str:
     """Render the sensitivity table as markdown (deterministic ordering)."""
     lines: list[str] = [
-        "# EXP-001 Sensitivity Analysis (TODO-024)",
+        heading(1, "EXP-001 Sensitivity Analysis (TODO-024)"),
         "",
         "Methodology: RSH-003 §9 — one parameter varied, others fixed (control).",
         "Code version: %s" % code_version,
         "Generated on: %s" % generated_on,
         "",
-        "## Baseline (EXP-001 frozen config)",
+        heading(2, "Baseline (EXP-001 frozen config)"),
         "",
     ]
     b = result.baseline
     lines.append(
-        "| Metric | Baseline |"
-        "\n| --- | --- |"
-        "\n| Trade count | %d |"
-        "\n| Win rate | %.4f |"
-        "\n| Expectancy | %.4f |"
-        "\n| Profit factor | %.4f |"
-        "\n| Net P&L | %.2f |"
-        "\n| Max drawdown | %.2f |"
-        "\n| Sufficient sample | %s |"
-        "\n" % (b.trade_count, b.win_rate or 0.0, b.expectancy or 0.0,
-                b.profit_factor or 0.0, b.net_pnl, b.max_drawdown, b.sufficient_sample)
+        table(
+            ["Metric", "Baseline"],
+            [
+                ["Trade count", b.trade_count],
+                ["Win rate", "%.4f" % (b.win_rate or 0.0)],
+                ["Expectancy", "%.4f" % (b.expectancy or 0.0)],
+                ["Profit factor", "%.4f" % (b.profit_factor or 0.0)],
+                ["Net P&L", "%.2f" % b.net_pnl],
+                ["Max drawdown", "%.2f" % b.max_drawdown],
+                ["Sufficient sample", b.sufficient_sample],
+            ],
+        )
     )
 
     parameters = tuple(dict.fromkeys(r.parameter for r in result.runs))
     for parameter in parameters:
+        rows: list[list[object]] = []
+        for run in result.for_parameter(parameter):
+            s = run.statistics
+            rows.append(
+                [
+                    run.value,
+                    s.trade_count,
+                    "%.4f" % (s.win_rate or 0.0),
+                    "%.4f" % (s.expectancy or 0.0),
+                    "%.4f" % (s.profit_factor or 0.0),
+                    "%.2f" % s.net_pnl,
+                    "%.2f" % s.max_drawdown,
+                    s.sufficient_sample,
+                ]
+            )
         lines.extend(
             [
                 "",
-                "## Parameter: %s" % parameter,
+                heading(2, "Parameter: %s" % parameter),
                 "",
-                "| Value | Trades | Win rate | Expectancy | PF | Net P&L | Max DD | Sufficient |",
-                "| --- | --- | --- | --- | --- | --- | --- | --- |",
+                table(
+                    ["Value", "Trades", "Win rate", "Expectancy", "PF", "Net P&L", "Max DD", "Sufficient"],
+                    rows,
+                ),
             ]
         )
-        for run in result.for_parameter(parameter):
-            s = run.statistics
-            lines.append(
-                "| %s | %d | %.4f | %.4f | %.4f | %.2f | %.2f | %s |"
-                % (run.value, s.trade_count, s.win_rate or 0.0, s.expectancy or 0.0,
-                   s.profit_factor or 0.0, s.net_pnl, s.max_drawdown, s.sufficient_sample)
-            )
     lines.append("")
     return "\n".join(lines)
 
 
-def _exp001_config(out: Path) -> ExperimentConfig:
-    return ExperimentConfig(
-        experiment_id="EXP-001",
-        title="RSI Trendline Breakout Baseline",
-        hypothesis="Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
-        "menghasilkan expectancy positif setelah biaya transaksi.",
-        code_version=_git_head(),
-        generated_on=datetime.now(timezone.utc).date().isoformat(),
-        strategy={
-            "rsi_period": 14,
-            "swing_left": 2,
-            "swing_right": 2,
-            "price_lookback": 20,
-            "signal_window": 5,
-            "hold_bars": 10,
-            "trigger_payload": "RSI_TRENDLINE_BROKEN slope__lt 0.0",
-        },
-        report_path=out,
-        signal_definition=_exp001_signal_definition(),
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
-    """CLI: run EXP-001 sensitivity analysis and write the markdown report."""
-    parser = argparse.ArgumentParser(description="Run EXP-001 sensitivity analysis (TODO-024).")
-    parser.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_sensitivity.md"))
-    args = parser.parse_args(argv)
+    """CLI: run EXP-001 sensitivity analysis (PRD-006 §8.7, via ``mre.cli``)."""
+    from mre.cli import main as cli_main
 
-    config = _exp001_config(args.out)
-    result = run_sensitivity(config, EXP001_GRID)
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(to_markdown(result, config.code_version, config.generated_on, config.strategy), encoding="utf-8")
-
-    b = result.baseline
-    print(f"baseline: {b.trade_count} trades, expectancy {b.expectancy:.4f}, PF {b.profit_factor:.4f}")
-    for parameter in ("rsi_period", "price_lookback", "signal_window", "hold_bars"):
-        runs = result.for_parameter(parameter)
-        print(f"{parameter}: " + ", ".join(f"{r.value}->exp {r.statistics.expectancy:.4f}" for r in runs))
-    print(f"sensitivity report written to {args.out}")
-    return 0
+    args = argv if argv is not None else sys.argv[1:]
+    return cli_main(["sensitivity", *args])
 
 
 if __name__ == "__main__":
