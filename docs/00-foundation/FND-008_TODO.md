@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.23
+version: 1.3.24
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1482,21 +1482,21 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (ARC-ACT-012 Signal Dedup DONE — ENG-003 §8.1)
+M7 — Iteration (ARC-ACT-012/013 DONE — ENG-003 §8.1, core/segments.py)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: ARC-ACT-013..014)
+M7 — Iteration (lanjutan: ARC-ACT-014)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-ARC-ACT-013 Unify Segment Runner (OOS + robustness)
+ARC-ACT-014 Unify Renderers & Config Builder
 ```
 
 ---
@@ -1890,6 +1890,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.23
+**Version:** 1.3.24
 
 **End of Document**

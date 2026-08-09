@@ -8,10 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from mre.core.experiment_runner import ExperimentConfig, _exp001_signal_definition, _git_head, compute_report
+from mre.core.segments import ensure_normalized, run_on_slice
 from mre.loaders.csv_loader import load_dataset
 from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
 from mre.models.statistics import TradeStatistics
-from mre.utils.candle_csv import write_candle_csv
 
 # Cost grid (commission_rate, slippage_rate) as fractions of notional per side:
 # baseline 0 plus two realistic retail levels for XAUUSD H1 (RSH-003 §10).
@@ -57,12 +57,6 @@ class RobustnessResult:
     combos: tuple[RobustnessRun, ...]
 
 
-def _normalized_path(config: ExperimentConfig) -> Path:
-    if not config.normalized_dataset.exists():
-        normalize_raw_csv(config.raw_dataset, config.normalized_dataset, RawCsvConfig())
-    return config.normalized_dataset
-
-
 def run_periods(
     config: ExperimentConfig,
     n_periods: int = 4,
@@ -77,7 +71,7 @@ def run_periods(
     if n_periods < 1:
         raise ValueError("n_periods must be >= 1")
 
-    normalized = _normalized_path(config)
+    normalized = ensure_normalized(config)
     dataset = load_dataset(normalized, config.data_config)
     candles = dataset.candles
     bounds = [round(len(candles) * k / n_periods) for k in range(n_periods + 1)]
@@ -89,8 +83,8 @@ def run_periods(
         if end <= start:
             raise ValueError("n_periods too large: produced an empty period")
         label = f"period-{k + 1}-of-{n_periods}"
-        path = write_candle_csv(candles[start:end], dir_path / f"XAUUSD_H1_{label}.csv")
-        runs.append(RobustnessRun(label=label, statistics=compute_report(config, path).statistics))
+        segment = run_on_slice(config, candles, start, end, dir_path, label)
+        runs.append(RobustnessRun(label=segment.label, statistics=segment.statistics))
     return tuple(runs)
 
 
@@ -131,7 +125,7 @@ def run_cost_grid(
     The first grid entry is the zero-cost baseline control (determinism
     check); later entries model realistic execution costs.
     """
-    normalized = dataset_path if dataset_path is not None else _normalized_path(config)
+    normalized = dataset_path if dataset_path is not None else ensure_normalized(config)
     runs: list[RobustnessRun] = []
     for commission_rate, slippage_rate in grid:
         variant = replace(
@@ -158,7 +152,7 @@ def run_combo_grid(
     (sensitivity varies them one at a time, TODO-024). The baseline pair is
     the first entry and acts as the control.
     """
-    normalized = dataset_path if dataset_path is not None else _normalized_path(config)
+    normalized = dataset_path if dataset_path is not None else ensure_normalized(config)
     runs: list[RobustnessRun] = []
     for price_lookback, rsi_period in combos:
         variant = replace(
@@ -179,7 +173,7 @@ def run_robustness(
     out_dir: Path | None = None,
 ) -> RobustnessResult:
     """Run every robustness dimension against the frozen EXP-001 config."""
-    normalized = _normalized_path(config)
+    normalized = ensure_normalized(config)
     baseline = compute_report(config, normalized).statistics
     periods = run_periods(config, n_periods, out_dir)
     markets = (run_market(config, market_csv, market_symbol, out_dir),) if market_csv is not None else ()

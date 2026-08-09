@@ -8,10 +8,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from mre.core.experiment_runner import ExperimentConfig, _exp001_signal_definition, _git_head, compute_report
+from mre.core.segments import ensure_normalized, run_on_slice
 from mre.loaders.csv_loader import load_dataset
-from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
 from mre.models.statistics import TradeStatistics
-from mre.utils.candle_csv import write_candle_csv
 
 
 @dataclass(frozen=True)
@@ -42,26 +41,22 @@ def run_oos(
     strategy (EXP-001 frozen config) is run unchanged on the unseen
     test portion; the split point is recorded for the record.
     """
-    normalized = config.normalized_dataset
-    if not normalized.exists():
-        normalize_raw_csv(config.raw_dataset, normalized, RawCsvConfig())
+    normalized = ensure_normalized(config)
 
     dataset = load_dataset(normalized, config.data_config)
     candles = dataset.candles
     idx = _split_index(len(candles), split_fraction)
 
     dir_path = out_dir if out_dir is not None else normalized.parent
-    train_path = write_candle_csv(candles[:idx], dir_path / "XAUUSD_H1_train.csv")
-    test_path = write_candle_csv(candles[idx:], dir_path / "XAUUSD_H1_test.csv")
+    train = run_on_slice(config, candles, 0, idx, dir_path, "train")
+    test = run_on_slice(config, candles, idx, len(candles), dir_path, "test")
 
     baseline = compute_report(config, normalized).statistics
-    train = compute_report(config, train_path).statistics
-    test = compute_report(config, test_path).statistics
 
     return OosResult(
         baseline=baseline,
-        train=train,
-        test=test,
+        train=train.statistics,
+        test=test.statistics,
         split_index=idx,
         split_timestamp=candles[idx].timestamp,
     )
