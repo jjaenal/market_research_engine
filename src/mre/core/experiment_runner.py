@@ -18,11 +18,11 @@ from mre.indicators.rsi import rsi
 from mre.loaders.csv_loader import load_dataset
 from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
 from mre.models.dataset import DataConfig
-from mre.models.event import PRICE_CONFIRMATION, RSI_TRENDLINE_BROKEN
 from mre.models.execution import ExecutionConfig
 from mre.models.report import Report, ReportConfig, ReportInput
 from mre.models.signal_rule import SignalRule
 from mre.models.statistics import StatisticsConfig
+from mre.strategies import EXP001_STRATEGY_ID, get as get_strategy
 
 
 @dataclass(frozen=True)
@@ -48,6 +48,7 @@ class ExperimentConfig:
     data_config: DataConfig = field(default_factory=lambda: DataConfig(symbol="XAUUSD", timeframe="H1"))
     indicator_config: IndicatorConfig = field(default_factory=IndicatorConfig)
     event_config: EventEngineConfig = field(default_factory=EventEngineConfig)
+    strategy_id: str = ""
     signal_definition: tuple[SignalRule, ...] = ()
     execution_config: ExecutionConfig = field(default_factory=ExecutionConfig)
     statistics_config: StatisticsConfig = field(default_factory=StatisticsConfig)
@@ -56,6 +57,8 @@ class ExperimentConfig:
     def __post_init__(self) -> None:
         if not self.experiment_id:
             raise ValueError("experiment_id must not be empty")
+        if self.strategy_id and not self.signal_definition:
+            object.__setattr__(self, "signal_definition", get_strategy(self.strategy_id))
         if not self.signal_definition:
             raise ValueError("signal_definition must not be empty")
 
@@ -127,20 +130,6 @@ def _git_head() -> str:
         return "unknown"
 
 
-def _exp001_signal_definition() -> tuple[SignalRule, ...]:
-    """EXP-001 §9.3 signal definition (LONG baseline, ENG-003 §10)."""
-    return (
-        SignalRule(
-            signal_type="LONG",
-            trigger=RSI_TRENDLINE_BROKEN,
-            confirmations=(PRICE_CONFIRMATION,),
-            window=5,
-            source_strategy="rsi_trendline_breakout",
-            trigger_payload={"slope__lt": 0.0},
-        ),
-    )
-
-
 _EXP001_HYPOTHESIS = (
     "Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
     "menghasilkan expectancy positif setelah biaya transaksi."
@@ -159,6 +148,9 @@ def exp001_config(
 
     Shared by the baseline, sensitivity, OOS, and robustness CLIs so the
     frozen parameters live in exactly one place (RSH-002 §9, FR-012).
+    The signal definition is resolved from the strategy plugin registry by
+    ``strategy_id`` (ARC-008 ARC-ACT-010); the Signal Engine interface is
+    unchanged — the plugin only supplies configuration (Article 12).
     """
     return ExperimentConfig(
         experiment_id=experiment_id,
@@ -177,7 +169,7 @@ def exp001_config(
         },
         raw_dataset=source,
         report_path=out,
-        signal_definition=_exp001_signal_definition(),
+        strategy_id=EXP001_STRATEGY_ID,
     )
 
 

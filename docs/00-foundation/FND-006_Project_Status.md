@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.26
+version: 1.3.27
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -520,7 +520,7 @@ Robustness (periode 3/4 positif; market tipis; gagal pada biaya realistis)
 Conclusion (PARTIALLY SUPPORTED — edge hanya pada biaya nol/near-zero)
     ↓ (TODO-028 Review Architecture Based on Evidence — ARC-008)
 Architecture Review (CORE HOLDS, PERIPHERY DRIFTS — ARC-ACT-010..014)
-    ↓ (next: M7 iteration — ARC-ACT-010 Extract Strategy Plugin Package)
+    ↓ (next: M7 iteration — ARC-ACT-011 Move Experiment Config to External File)
 Iteration
 ```
 
@@ -1448,6 +1448,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.26
+**Version:** 1.3.27
 
 **End of Document**
