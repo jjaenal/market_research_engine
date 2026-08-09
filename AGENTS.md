@@ -4,7 +4,7 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 
 ## Current state (trust git history + FND-008 §7 TODO table; FND-006 prose lags)
 - **Code and tests exist.** Package is `src/mre/` (`core`, `detectors`, `engines`, `indicators`, `loaders`, `models`, `utils`). There is **no `strategies/` package yet** — the one strategy is `_exp001_signal_definition()` in `src/mre/core/experiment_runner.py`.
-- Next work is **TODO-027 Produce Research Conclusion** (PLANNED). TODO-025 (Out-of-Sample, `src/mre/core/out_of_sample.py`) and TODO-026 (Robustness, `src/mre/core/robustness.py`) are DONE and recorded in EXP-001 §17/§18.
+- Next work is **TODO-028 Review Architecture Based on Evidence** (PLANNED, M7). TODO-025 (Out-of-Sample, `src/mre/core/out_of_sample.py`), TODO-026 (Robustness, `src/mre/core/robustness.py`), and TODO-027 (Research Conclusion, EXP-001 §19 — **PARTIALLY SUPPORTED**) are DONE; M6 validation is complete.
 - Foundation docs are **locked** (FND-010, approved). Docs are written in **Indonesian**; use FND-009 glossary terms (Event ≠ Signal ≠ Trade).
 - **Docs drift is a known risk (R-005):** FND-006's status snapshot still says "M1 / Not Started" while its milestone table and FND-008 §7 say M6. When they conflict, trust git history and the FND-008 master TODO table.
 - `datasets/`, `experiments/`, `reports/` are **gitignored but populated locally** (XAUUSD_H1.csv ~100k rows; EXP-001 report/sensitivity under `experiments/EXP-001/`). Never commit them. Tests use synthetic sine CSVs, never real data.

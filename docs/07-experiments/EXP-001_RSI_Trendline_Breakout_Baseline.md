@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.3
+version: 1.0.4
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -522,8 +522,67 @@ Timeframe tidak divariasikan: hanya data H1 yang tersedia.
 
 # 19. Conclusion
 
-Ditentukan oleh peneliti setelah Result tersedia
-(PRD-006 §9 — conclusion manual, bukan otomatis).
+## 19.1 Verdict
+
+```text
+PARTIALLY SUPPORTED
+```
+
+Kesimpulan diturunkan dari evidence (§15–§18), bukan rekomendasi
+(RSH-001 §13, PRD-003 §7.9).
+
+## 19.2 Evidence Summary
+
+| Dimension            | Evidence                                                                 | Terpenuhi |
+| -------------------- | ------------------------------------------------------------------------ | --------- |
+| Baseline (zero cost) | expectancy 0.868, PF 1.209, n=1403 ≥ 30 (§15)                            | ✓         |
+| Sensitivity          | seluruh grid (6×3) tetap expectancy positif — edge tidak fragile secara arah (§16) | ✓ |
+| Out-of-Sample        | edge positif dan meningkat di test set (exp 2.50 vs train 0.12), tanpa degradasi (§17) | ✓ |
+| Time period          | 3/4 slice positif; slice ke-3 negatif (−0.17) — robustness temporal lemah (§18.1) | ✗ |
+| Cross-market         | XAGUSD positif tipis (exp 0.04) (§18.2)                                  | △         |
+| Execution cost       | gagal pada biaya realistis: 0.05%/sisi → expectancy negatif (§18.3)      | ✗         |
+| Parameter combos     | 5/5 kombinasi positif (§18.4)                                            | ✓         |
+
+## 19.3 Research Questions (FND-006 §24)
+
+| RQ  | Pertanyaan                                     | Jawaban                                             |
+| --- | ---------------------------------------------- | --------------------------------------------------- |
+| RQ-001 | Berapa win probability?                    | ≈ 0.495 (win rate baseline, n=1403)                 |
+| RQ-002 | RR berapa menghasilkan expectancy terbaik? | RR 1.23 baseline; hold_bars 20 → expectancy 2.01 (deskriptif) |
+| RQ-003 | Seberapa sensitif terhadap parameter?      | Tidak fragile secara arah, namun sensitif magnitude (price_lookback, rsi_period, swing_left) |
+| RQ-004 | Bertahan pada periode berbeda?             | Sebagian — 3/4 periode positif; periode tengah negatif |
+| RQ-005 | Bertahan out-of-sample?                    | Ya — edge meningkat di test set, tanpa degradasi     |
+| RQ-006 | Bertahan setelah biaya realistis?          | Tidak — 0.05%/sisi menghilangkan edge                |
+
+## 19.4 Conclusion Statement
+
+> **Hipotesis "Breakout RSI trendline yang dikonfirmasi harga pada
+> XAUUSD H1 menghasilkan expectancy positif setelah biaya transaksi"
+> hanya terdukung pada asumsi biaya nol/near-zero, bukan setelah
+> biaya transaksi realistis.**
+
+- **Yang terdukung (evidence cukup, n ≥ 30):** terdapat statistical edge
+  arah pada deteksi RSI trendline breakout yang dikonfirmasi harga —
+  expectancy positif dan stabil arah pada baseline, seluruh grid
+  sensitivity, seluruh kombinasi parameter teruji, serta out-of-sample
+  (edge justru meningkat di test set).
+- **Yang tidak terdukung:** klausa *"setelah biaya transaksi"* dari
+  hipotesis. Edge tidak bertahan pada biaya per sisi ≥ 0.05% dan
+  menyisakan expectancy hampir nol pada 0.02%; robustness temporal juga
+  lemah (satu dari empat periode negatif).
+- **Evidence cukup** (n=1403, FR-011); backtest adalah evidence, bukan
+  bukti (FND-009).
+
+## 19.5 Implications
+
+- Strategi berpotensi dieksplorasi pada kondisi/regime market yang
+  favorable dan pada biaya eksekusi rendah; validasi tambahan
+  (walk-forward, deduplikasi signal, biaya sesuai venue) diperlukan
+  sebelum iterasi lanjutan (M7).
+- Tanpa mitigasi biaya atau seleksi kondisi, edge baseline tidak cukup
+  untuk klaim "positif setelah biaya transaksi".
+- Rekomendasi strategi/trading bukan bagian dari kesimpulan ini
+  (RSH-001 §13).
 
 ---
 
@@ -586,6 +645,7 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.4   | 2026-08-09 | Research conclusion (TODO-027) dicatat (§19) |
 | 1.0.3   | 2026-08-09 | OOS (TODO-025) dan robustness (TODO-026) dicatat (§17, §18) |
 | 1.0.2   | 2026-08-08 | Sensitivity analysis (TODO-024) dicatat (§16) |
 | 1.0.1   | 2026-08-08 | Run baseline (TODO-023); signal definition diarahkan LONG via trigger_payload |
@@ -597,6 +657,6 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.3
+**Version:** 1.0.4
 
 **End of Document**
