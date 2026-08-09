@@ -1,36 +1,35 @@
 # AGENTS.md
 
-Market Research Engine (MRE): a documentation-driven, event-driven framework for testing trading hypotheses. The Foundation phase is **APPROVED and LOCKED** (per FND-010); the next phase is **M1 — Product Definition** (TODO-004…008 in FND-008), then the implementation sprint. **No code or tests exist yet.**
+Market Research Engine (MRE): a documentation-driven, event-driven framework for testing trading hypotheses (RSI Trendline Breakout baseline). **Phase M6 — Validation is in progress** (per git history + FND-008 §7); M0–M5 are done.
 
-## Current state (verify before assuming)
-- **No code or tests exist.** `src/` and `tests/` are empty scaffolds — loaders, models, engines, etc. are not written. Do not go looking for implementations.
-- `src/` already has the intended package layout (`core`, `models`, `loaders`, `indicators`, `detectors`, `engines`, `reports`, `utils`, `strategies`). Put new modules there; don't reorganize.
-- `requirements.txt` is intentionally empty; there is **no `pyproject.toml`, no test runner, no linter configured**. Nothing can be installed or tested. Do not invent commands like `pytest`/`ruff` and expect them to work; `pytest`, `ruff`, and `black` are planned, not installed.
-- `.venv` exists (Python 3.13, no packages). Use `.venv/bin/python` rather than the system interpreter. `.venv/` is gitignored.
-- `datasets/` (CSV inputs, e.g. `datasets/XAUUSD_H1.csv`), `experiments/`, and `reports/` (run output) are all empty **and gitignored** — don't commit data.
-- **Foundation cleanup complete (FND-ACT-001…004):** FND-010 is registered in the FND-004 index, `docs/README.md` is updated (correct naming + `docs/06-decisions/` layout), and Foundation metadata is consistent. No outstanding actions remain from the review.
-- Changes land via short-lived branches + PRs (see git history).
+## Current state (trust git history + FND-008 §7 TODO table; FND-006 prose lags)
+- **Code and tests exist.** Package is `src/mre/` (`core`, `detectors`, `engines`, `indicators`, `loaders`, `models`, `utils`). There is **no `strategies/` package yet** — the one strategy is `_exp001_signal_definition()` in `src/mre/core/experiment_runner.py`.
+- Next work is **TODO-025 Out-of-Sample Testing** (PLANNED). WIP already exists on `main` but is **untracked**: `src/mre/core/out_of_sample.py` + `tests/test_out_of_sample.py` (module complete; the 400-candle fixture produces baseline trades; all tests pass).
+- Foundation docs are **locked** (FND-010, approved). Docs are written in **Indonesian**; use FND-009 glossary terms (Event ≠ Signal ≠ Trade).
+- **Docs drift is a known risk (R-005):** FND-006's status snapshot still says "M1 / Not Started" while its milestone table and FND-008 §7 say M6. When they conflict, trust git history and the FND-008 master TODO table.
+- `datasets/`, `experiments/`, `reports/` are **gitignored but populated locally** (XAUUSD_H1.csv ~100k rows; EXP-001 report/sensitivity under `experiments/EXP-001/`). Never commit them. Tests use synthetic sine CSVs, never real data.
 
-## Documentation-Driven Development
-- `docs/` is the source of truth: when docs and code conflict, **docs take precedence**. Decision priority (per FND-005 §37): Project Charter > Architecture Constitution > Approved ADR > Product Requirements > Research Evidence > Implementation Preference.
-- **Read `docs/00-foundation/FND-001_Project_Charter.md` before proposing architecture/code.** It defines the Architecture Constitution and Ubiquitous Language; code must change, never the constitution. Key rules: Event is the atomic unit (Signal aggregates Events); Detectors emit facts (Events), never recommendations; Indicators never produce trades; data is immutable; configuration over hardcode; new terms/architecture require an ADR.
-- `docs/00-foundation/FND-005_Project_Context.md` (Active) is the authoritative project context: **do not implement Python code until its requirements are documented**. Suggested reading order (FND-005 §48): README → FND-005 → FND-001 → FND-004 → relevant PRD/ARC/DEV. (`docs/context/PROJECT_CONTEXT.md` is the pre-FND-004 version, superseded by FND-005.)
-- `docs/00-foundation/FND-010_Foundation_Review.md` (v1.0.0, Approved) is the formal gate: Foundation = **APPROVED / LOCKED** (0 blockers, 95% readiness, "PASS WITH ACTIONS"). **Foundation docs are locked — material changes require a Change Request → Impact Analysis, not casual edits.**
-- `docs/00-foundation/FND-006_Project_Status.md` (Active) is authoritative for phase/sprint/milestone/next steps. Current phase is **M1 — Product Definition** (Sprint 1); Foundation (Sprint 0) is complete. Check it before deciding what to work on.
-- `docs/00-foundation/FND-007_Roadmap.md` (Active) defines the phased roadmap (M0 Foundation → M1 Product → M2 Architecture → M3 Research → M4 Engine → M5 Baseline Experiment → M6 Validation → M7 Iteration → M8 Expansion). MVP = one reproducible experiment from CSV to report.
-- `docs/00-foundation/FND-008_TODO.md` (Active) is the execution backlog (statuses PLANNED/READY/IN_PROGRESS/BLOCKED/REVIEW/DONE/DEFERRED/CANCELLED, priorities P0–P3). Next work is M1 Product Definition (TODO-004 Define Product Vision → TODO-008).
-- `docs/00-foundation/FND-009_Project_Glossary.md` (Active) is the controlled vocabulary (One Concept, One Name; e.g. Order ≠ Trade ≠ Position, Signal ≠ Trade). Use its terms, don't invent synonyms.
-- `docs/00-foundation/FND-002_Documentation_Standard.md` (Approved) governs doc structure: front-matter (title, document_id, version, status, category, owner, created, last_updated, depends_on, referenced_by); structure (Purpose, Scope, Audience, Background, Definitions, Main Content, Examples, References, Revision History). Docs are written in **Indonesian**.
-- `docs/00-foundation/FND-003_Document_ID_Standard.md` (Approved) governs document IDs: format `<PREFIX>-<NNN>` with prefixes FND/PRD/ARC/ENG/DEV/RSH/ADR/EXP/TMP/REF. Numbers are 3-digit, sequential per category, **immutable and never reused**. File names are `<PREFIX>-<NNN>_<PascalCase>.md`; the front-matter `document_id` is the identity, the filename may change. Cross-reference other docs by ID (e.g. "See FND-003").
-- `docs/00-foundation/FND-004_Document_Index.md` (Active) is the official registry of all doc IDs, paths, versions, and statuses. **Check it before creating a doc** (duplicate prevention); a doc not listed there is not official. Workflow: assign ID → create doc → update FND-004, and keep it synced on every version/status change (FND-004 §25). Known gap: FND-010 hasn't been added yet.
-- New docs go in the numbered category folders under `docs/`: `00-foundation` … `05-research`, plus `06-decisions` (ADRs), `07-experiments`, `08-templates`, `09-reference`. Per FND-004, ADRs go in `docs/06-decisions/`, not the legacy empty `docs/adr/`. (`docs/README.md` is stale: outdated naming example and `docs/adr/` layout.)
-- Major architectural decisions must be recorded as an ADR in `docs/06-decisions/` before implementation.
+## Commands (exact)
+- Run all tests: `.venv/bin/python -m pytest` (pyproject.toml sets `testpaths=["tests"]` and `pythonpath=["src"]`; pytest 9.1.1 installed in `.venv`).
+- Run one file: `.venv/bin/python -m pytest tests/test_out_of_sample.py`
+- Run a CLI module — **must** prepend `PYTHONPATH=src`; plain `python -m mre.core.*` raises `ModuleNotFoundError` because the package is not pip-installed (pyproject.toml has no `[project]` section):
+  - `PYTHONPATH=src .venv/bin/python -m mre.core.experiment_runner` — EXP-001 baseline (M5, done)
+  - `PYTHONPATH=src .venv/bin/python -m mre.core.sensitivity` — TODO-024 (done)
+  - `PYTHONPATH=src .venv/bin/python -m mre.core.out_of_sample` — TODO-025 (in progress)
+- **No linter/formatter is configured** (ruff/black are planned in DEV-002, not installed). Don't invent `ruff`/`black`/`mypy`/`flake8` commands.
 
-## Architecture (per docs/Market_Research_Engine_PRD_Sprint1.md)
-- Data flow: CSV → Data Loader → Validator → Domain Models → Detector Layer → Event Engine → Probability Engine → Trading Engine (future) → Reports.
-- Core principles: event-driven; pure functions (deterministic); reproducible experiments; config over hardcode (YAML); unit-test first; strategies as plugins.
-- Domain models: Candle, Swing, Trendline, IndicatorSeries, Event, Signal, Trade.
+## Architecture notes (not obvious from filenames)
+- Pipeline: `normalize_raw_csv` → `load_dataset` → indicators (`rsi`) → `EventEngine.detect` → `signal_engine.combine` → `simulate` → `calculate` → `render` (markdown). Orchestrated in `compute_report()` (`src/mre/core/experiment_runner.py:63`).
+- **Config is frozen dataclasses, not YAML** (`ExperimentConfig`, `EventEngineConfig`, `ExecutionConfig`, `StatisticsConfig`); parameters are hardcoded in `_exp001_signal_definition()` and CLI defaults. The docs' "config over hardcode (YAML)" is aspirational, not implemented.
+- Engines implemented: event, signal, simulation, statistics, reporting. ENG-004 Probability Engine has no doc or impl (statistics engine covers it). Detectors: swing, price_confirmation, rsi_trendline. Indicators: rsi, ema, atr.
+- Render (`reporting_engine.render`, `sensitivity.to_markdown`, `out_of_sample.to_markdown`) is pure string output; file writes happen only in `run_experiment()` and CLI `main()`s.
 
-## Coding standards (for when code is added)
-- Type hints; dataclasses when appropriate; pure functions; **no `print` in business logic** (use a logger with INFO/WARNING/ERROR levels); docstring for every public class/function.
-- Sprint 1 (implementation) excludes buy/sell entries, TP/SL, optimization, and ML.
+## Doc governance (when touching docs)
+- New/updated docs need an ID from the FND-004 registry; creating or versioning a doc means syncing FND-004. ADRs go in `docs/06-decisions/`. Major architectural decisions require an ADR before implementation.
+- Docs follow FND-002 front-matter/structure and are in **Indonesian**.
+- Changes land via short-lived `feat/mN-*` branches merged to `main` through PRs (see git history).
+
+## Coding standards (verified in the code)
+- Type hints everywhere; frozen dataclasses for config; docstring on every public function/class; pure deterministic functions — no time/random sources, no future-candle lookahead (reproducibility is a hard requirement, Article 7).
+- No `print` in business logic; `print` only in CLI `main()` entrypoints.
+- One test file per module with `test_*` names and synthetic deterministic fixtures; correctness > performance.
