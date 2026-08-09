@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.31
+version: 1.3.32
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -180,6 +180,7 @@ M1 Product Definition
 | TODO-032 | M1 Product Definition Review          |       P1 | DONE        |
 | TODO-033 | M2 Architecture Review                |       P1 | DONE        |
 | TODO-034 | M3 Research Review                    |       P1 | DONE        |
+| TODO-035 | Create EXP-002 (real venue cost)      |       P1 | IN PROGRESS |
 
 ---
 
@@ -1519,9 +1520,9 @@ Kemudian:
 
 ```text
 NEXT TASK
-Definisikan strategi/eksperimen berikutnya (mis. biaya eksekusi nyata venue
-XAUUSD atau transformasi strategi) dan pra-registrasikan sebagai EXP-002
-(RSH-001 §7.2)
+EXP-002 pre-registered (TODO-035): re-test edge terhadap biaya eksekusi
+venue nyata XAUUSD (spread + komisi + slippage retail ECN, ~1.0 bps/side)
+alih-alih grid sintetis 0.02%-0.05%/sisi. Berikutnya: TODO-036 run EXP-002.
 ```
 
 ---
@@ -1813,6 +1814,40 @@ Readiness: 95%
 
 ---
 
+# 78. TODO-035 — Create EXP-002 (Real Venue Cost)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+```text
+EXP-002
+RSI Trendline Breakout — Real Venue Execution Cost
+```
+
+## Objective
+
+Re-test hipotesis EXP-001 terhadap biaya eksekusi venue nyata
+(spread + komisi + slippage retail XAUUSD) alih-alih grid sintetis
+0.02%–0.05%/sisi (ARC-008 §14.4, FND-006 §17). Pre-registered
+(RSH-001 §7.2) sebelum run.
+
+## Deliverable
+
+- `docs/07-experiments/EXP-002_RSI_Trendline_Breakout_Real_Venue_Cost.md`
+  (status: Defined — pre-registration);
+- `configs/EXP-002.yaml` (config frozen, venue-derived costs).
+
+## Next
+
+```text
+TODO-036 Run EXP-002 (baseline on venue cost grid)
+```
+
+---
+
 # Appendix A — Quick TODO
 
 ```text
@@ -1915,6 +1950,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.31
+**Version:** 1.3.32
 
 **End of Document**

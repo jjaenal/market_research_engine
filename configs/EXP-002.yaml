@@ -1,0 +1,64 @@
+# EXP-002 frozen experiment configuration (RSH-002 §9, FR-012, ARC-011 pattern).
+#
+# EXP-002 re-tests the EXP-001 hypothesis (RSI trendline breakout, XAUUSD H1)
+# under REAL retail venue execution costs instead of the synthetic 2-5 bps/side
+# grid used in M7 (ARC-008 §14.1/§14.3).
+#
+# Venue cost model (pre-registered, EXP-002 §9.5): representative retail ECN
+# XAUUSD account, standard lot = 100 oz. Components per side:
+#   - spread (half round-trip):  ~$6 / lot
+#   - commission:                $3.50 / lot / side
+#   - slippage (typical):        ~$2 / lot / side
+# At representative gold ~$1,800/oz -> notional $180,000/lot:
+#   - total per side ~$11.50 / $180,000 = 0.64 bps
+# To remain conservative across the dataset's wide gold range ($700-$2,700),
+# EXP-002 freezes a central value of 1.0 bps/side total, split as
+# commission_rate 0.00003 (0.3 bps) + slippage_rate 0.00007 (0.7 bps).
+# A cost grid around this level is pre-registered in EXP-002 §11.2.
+experiment:
+  id: EXP-002
+  title: RSI Trendline Breakout — Real Venue Execution Cost
+  hypothesis: >-
+    Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1
+    menghasilkan expectancy positif setelah biaya eksekusi venue nyata
+    (spread + komisi + slippage retail ECN).
+  strategy_id: rsi_trendline_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H1
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: ""
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H1.csv
+  normalized_dataset: experiments/EXP-002/dataset/XAUUSD_H1_normalized.csv
+  report_path: experiments/EXP-002/EXP-002_report.md
