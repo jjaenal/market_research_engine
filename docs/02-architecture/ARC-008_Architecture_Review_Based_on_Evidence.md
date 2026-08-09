@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.6
+version: 1.0.8
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -421,6 +421,68 @@ Slang waktu ini juga menutup data gap "label regime/condition market"
 (§7): arsitektur kini memiliki slot `regime_config` + indicator regime,
 sehingga RQ regime dependency (FND-006 §17) dapat dijawab.
 
+## 14.2 Next Research Question — Risk Management (SL/TP)
+
+RQ-006 dijawab **TIDAK**: deduplikasi + regime selection tidak memulihkan
+edge pada biaya realistis (EXP-001 §19.6). Arah mitigasi biaya berikutnya
+yang dipilih: **risk management SL/TP**.
+
+```text
+NEXT RESEARCH QUESTION (RQ-007, pre-registered — RSH-001 §7.2)
+Apakah menambahkan stop-loss/take-profit berbasis ATR-multiple pada
+EXP-001 memulihkan expectancy positif pada biaya eksekusi realistis?
+```
+
+Pre-registration (per RSH-001 §7.2, dinyatakan sebelum experiment):
+
+- **Hipotesis:** SL/TP ATR-multiple (exit dini membatasi loss dan mengunci
+  profit) meningkatkan expectancy pada biaya realistis dibanding baseline
+  tanpa SL/TP.
+- **Independent variables:** `stop_loss_atr` (SL = entry ∓ N×ATR) dan
+  `take_profit_atr` (TP = entry ± N×ATR), N ∈ grid yang pre-defined;
+  biaya eksekusi per sisi (0–0.05%, RSH-003 §10).
+- **Control variables:** dataset, signal definition, deduplikasi (cooldown),
+  regime selection tetap seperti konfigurasi frozen.
+- **Metrik:** expectancy, win rate, PF pada tiap level biaya; dibanding
+  terhadap baseline tanpa SL/TP (control).
+- **Kriteria:** edge "bertahan" bila expectancy > 0 pada biaya realistis
+  (0.02%/0.05%) dengan n ≥ min_sample.
+
+Hasil dicatat di EXP-001 §19.7.
+
+## 14.3 Jawaban — RQ-007 (Risk Management SL/TP)
+
+Re-run dieksekusi lewat pipeline yang sama dengan `stop_loss_atr` /
+`take_profit_atr` (SL/TP dihitung dari ATR di entry bar, no lookahead;
+`src/mre/models/execution.py` + `src/mre/engines/simulation_engine.py`).
+
+Expectancy (n = 1403 signal, cooldown 0, tanpa regime filter):
+
+| SL/TP (ATR)    | 0.0      | 0.02%    | 0.05%    |
+| --------------- | -------- | -------- | -------- |
+| none (baseline) | 0.8683   | 0.1539   | −0.9176  |
+| SL 1.0          | 1.0165   | 0.3021   | −0.7696  |
+| SL 1.0 / TP 4.0 | 1.0534   | 0.3390   | −0.7326  |
+| SL 2.0 / TP 4.0 | 0.8974   | 0.1830   | −0.8886  |
+
+Breakeven cost (titik expectancy menyeberang nol):
+
+| Skenario        | Breakeven/sisi |
+| --------------- | -------------- |
+| all, no SL/TP   | 26 bps         |
+| all, SL 1.0/TP 4.0 | 30 bps      |
+| high, no SL/TP  | 36 bps         |
+| high, SL 1.0/TP 4.0 | 42 bps     |
+
+Kombinasi terkuat (cooldown 10, regime high, SL 1.0/TP 4.0) tetap
+negatif pada 0.05%/sisi (−0.51).
+
+**Jawaban: TIDAK.** SL/TP ATR-multiple **memperbaiki** tolerance biaya
+(breakeven naik ~4–6 bps/sisi dan expectancy pada 0.02% membaik),
+namun **tidak memulihkan edge** pada 0.05%/sisi — kriteria pre-registration
+(expectancy > 0 pada 0.05%) tidak terpenuhi di semua kombinasi. Konklusi
+baseline EXP-001 §19 diperkuat lagi.
+
 ---
 
 # 15. Approval
@@ -463,6 +525,8 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.8   | 2026-08-09 | RQ-007 answered (§14.3): SL/TP ATR-multiple raises breakeven cost but does not restore edge at 0.05%/side |
+| 1.0.7   | 2026-08-09 | RQ-007 pre-registered (§14.2): risk management SL/TP ATR-multiple |
 | 1.0.6   | 2026-08-09 | M7 re-run recorded (§14.1): cooldown + ATR regime + cost grid; RQ answered TIDAK; regime slot added (indicators/regime.py, regime_config) |
 | 1.0.5   | 2026-08-09 | ARC-ACT-011 marked DONE (configs/EXP-001.yaml + loader) |
 | 1.0.4   | 2026-08-09 | ARC-ACT-010 marked DONE (strategies/ package + registry) |
@@ -477,6 +541,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.6
+**Version:** 1.0.8
 
 **End of Document**

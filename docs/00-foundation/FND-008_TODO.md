@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.28
+version: 1.3.30
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1484,23 +1484,26 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (ARC-ACT-010..014 DONE; re-run cooldown + regime + biaya realistis — DONE, ARC-008 §14.1/EXP-001 §19.6)
+M7 — Iteration (RQ-007 dijawab TIDAK: SL/TP ATR-multiple menaikkan breakeven
+cost ~4-6 bps/sisi namun edge tetap tidak bertahan pada 0.05%/sisi —
+ARC-008 §14.3/EXP-001 §19.7)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: jawaban RQ dicatat — TIDAK; edge tidak bertahan
-pada biaya realistis bahkan dengan deduplikasi + regime selection)
+M7 — Iteration (mitigasi biaya tidak cukup: dedup + regime + SL/TP semua
+TIDAK memulihkan edge pada biaya realistis; arah: biaya nyata venue atau
+transformasi strategi)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-M7 — Iteration (konklusi: edge hanya bertahan pada biaya nol/near-zero;
-mitigasi biaya / transformasi strategi untuk RQ berikutnya)
+Definisikan RQ berikutnya (biaya eksekusi nyata venue XAUUSD atau
+transformasi strategi) untuk menutup iterasi M7 (FND-007 §38)
 ```
 
 ---
@@ -1894,6 +1897,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.28
+**Version:** 1.3.30
 
 **End of Document**

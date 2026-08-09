@@ -42,6 +42,9 @@ execution:
   hold_bars: 8
   stop_loss: null
   take_profit: null
+  stop_loss_atr: null
+  take_profit_atr: null
+  atr_period: 14
 
 statistics:
   min_sample: 50
@@ -104,6 +107,9 @@ def test_load_experiment_config_maps_all_sections(tmp_path: Path) -> None:
     assert cfg.execution_config.hold_bars == 8
     assert cfg.execution_config.stop_loss is None
     assert cfg.execution_config.take_profit is None
+    assert cfg.execution_config.stop_loss_atr is None
+    assert cfg.execution_config.take_profit_atr is None
+    assert cfg.execution_config.atr_period == 14
 
     assert cfg.statistics_config.min_sample == 50
     assert cfg.regime_config.atr_short_period == 7
