@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.1
+version: 1.0.2
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -295,6 +295,10 @@ Buat util bersama untuk "run frozen config pada rentang candle" dan
 pakai di OOS + robustness; hapus duplikasi `write_candle_csv` +
 `compute_report`.
 
+**Status: DONE** (`src/mre/core/segments.py` — `run_on_slice()`,
+`SegmentRun`, `ensure_normalized()`). OOS train/test dan robustness
+period slices kini berbagi satu implementasi slice→CSV→compute.
+
 ## ARC-ACT-014 — Unify Renderers & Config Builder
 
 Satu helper markdown tabel/heading bersama; `_exp001_config()` satu
@@ -382,6 +386,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.2   | 2026-08-09 | ARC-ACT-013 marked DONE (core/segments.py) |
 | 1.0.1   | 2026-08-09 | ARC-ACT-012 marked DONE (ENG-003 §8.1)     |
 | 1.0.0   | 2026-08-09 | Initial evidence-based architecture review (TODO-028) |
 
@@ -391,6 +396,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**

@@ -4,7 +4,7 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 
 ## Current state (trust git history + FND-008 §7 TODO table; FND-006 prose lags)
 - **Code and tests exist.** Package is `src/mre/` (`core`, `detectors`, `engines`, `indicators`, `loaders`, `models`, `utils`). There is **no `strategies/` package yet** — the one strategy is `_exp001_signal_definition()` in `src/mre/core/experiment_runner.py` (flagged as a gap in ARC-008 §6.1).
-- Next work is **ARC-ACT-013 Unify Segment Runner** (M7 iteration). ARC-ACT-012 (Signal Deduplication — `SignalRule.cooldown` in `src/mre/models/signal_rule.py`, implemented in `combine()` at `src/mre/engines/signal_engine.py`, ENG-003 §8.1) is DONE. TODO-025..028 and the M7 architecture review (ARC-008 — **CORE HOLDS, PERIPHERY DRIFTS**) are complete; M6 validation done.
+- Next work is **ARC-ACT-014 Unify Renderers & Config Builder** (M7 iteration). ARC-ACT-012 (Signal Deduplication — `SignalRule.cooldown` in `src/mre/models/signal_rule.py`, implemented in `combine()` at `src/mre/engines/signal_engine.py`, ENG-003 §8.1) and ARC-ACT-013 (Unify Segment Runner — `src/mre/core/segments.py`: `run_on_slice()`, `SegmentRun`, `ensure_normalized()`, shared by OOS + robustness) are DONE. TODO-025..028 and the M7 architecture review (ARC-008 — **CORE HOLDS, PERIPHERY DRIFTS**) are complete; M6 validation done.
 - Foundation docs are **locked** (FND-010, approved). Docs are written in **Indonesian**; use FND-009 glossary terms (Event ≠ Signal ≠ Trade).
 - **Docs drift is a known risk (R-005):** FND-006's status snapshot still says "M1 / Not Started" while its milestone table and FND-008 §7 say M6. When they conflict, trust git history and the FND-008 master TODO table.
 - `datasets/`, `experiments/`, `reports/` are **gitignored but populated locally** (XAUUSD_H1.csv ~100k rows; EXP-001 report/sensitivity under `experiments/EXP-001/`). Never commit them. Tests use synthetic sine CSVs, never real data.
@@ -24,7 +24,7 @@ Market Research Engine (MRE): a documentation-driven, event-driven framework for
 - **Config is frozen dataclasses, not YAML** (`ExperimentConfig`, `EventEngineConfig`, `ExecutionConfig`, `StatisticsConfig`); parameters are hardcoded in `_exp001_signal_definition()` and CLI defaults. The docs' "config over hardcode (YAML)" is aspirational, not implemented.
 - Engines implemented: event, signal, simulation, statistics, reporting. ENG-004 Probability Engine has no doc or impl (statistics engine covers it). Detectors: swing, price_confirmation, rsi_trendline. Indicators: rsi, ema, atr.
 - Render (`reporting_engine.render`, `sensitivity.to_markdown`, `out_of_sample.to_markdown`, `robustness.to_markdown`) is pure string output; file writes happen only in `run_experiment()` and CLI `main()`s.
-- `mre/utils/candle_csv.py` (`write_candle_csv`) is the shared writer for compliant segment CSVs used by OOS train/test and robustness period splits — reuse it instead of hand-writing CSVs.
+- `mre/core/segments.py` (`run_on_slice`, `SegmentRun`, `ensure_normalized`) is the shared segment runner — OOS train/test and robustness period splits both go through it. It uses `mre/utils/candle_csv.py` (`write_candle_csv`) as the compliant segment CSV writer — reuse `run_on_slice`/`write_candle_csv` instead of hand-writing segment CSVs.
 
 ## Doc governance (when touching docs)
 - New/updated docs need an ID from the FND-004 registry; creating or versioning a doc means syncing FND-004. ADRs go in `docs/06-decisions/`. Major architectural decisions require an ADR before implementation.
