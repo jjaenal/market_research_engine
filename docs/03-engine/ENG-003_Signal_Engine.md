@@ -1,12 +1,12 @@
 ---
 title: Signal Engine
 document_id: ENG-003
-version: 1.1.0
+version: 1.2.0
 status: Draft
 category: Engine
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-09
 
 depends_on:
   - FND-001
@@ -146,13 +146,15 @@ LONG
 | `window`           | int               | max jarak reference (candle)     |
 | `source_strategy`  | string            | plugin strategy asal             |
 | `trigger_payload`  | dict              | filter payload trigger (opsional)|
+| `cooldown`         | int               | dedup gap (candle), 0 = off      |
 
 Konstraint:
 
 - `window >= 1`;
 - `confirmations` tidak kosong dan tidak duplikat (anti-ambigu);
 - kunci `trigger_payload` harus string dengan operator dikenali:
-  `eq`, `neq`, `lt`, `le`, `gt`, `ge` (sufiks `__<op>`), default `eq`.
+  `eq`, `neq`, `lt`, `le`, `gt`, `ge` (sufiks `__<op>`), default `eq`;
+- `cooldown >= 0`.
 
 Filter payload memungkinkan pemilihan arah break di Signal Engine
 (bukan di detector), konsisten dengan ENG-002 §8 — integrasi hanya
@@ -182,6 +184,26 @@ Per rule:
 5. bila trigger tidak memenuhi → tanpa Signal (NO SIGNAL).
 
 Determinisme (Article 7): konfirmasi terawal dipilih.
+
+### 8.1 Deduplication (cooldown)
+
+Per ARC-008 ARC-ACT-012 (signal overlap, EXP-001 §15.3):
+
+- `cooldown = 0` (default): perilaku legacy — tiap trigger valid
+  menghasilkan Signal;
+- `cooldown > 0`: setelah Signal di-emit pada reference R (reference
+  konfirmasi), trigger berikutnya yang akan menghasilkan Signal dengan
+  reference < `R + cooldown` **disuppress** — satu keputusan per episode,
+  bukan satu per trigger.
+
+Semantik dedup diukur pada reference Signal (candle konfirmasi), bukan
+reference trigger, sehingga trigger berdekatan yang memakai konfirmasi
+yang sama digabung menjadi satu Signal (trade count merepresentasikan
+keputusan unik, ARC-008 §9).
+
+Dedup bersifat **per-rule**: tiap `SignalRule` melacak reference Signal
+terakhir yang di-emit secara independen; aturan berbeda tidak saling
+menekan.
 
 ---
 
@@ -217,8 +239,8 @@ arah bawah; belum ada detector-nya pada MVP (PRD-006 §8).
 # 11. Testing (DEV-002)
 
 - unit test Signal model (fields, immutable);
-- unit test SignalRule (validasi);
-- unit test combine (window, determinism, failure conditions).
+- unit test SignalRule (validasi, termasuk cooldown);
+- unit test combine (window, determinism, failure conditions, dedup cooldown).
 
 ---
 
@@ -228,6 +250,7 @@ arah bawah; belum ada detector-nya pada MVP (PRD-006 §8).
 | ------------- | ------------------------- |
 | Signal model  | ARC-002 §7.6, Article 4, 5 |
 | combine       | ARC-006 §7.4, FEAT-005, FR-005 |
+| Dedup cooldown | ARC-008 ARC-ACT-012, EXP-001 §15.3 |
 | Failure       | PRD-003 §7.5              |
 
 ---
@@ -265,6 +288,7 @@ arah bawah; belum ada detector-nya pada MVP (PRD-006 §8).
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.2.0   | 2026-08-09 | Add SignalRule cooldown dedup (ARC-008 ARC-ACT-012) |
 | 1.1.0   | 2026-08-08 | Add SignalRule trigger_payload filter (direction selection in Signal Engine) |
 | 1.0.0   | 2026-08-08 | Initial signal engine spec       |
 
@@ -274,6 +298,6 @@ arah bawah; belum ada detector-nya pada MVP (PRD-006 §8).
 
 **Document ID:** ENG-003
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

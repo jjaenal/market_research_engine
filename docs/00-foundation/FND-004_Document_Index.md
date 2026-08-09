@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.38
+version: 1.1.39
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -134,7 +134,7 @@ docs/02-architecture/
 | ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | 1.1.0   | Approved |
 | ARC-006 | Module Architecture | `docs/02-architecture/ARC-006_Module_Architecture.md` | 1.1.0   | Approved |
 | ARC-007 | Architecture Review | `docs/02-architecture/ARC-007_Architecture_Review.md` | 1.1.0   | Approved |
-| ARC-008 | Architecture Review Based on Evidence | `docs/02-architecture/ARC-008_Architecture_Review_Based_on_Evidence.md` | 1.0.0 | Result |
+| ARC-008 | Architecture Review Based on Evidence | `docs/02-architecture/ARC-008_Architecture_Review_Based_on_Evidence.md` | 1.0.1 | Result |
 
 ---
 
@@ -150,7 +150,7 @@ docs/03-engine/
 | ------- | ------------------ | ---------------------------------------------- | ------- | ------- |
 | ENG-001 | Data Engine        | `docs/03-engine/ENG-001_Data_Engine.md`        | 1.0.0   | Draft |
 | ENG-002 | Event Engine       | `docs/03-engine/ENG-002_Event_Engine.md`       | 1.0.0   | Draft |
-| ENG-003 | Signal Engine      | `docs/03-engine/ENG-003_Signal_Engine.md`      | 1.1.0   | Draft |
+| ENG-003 | Signal Engine      | `docs/03-engine/ENG-003_Signal_Engine.md`      | 1.2.0   | Draft |
 | ENG-004 | Probability Engine | `docs/03-engine/ENG-004_Probability_Engine.md` | —       | Planned |
 | ENG-005 | Simulation Engine  | `docs/03-engine/ENG-005_Simulation_Engine.md`  | 1.0.0   | Draft |
 | ENG-006 | Statistics Engine  | `docs/03-engine/ENG-006_Statistics_Engine.md`  | 1.0.0   | Draft |
@@ -801,6 +801,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.38
+**Version:** 1.1.39
 
 **End of Document**

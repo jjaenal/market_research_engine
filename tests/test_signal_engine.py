@@ -164,3 +164,94 @@ def test_combine_trigger_filter_excludes_without_confirm() -> None:
     bullish = _ev_slope(RSI_TRENDLINE_BROKEN, 10, slope=-1.0)
     confirm = _ev(PRICE_CONFIRMATION, 12)
     assert combine([bullish, confirm], [rule]) == ()
+
+
+def _long_rule_with_cooldown(cooldown: int, window: int = 5) -> SignalRule:
+    return SignalRule(
+        signal_type="LONG",
+        trigger=RSI_TRENDLINE_BROKEN,
+        confirmations=(PRICE_CONFIRMATION,),
+        window=window,
+        source_strategy="rsi_trendline_breakout",
+        cooldown=cooldown,
+    )
+
+
+def test_combine_cooldown_collapses_overlapping_triggers() -> None:
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(RSI_TRENDLINE_BROKEN, 11),
+        _ev(RSI_TRENDLINE_BROKEN, 12),
+        _ev(PRICE_CONFIRMATION, 13),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=1)])
+    assert len(signals) == 1
+    assert signals[0].timestamp == _ts(13)
+
+
+def test_combine_cooldown_zero_keeps_legacy_behavior() -> None:
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(RSI_TRENDLINE_BROKEN, 11),
+        _ev(RSI_TRENDLINE_BROKEN, 12),
+        _ev(PRICE_CONFIRMATION, 13),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=0)])
+    assert len(signals) == 3
+    assert [s.timestamp for s in signals] == [_ts(13), _ts(13), _ts(13)]
+
+
+def test_combine_cooldown_allows_signals_at_exact_spacing() -> None:
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(PRICE_CONFIRMATION, 12),
+        _ev(RSI_TRENDLINE_BROKEN, 15),
+        _ev(PRICE_CONFIRMATION, 17),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=5)])
+    assert len(signals) == 2
+    assert [s.timestamp for s in signals] == [_ts(12), _ts(17)]
+
+
+def test_combine_cooldown_suppresses_inside_gap() -> None:
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(PRICE_CONFIRMATION, 12),
+        _ev(RSI_TRENDLINE_BROKEN, 15),
+        _ev(PRICE_CONFIRMATION, 17),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=6)])
+    assert len(signals) == 1
+    assert signals[0].timestamp == _ts(12)
+
+
+def test_combine_cooldown_tracks_last_emitted_reference() -> None:
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(PRICE_CONFIRMATION, 12),
+        _ev(RSI_TRENDLINE_BROKEN, 12),
+        _ev(PRICE_CONFIRMATION, 14),
+        _ev(RSI_TRENDLINE_BROKEN, 18),
+        _ev(PRICE_CONFIRMATION, 20),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=3)])
+    assert [s.timestamp for s in signals] == [_ts(12), _ts(20)]
+
+
+def test_combine_cooldown_is_per_rule() -> None:
+    rule_a = _long_rule_with_cooldown(cooldown=1)
+    rule_b = SignalRule(
+        signal_type="SHORT",
+        trigger="SWING_LOW",
+        confirmations=(PRICE_CONFIRMATION,),
+        window=5,
+        cooldown=1,
+    )
+    events = [
+        _ev(RSI_TRENDLINE_BROKEN, 10),
+        _ev(RSI_TRENDLINE_BROKEN, 11),
+        _ev("SWING_LOW", 12),
+        _ev(PRICE_CONFIRMATION, 13),
+    ]
+    signals = combine(events, [rule_a, rule_b])
+    assert [s.signal_type for s in signals] == ["LONG", "SHORT"]

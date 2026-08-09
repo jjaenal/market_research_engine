@@ -346,7 +346,10 @@ Observasi:
   berdekatan memakai konfirmasi yang sama) — artefak semantik `combine()`
   (ENG-003 §8), bukan keputusan strategy. Didokumentasikan untuk iterasi
   (kemungkinan deduplikasi Signal pada M6/M7), bukan dioptimasi sebelum
-  baseline tercatat (FND-008 §36).
+  baseline tercatat (FND-008 §36). Semantik deduplication kini didefinisikan
+  (SignalRule.cooldown, ENG-003 §8.1, ARC-008 ARC-ACT-012) dan siap
+  dievaluasi pada iterasi berikutnya; baseline di atas tetap frozen
+  (cooldown 0).
 
 Code Version (git commit) tercatat di report (`9564eee`).
 Run direproduksi deterministik: dua run (130f3f8-dirty, 9564eee)

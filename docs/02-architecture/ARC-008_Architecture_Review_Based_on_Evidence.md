@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.0
+version: 1.0.1
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -285,6 +285,10 @@ Article 12 / FR-012); CLI membaca berkas dan menghasilkan
 Tambah opsi cooldown/deduplikasi pada `SignalRule` dan `combine()` untuk
 mengatasi signal overlap (EXP-001 §15.3); re-run EXP-001 setelahnya.
 
+**Status: DONE** (SignalRule.cooldown, ENG-003 §8.1). Re-run EXP-001
+dengan cooldown > 0 didelegasikan ke iterasi berikutnya; baseline tetap
+frozen (cooldown 0).
+
 ## ARC-ACT-013 — Unify Segment Runner
 
 Buat util bersama untuk "run frozen config pada rentang candle" dan
@@ -378,6 +382,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.1   | 2026-08-09 | ARC-ACT-012 marked DONE (ENG-003 §8.1)     |
 | 1.0.0   | 2026-08-09 | Initial evidence-based architecture review (TODO-028) |
 
 ---
@@ -386,6 +391,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**
