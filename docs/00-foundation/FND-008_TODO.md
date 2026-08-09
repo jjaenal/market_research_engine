@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.30
+version: 1.3.31
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -989,6 +989,22 @@ strategy yang profitable.
 
 # 42. M7 — Iteration
 
+**Status:** DONE
+
+Iteration ditutup. Kedua research question dijawab TIDAK:
+
+```text
+RQ-006 (dedup + regime selection): TIDAK — edge tidak bertahan pada biaya realistis (ARC-008 §14.1)
+RQ-007 (risk management SL/TP):     TIDAK — SL/TP ATR-multiple menaikkan breakeven namun tidak memulihkan edge (ARC-008 §14.3)
+
+Verdict akhir: hipotesis EXP-001 DITOLAK sebagai strategi yang dapat
+diperdagangkan pada biaya realistis; edge hanya bertahan pada biaya
+nol/near-zero (EXP-001 §19.8, ARC-008 §14.4).
+
+Tindak lanjut: project kembali ke Research/Experiment untuk mendefinisikan
+strategi berikutnya (FND-007 §38). Exit criterion FND-007 §38 terpenuhi.
+```
+
 ---
 
 # 43. TODO-028 — Architecture Review Based on Evidence
@@ -1484,26 +1500,28 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (RQ-007 dijawab TIDAK: SL/TP ATR-multiple menaikkan breakeven
-cost ~4-6 bps/sisi namun edge tetap tidak bertahan pada 0.05%/sisi —
-ARC-008 §14.3/EXP-001 §19.7)
+M7 — Iteration CLOSED. Seluruh research question dijawab TIDAK dan verdict
+akhir tercatat: hipotesis EXP-001 DITOLAK sebagai strategi yang dapat
+diperdagangkan pada biaya realistis (edge hanya bertahan pada biaya
+nol/near-zero — ARC-008 §14.4, EXP-001 §19.8)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (mitigasi biaya tidak cukup: dedup + regime + SL/TP semua
-TIDAK memulihkan edge pada biaya realistis; arah: biaya nyata venue atau
-transformasi strategi)
+Project kembali ke Research/Experiment (FND-007 §38) untuk mendefinisikan
+strategi berikutnya (EXP-002 atau seterusnya) dengan evidence input dari
+temuan M7
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-Definisikan RQ berikutnya (biaya eksekusi nyata venue XAUUSD atau
-transformasi strategi) untuk menutup iterasi M7 (FND-007 §38)
+Definisikan strategi/eksperimen berikutnya (mis. biaya eksekusi nyata venue
+XAUUSD atau transformasi strategi) dan pra-registrasikan sebagai EXP-002
+(RSH-001 §7.2)
 ```
 
 ---
@@ -1897,6 +1915,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.30
+**Version:** 1.3.31
 
 **End of Document**

@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.6
+version: 1.0.7
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -680,6 +680,34 @@ Breakeven cost (titik expectancy menyeberang nol):
 - Mekanisme SL/TP ATR-multiple kini tersedia di arsitektur untuk
   eksperimen/strategi lain.
 
+## 19.8 M7 Iteration Conclusion (Closure)
+
+Iterasi M7 ditutup dengan verdict akhir terhadap keseluruhan hipotesis
+(FND-007 §37 — "No Edge → Reject Hypothesis" adalah successful research
+outcome):
+
+```text
+VERDICT AKHIR M7
+Hipotesis EXP-001 (expectancy positif setelah biaya eksekusi realistis)
+DITOLAK sebagai strategi yang dapat diperdagangkan.
+
+Edge RSI trendline breakout hanya bertahan pada biaya nol/near-zero.
+
+Mitigasi yang telah diuji pada iterasi M7 — SEMUA TIDAK memulihkan
+edge pada >= 0.05%/sisi:
+  1. deduplikasi signal (cooldown)        -> RQ-006 TIDAK (§19.6)
+  2. regime selection (ATR high/low)      -> RQ-006 TIDAK (§19.6)
+  3. risk management (SL/TP ATR-multiple) -> RQ-007 TIDAK (§19.7)
+
+Kombinasi terkuat (cooldown 10 + regime high + SL 1.0/TP 4.0):
+expectancy 1.2469 @0 / 0.5290 @0.02% / −0.5479 @0.05% — tetap negatif
+pada biaya realistis.
+
+Tindak lanjut: project kembali ke Research/Experiment untuk
+mendefinisikan strategi berikutnya (EXP-002 atau seterusnya), dengan
+menjadikan temuan ini sebagai evidence input (ARC-008 §14.4).
+```
+
 ---
 
 # 20. Traceability
@@ -741,6 +769,7 @@ Breakeven cost (titik expectancy menyeberang nol):
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.7   | 2026-08-09 | M7 iteration closed (§19.8): verdict akhir — hipotesis DITOLAK pada biaya realistis; edge hanya bertahan di biaya nol/near-zero; project kembali ke Research/Experiment |
 | 1.0.6   | 2026-08-09 | M7 re-run RQ-007 dicatat (§19.7): SL/TP ATR-multiple + biaya realistis; breakeven naik namun edge tetap tidak bertahan |
 | 1.0.5   | 2026-08-09 | M7 re-run dicatat (§19.6): deduplikasi (cooldown) + ATR regime selection + biaya realistis; verdict diperkuat |
 | 1.0.4   | 2026-08-09 | Research conclusion (TODO-027) dicatat (§19) |
@@ -755,6 +784,6 @@ Breakeven cost (titik expectancy menyeberang nol):
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.6
+**Version:** 1.0.7
 
 **End of Document**
