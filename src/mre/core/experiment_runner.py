@@ -17,11 +17,14 @@ from mre.engines.signal_engine import combine
 from mre.engines.simulation_engine import simulate
 from mre.engines.statistics_engine import calculate
 from mre.indicators.rsi import rsi
+from mre.indicators.regime import volatility_regime
 from mre.loaders.csv_loader import load_dataset
 from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
+from mre.models.candle import Candle
 from mre.models.dataset import DataConfig
 from mre.models.execution import ExecutionConfig
 from mre.models.report import Report, ReportConfig, ReportInput
+from mre.models.signal import Signal
 from mre.models.signal_rule import SignalRule
 from mre.models.statistics import StatisticsConfig
 from mre.strategies import get as get_strategy
@@ -32,6 +35,28 @@ class IndicatorConfig:
     """Indicator parameters (EXP-001 §9.1)."""
 
     rsi_period: int = 14
+
+
+@dataclass(frozen=True)
+class RegimeConfig:
+    """Market volatility regime selection (ARC-008 §14, FND-006 §17 RQ).
+
+    Empty ``selected_regime`` means no regime filter is applied.
+    Otherwise only signals whose candle is labeled with the selected
+    volatility regime ("high" or "low") are traded.
+    """
+
+    atr_short_period: int = 14
+    atr_long_period: int = 100
+    selected_regime: str = ""
+
+    def __post_init__(self) -> None:
+        if self.selected_regime not in ("", "high", "low"):
+            raise ValueError(f"selected_regime must be one of '', 'high', 'low'; got {self.selected_regime!r}")
+        if self.atr_short_period < 1 or self.atr_long_period < 1:
+            raise ValueError("atr periods must be >= 1")
+        if self.atr_long_period < self.atr_short_period:
+            raise ValueError("atr_long_period must be >= atr_short_period")
 
 
 @dataclass(frozen=True)
@@ -49,9 +74,11 @@ class ExperimentConfig:
     report_path: Path = Path("experiments/EXP-001/EXP-001_report.md")
     data_config: DataConfig = field(default_factory=lambda: DataConfig(symbol="XAUUSD", timeframe="H1"))
     indicator_config: IndicatorConfig = field(default_factory=IndicatorConfig)
+    regime_config: RegimeConfig = field(default_factory=RegimeConfig)
     event_config: EventEngineConfig = field(default_factory=EventEngineConfig)
     strategy_id: str = ""
     signal_definition: tuple[SignalRule, ...] = ()
+    signal_cooldown: int = 0
     execution_config: ExecutionConfig = field(default_factory=ExecutionConfig)
     statistics_config: StatisticsConfig = field(default_factory=StatisticsConfig)
     conclusion: str = ""
@@ -59,10 +86,38 @@ class ExperimentConfig:
     def __post_init__(self) -> None:
         if not self.experiment_id:
             raise ValueError("experiment_id must not be empty")
+        if self.signal_cooldown < 0:
+            raise ValueError("signal_cooldown must be >= 0")
         if self.strategy_id and not self.signal_definition:
             object.__setattr__(self, "signal_definition", get_strategy(self.strategy_id))
         if not self.signal_definition:
             raise ValueError("signal_definition must not be empty")
+        if self.signal_cooldown:
+            object.__setattr__(
+                self,
+                "signal_definition",
+                tuple(replace(rule, cooldown=self.signal_cooldown) for rule in self.signal_definition),
+            )
+
+
+def select_regime(
+    signals: tuple[Signal, ...],
+    candles: tuple[Candle, ...],
+    regime_config: RegimeConfig,
+) -> tuple[Signal, ...]:
+    """Filter signals to those confirmed inside the selected volatility regime.
+
+    A signal's regime is the label of the candle at its confirmation
+    timestamp (no lookahead: the label uses only candles up to that bar).
+    With ``selected_regime == ""`` all signals pass through unchanged.
+    """
+    if not regime_config.selected_regime:
+        return signals
+    labels = volatility_regime(
+        candles, regime_config.atr_short_period, regime_config.atr_long_period
+    )
+    by_ts = {c.timestamp: label for c, label in zip(candles, labels)}
+    return tuple(s for s in signals if by_ts.get(s.timestamp) == regime_config.selected_regime)
 
 
 def compute_report(config: ExperimentConfig, dataset_path: Path | None = None) -> Report:
@@ -86,6 +141,7 @@ def compute_report(config: ExperimentConfig, dataset_path: Path | None = None) -
 
     events = EventEngine(config.event_config).detect(dataset, {"rsi": rsi_values})
     signals = combine(events, config.signal_definition)
+    signals = select_regime(signals, dataset.candles, config.regime_config)
     trades = simulate(signals, dataset.candles, config.execution_config)
     statistics = calculate(trades, config.statistics_config)
 
@@ -144,12 +200,17 @@ def _strategy_summary(config: ExperimentConfig) -> dict[str, Any]:
     """Flatten the resolved strategy into the report's Configuration table."""
     rule = config.signal_definition[0]
     payload = " ".join(f"{key} {value}" for key, value in (rule.trigger_payload or {}).items())
+    regime = config.regime_config
     return {
         "rsi_period": config.indicator_config.rsi_period,
         "swing_left": config.event_config.swing_left,
         "swing_right": config.event_config.swing_right,
         "price_lookback": config.event_config.price_lookback,
         "signal_window": rule.window,
+        "signal_cooldown": config.signal_cooldown,
+        "regime": regime.selected_regime or "none",
+        "regime_atr_short": regime.atr_short_period,
+        "regime_atr_long": regime.atr_long_period,
         "hold_bars": config.execution_config.hold_bars,
         "trigger_payload": f"{rule.trigger} {payload}".strip(),
     }
@@ -191,6 +252,13 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
     indicator = _section(raw, "indicator")
     indicator_config = IndicatorConfig(rsi_period=int(indicator.get("rsi_period", 14)))
 
+    regime_section = raw.get("regime", {})
+    regime_config = RegimeConfig(
+        atr_short_period=int(regime_section.get("atr_short_period", 14)),
+        atr_long_period=int(regime_section.get("atr_long_period", 100)),
+        selected_regime=str(regime_section.get("selected_regime", "")),
+    )
+
     event = _section(raw, "event")
     event_config = EventEngineConfig(
         swing_left=int(event.get("swing_left", 2)),
@@ -223,8 +291,10 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
         report_path=Path(paths.get("report_path", "experiments/EXP-001/EXP-001_report.md")),
         data_config=data_config,
         indicator_config=indicator_config,
+        regime_config=regime_config,
         event_config=event_config,
         strategy_id=strategy_id,
+        signal_cooldown=int(raw.get("signal", {}).get("cooldown", 0)),
         execution_config=execution_config,
         statistics_config=statistics_config,
     )

@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.4
+version: 1.0.5
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -587,6 +587,51 @@ Kesimpulan diturunkan dari evidence (§15–§18), bukan rekomendasi
 - Rekomendasi strategi/trading bukan bagian dari kesimpulan ini
   (RSH-001 §13).
 
+## 19.6 M7 Iteration Re-run — Deduplikasi + Regime Selection + Biaya Realistis
+
+Ditambahkan pada iterasi M7 (ARC-008 §14.1): re-run EXP-001 dengan
+deduplikasi signal (cooldown) dan regime selection (ATR volatility),
+pada biaya eksekusi realistis. Metodologi: pipeline yang sama
+(`compute_report()`, deterministik, FR-010); cooldown via
+`SignalRule.cooldown` (ENG-003 §8.1); regime via
+`src/mre/indicators/regime.py` (label high/low dari ATR 14 vs ATR 100);
+cost grid dari RSH-003 §10.
+
+Expectancy per skenario (n = jumlah signal setelah filter):
+
+| Skenario          | n   | 0.0      | 0.02%    | 0.05%    |
+| ----------------- | --- | -------- | -------- | -------- |
+| cooldown 0, all   | 1403| 0.8683   | 0.1539   | −0.9176  |
+| cooldown 0, high  | 698 | 1.2506   | 0.5269   | −0.5587  |
+| cooldown 0, low   | 704 | 0.5068   | −0.1988  | −1.2571  |
+| cooldown 10, all  | 1095| 0.8781   | 0.1679   | −0.8974  |
+| cooldown 10, high | 532 | 1.2276   | 0.5097   | −0.5672  |
+| cooldown 10, low  | 562 | 0.5692   | −0.1343  | −1.1894  |
+| cooldown 20, all  | 992 | 0.7203   | 0.0115   | −1.0516  |
+| cooldown 20, high | 480 | 0.8262   | 0.1158   | −0.9498  |
+| cooldown 20, low  | 511 | 0.6447   | −0.0631  | −1.1249  |
+
+### 19.6.1 Temuan
+
+- **Deduplikasi bekerja**: cooldown 10/20 mengurangi trade count
+  (1403 → 1095/992; signal overlap §15.3) dan sedikit mengubah
+  expectancy biaya-nol, namun **tidak memulihkan edge**.
+- **Regime "high" adalah yang paling tahan biaya**: expectancy terbaik
+  di tiap tingkat cost, konsisten untuk cooldown 0/10/20.
+- **Biaya 0.05%/sisi menghilangkan edge di semua kombinasi**: regime
+  high terbaik sekalipun negatif (−0.56 s/d −0.95).
+- **Verdict re-run**: hipotesis tetap **TIDAK terdukung** pada biaya
+  realistis (≤ 0.05%/sisi), bahkan setelah deduplikasi + regime
+  selection. Konklusi baseline (§19.1) diperkuat, bukan diubah.
+
+### 19.6.2 Implikasi untuk Iterasi Berikutnya
+
+- Mitigasi biaya (venue/eksekusi nyata) atau transformasi strategi
+  diperlukan sebelum klaim "positif setelah biaya transaksi" — lihat
+  ARC-008 §14.1.
+- Slot regime kini tersedia di arsitektur (`regime_config`,
+  `indicators/regime.py`), menutup data gap ARC-008 §7.
+
 ---
 
 # 20. Traceability
@@ -648,6 +693,7 @@ Kesimpulan diturunkan dari evidence (§15–§18), bukan rekomendasi
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.5   | 2026-08-09 | M7 re-run dicatat (§19.6): deduplikasi (cooldown) + ATR regime selection + biaya realistis; verdict diperkuat |
 | 1.0.4   | 2026-08-09 | Research conclusion (TODO-027) dicatat (§19) |
 | 1.0.3   | 2026-08-09 | OOS (TODO-025) dan robustness (TODO-026) dicatat (§17, §18) |
 | 1.0.2   | 2026-08-08 | Sensitivity analysis (TODO-024) dicatat (§16) |
@@ -660,6 +706,6 @@ Kesimpulan diturunkan dari evidence (§15–§18), bukan rekomendasi
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.4
+**Version:** 1.0.5
 
 **End of Document**

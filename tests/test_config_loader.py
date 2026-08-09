@@ -46,6 +46,14 @@ execution:
 statistics:
   min_sample: 50
 
+regime:
+  atr_short_period: 7
+  atr_long_period: 60
+  selected_regime: high
+
+signal:
+  cooldown: 5
+
 paths:
   raw_dataset: datasets/XAUUSD_H1.csv
   normalized_dataset: experiments/EXP-001/dataset/XAUUSD_H1_normalized.csv
@@ -73,7 +81,12 @@ def test_load_experiment_config_maps_all_sections(tmp_path: Path) -> None:
     assert cfg.title == "T"
     assert cfg.hypothesis == "H"
     assert cfg.strategy_id == EXP001_STRATEGY_ID
-    assert cfg.signal_definition == get_strategy(EXP001_STRATEGY_ID)
+    assert cfg.signal_definition != get_strategy(EXP001_STRATEGY_ID)
+    assert len(cfg.signal_definition) == len(get_strategy(EXP001_STRATEGY_ID))
+    for rule, base in zip(cfg.signal_definition, get_strategy(EXP001_STRATEGY_ID)):
+        assert rule.cooldown == 5
+        assert rule.signal_type == base.signal_type
+        assert rule.trigger == base.trigger
 
     assert cfg.data_config.symbol == "XAUUSD"
     assert cfg.data_config.timeframe == "H1"
@@ -93,6 +106,11 @@ def test_load_experiment_config_maps_all_sections(tmp_path: Path) -> None:
     assert cfg.execution_config.take_profit is None
 
     assert cfg.statistics_config.min_sample == 50
+    assert cfg.regime_config.atr_short_period == 7
+    assert cfg.regime_config.atr_long_period == 60
+    assert cfg.regime_config.selected_regime == "high"
+    assert cfg.signal_cooldown == 5
+    assert all(rule.cooldown == 5 for rule in cfg.signal_definition)
     assert cfg.raw_dataset == Path("datasets/XAUUSD_H1.csv")
     assert cfg.normalized_dataset == Path("experiments/EXP-001/dataset/XAUUSD_H1_normalized.csv")
     assert cfg.report_path == Path("experiments/EXP-001/EXP-001_report.md")
@@ -107,6 +125,10 @@ def test_load_experiment_config_derives_strategy_summary(tmp_path: Path) -> None
     assert cfg.strategy["swing_right"] == 3
     assert cfg.strategy["price_lookback"] == 12
     assert cfg.strategy["signal_window"] == 5
+    assert cfg.strategy["signal_cooldown"] == 5
+    assert cfg.strategy["regime"] == "high"
+    assert cfg.strategy["regime_atr_short"] == 7
+    assert cfg.strategy["regime_atr_long"] == 60
     assert cfg.strategy["hold_bars"] == 8
     assert cfg.strategy["trigger_payload"] == "RSI_TRENDLINE_BROKEN slope__lt 0.0"
 

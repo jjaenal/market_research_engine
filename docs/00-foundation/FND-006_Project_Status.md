@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.28
+version: 1.3.29
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -520,8 +520,8 @@ Robustness (periode 3/4 positif; market tipis; gagal pada biaya realistis)
 Conclusion (PARTIALLY SUPPORTED — edge hanya pada biaya nol/near-zero)
     ↓ (TODO-028 Review Architecture Based on Evidence — ARC-008)
 Architecture Review (CORE HOLDS, PERIPHERY DRIFTS — ARC-ACT-010..014)
-    ↓ (next: re-run EXP-001 dengan cooldown + biaya realistis + regime selection)
-Iteration
+    ↓ (M7 re-run: cooldown + regime selection + biaya realistis — ARC-008 §14.1, EXP-001 §19.6)
+Iteration (RQ dijawab TIDAK — edge tidak bertahan pada biaya realistis)
 ```
 
 Expected research questions:
@@ -1448,6 +1448,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.28
+**Version:** 1.3.29
 
 **End of Document**
