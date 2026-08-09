@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.22
+version: 1.3.23
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -518,7 +518,9 @@ Out-of-Sample (70/30; edge positif dan meningkat di test set)
 Robustness (periode 3/4 positif; market tipis; gagal pada biaya realistis)
     ↓ (TODO-027 Research Conclusion — EXP-001 §19)
 Conclusion (PARTIALLY SUPPORTED — edge hanya pada biaya nol/near-zero)
-    ↓ (next: M7 — TODO-028 Review Architecture)
+    ↓ (TODO-028 Review Architecture Based on Evidence — ARC-008)
+Architecture Review (CORE HOLDS, PERIPHERY DRIFTS — ARC-ACT-010..014)
+    ↓ (next: M7 iteration — ARC-ACT-012 Signal Deduplication)
 Iteration
 ```
 
@@ -1048,7 +1050,8 @@ Major milestones:
 | M3 — Research Core         | ✅ Done        |
 | M4 — Engine Implementation | ✅ Done        |
 | M5 — Baseline Experiment   | ✅ Done        |
-| M6 — Validation            | 🟡 In Progress |
+| M6 — Validation            | ✅ Done        |
+| M7 — Iteration             | 🟡 In Progress |
 
 ---
 
@@ -1445,6 +1448,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.20
+**Version:** 1.3.23
 
 **End of Document**

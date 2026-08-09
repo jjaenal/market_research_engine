@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.21
+version: 1.3.22
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -173,7 +173,7 @@ M1 Product Definition
 | TODO-025 | Perform Out-of-Sample Testing         |       P1 | DONE        |
 | TODO-026 | Perform Robustness Analysis           |       P1 | DONE        |
 | TODO-027 | Produce Research Conclusion           |       P1 | DONE        |
-| TODO-028 | Review Architecture Based on Evidence |       P2 | PLANNED     |
+| TODO-028 | Review Architecture Based on Evidence |       P2 | DONE        |
 | TODO-029 | Strategy Expansion                    |       P3 | DEFERRED    |
 | TODO-030 | Market Expansion                      |       P3 | DEFERRED    |
 | TODO-031 | ML Research Layer                     |       P3 | DEFERRED    |
@@ -995,7 +995,7 @@ strategy yang profitable.
 
 **Priority:** P2
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Objective
 
@@ -1009,6 +1009,20 @@ Questions:
 - What data was missing?
 - What should be simplified?
 - What should be generalized?
+
+## Result
+
+- verdict: **CORE HOLDS, PERIPHERY DRIFTS** (ARC-008);
+- inti arsitektur (pipeline `compute_report()`, frozen config, pure
+  deterministic functions) terbukti menahan beban experiment — dipertahankan;
+- yang gagal/belum terwujud: strategi bukan plugin (tidak ada `strategies/`),
+  config YAML belum ada (hardcode di CLI), deduplikasi signal belum
+  didefinisikan (signal overlap, EXP-001 §15.3);
+- data kurang: timeframe selain H1, market ketiga+, biaya eksekusi nyata,
+  label regime market (RQ regime dependency belum bisa dijawab);
+- arah iterasi: ARC-ACT-010..014 + next research question
+  (deduplikasi signal + eksekusi biaya realistis dengan regime selection);
+- critical blockers: 0.
 
 ---
 
@@ -1468,21 +1482,21 @@ Saat ini:
 
 ```text
 CURRENT
-M6 — Validation (lengkap: TODO-024..027 DONE)
+M7 — Iteration (TODO-028 Architecture Review DONE — ARC-008)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration
+M7 — Iteration (lanjutan: ARC-ACT-010..014)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-TODO-028 Review Architecture Based on Evidence
+ARC-ACT-012 Define Signal Deduplication Semantics
 ```
 
 ---
@@ -1876,6 +1890,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.19
+**Version:** 1.3.22
 
 **End of Document**
