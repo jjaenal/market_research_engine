@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.20
+version: 1.3.21
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -172,7 +172,7 @@ M1 Product Definition
 | TODO-024 | Perform Sensitivity Analysis          |       P1 | DONE        |
 | TODO-025 | Perform Out-of-Sample Testing         |       P1 | DONE        |
 | TODO-026 | Perform Robustness Analysis           |       P1 | DONE        |
-| TODO-027 | Produce Research Conclusion           |       P1 | PLANNED     |
+| TODO-027 | Produce Research Conclusion           |       P1 | DONE        |
 | TODO-028 | Review Architecture Based on Evidence |       P2 | PLANNED     |
 | TODO-029 | Strategy Expansion                    |       P3 | DEFERRED    |
 | TODO-030 | Market Expansion                      |       P3 | DEFERRED    |
@@ -958,7 +958,7 @@ over varying data and assumptions.
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Possible Outcomes
 
@@ -972,6 +972,18 @@ REJECTED
 Tidak ada keharusan bahwa
 experiment menghasilkan
 strategy yang profitable.
+
+## Result
+
+- verdict: **PARTIALLY SUPPORTED** (EXP-001 §19);
+- hipotesis "expectancy positif setelah biaya transaksi" hanya
+  terdukung pada asumsi biaya nol/near-zero;
+- terdukung: edge arah stabil pada baseline, sensitivity grid, parameter
+  combos, dan out-of-sample (meningkat);
+- tidak terdukung: bertahan pada biaya realistis (0.05%/sisi → negatif)
+  dan robustness temporal penuh (3/4 periode positif);
+- evidence cukup (n=1403, FR-011); kesimpulan manual peneliti, bukan
+  rekomendasi (RSH-001 §13).
 
 ---
 
@@ -1456,21 +1468,21 @@ Saat ini:
 
 ```text
 CURRENT
-M6 — Validation
+M6 — Validation (lengkap: TODO-024..027 DONE)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M6 — Validation (lanjut)
+M7 — Iteration
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-TODO-027 Produce Research Conclusion
+TODO-028 Review Architecture Based on Evidence
 ```
 
 ---

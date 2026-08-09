@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.21
+version: 1.3.22
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -516,8 +516,10 @@ Sensitivity (grid 6×3 tercatat; edge tidak fragile secara arah)
 Out-of-Sample (70/30; edge positif dan meningkat di test set)
     ↓ (TODO-026 Robustness Analysis — EXP-001 §18)
 Robustness (periode 3/4 positif; market tipis; gagal pada biaya realistis)
-    ↓ (next: TODO-027 Research Conclusion)
-Conclusion
+    ↓ (TODO-027 Research Conclusion — EXP-001 §19)
+Conclusion (PARTIALLY SUPPORTED — edge hanya pada biaya nol/near-zero)
+    ↓ (next: M7 — TODO-028 Review Architecture)
+Iteration
 ```
 
 Expected research questions:
