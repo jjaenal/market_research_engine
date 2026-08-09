@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.32
+version: 1.3.33
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -529,6 +529,9 @@ ITERATION CLOSED (hipotesis EXP-001 DITOLAK pada biaya realistis;
 edge hanya bertahan pada biaya nol/near-zero)
     ↓ (FND-007 §38 — project kembali ke Research/Experiment)
 Next: definisikan strategi berikutnya (EXP-002 atau seterusnya)
+    ↓ (TODO-035 EXP-002 pre-registered — biaya eksekusi venue nyata)
+EXP-002 PRE-REGISTERED (re-test edge pada biaya venue nyata XAUUSD,
+spread + komisi + slippage retail ECN ~1.0 bps/side — EXP-002 §6/§9.5)
 ```
 
 Expected research questions:
@@ -863,6 +866,10 @@ M7 iteration conclusion: all RQs answered; hypothesis EXP-001 REJECTED at
 realistic costs — edge only survives at zero/near-zero cost. Project
 returns to Research/Experiment to define the next strategy (ARC-008 §14.4,
 EXP-001 §19.8).
+
+EXP-002 (pre-registered, TODO-035): re-test the edge against real retail
+XAUUSD venue execution costs (~1.0 bps/side) instead of the synthetic
+2-5 bps/side grid used in M7.
 ```
 
 ---
@@ -1467,6 +1474,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.32
+**Version:** 1.3.33
 
 **End of Document**
