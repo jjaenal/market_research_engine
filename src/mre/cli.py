@@ -12,13 +12,7 @@ from mre.core.sensitivity import EXP001_GRID, run_sensitivity, to_markdown as se
 
 
 def _cmd_baseline(args: argparse.Namespace) -> int:
-    config = exp001_config(
-        args.out,
-        source=args.source,
-        experiment_id=args.experiment_id,
-        title=args.title,
-        hypothesis=args.hypothesis,
-    )
+    config = exp001_config(args.out, source=args.source, config_path=args.config)
     report = run_experiment(config)
     print(f"experiment {report.experiment_id}: {report.statistics.trade_count} trades, "
           f"net P&L {report.statistics.net_pnl:g}, win rate {report.statistics.win_rate or 0.0:.4f}")
@@ -27,7 +21,7 @@ def _cmd_baseline(args: argparse.Namespace) -> int:
 
 
 def _cmd_sensitivity(args: argparse.Namespace) -> int:
-    config = exp001_config(args.out, source=args.source)
+    config = exp001_config(args.out, source=args.source, config_path=args.config)
     result = run_sensitivity(config, EXP001_GRID)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
@@ -45,7 +39,7 @@ def _cmd_sensitivity(args: argparse.Namespace) -> int:
 
 
 def _cmd_oos(args: argparse.Namespace) -> int:
-    config = exp001_config(args.out, source=args.source)
+    config = exp001_config(args.out, source=args.source, config_path=args.config)
     result = run_oos(config, split_fraction=args.split)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
@@ -61,7 +55,7 @@ def _cmd_oos(args: argparse.Namespace) -> int:
 
 
 def _cmd_robustness(args: argparse.Namespace) -> int:
-    config = exp001_config(args.out, source=args.source)
+    config = exp001_config(args.out, source=args.source, config_path=args.config)
     out_dir = config.normalized_dataset.parent
     market_csv = None if args.no_market else args.market
     result = run_robustness(config, n_periods=args.periods, market_csv=market_csv, out_dir=out_dir)
@@ -89,29 +83,46 @@ def _build_parser() -> argparse.ArgumentParser:
 
     baseline = sub.add_parser("baseline", help="run EXP-001 baseline report")
     baseline.add_argument("--source", type=Path, default=Path("datasets/XAUUSD_H1.csv"))
-    baseline.add_argument("--experiment-id", default="EXP-001")
-    baseline.add_argument("--title", default="RSI Trendline Breakout Baseline")
     baseline.add_argument(
-        "--hypothesis",
-        default="Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
-        "menghasilkan expectancy positif setelah biaya transaksi.",
+        "--config",
+        type=Path,
+        default=Path("configs/EXP-001.yaml"),
+        help="experiment config YAML (frozen params, FR-012)",
     )
     baseline.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_report.md"))
     baseline.set_defaults(handler=_cmd_baseline)
 
     sensitivity = sub.add_parser("sensitivity", help="run EXP-001 sensitivity analysis")
     sensitivity.add_argument("--source", type=Path, default=Path("datasets/XAUUSD_H1.csv"))
+    sensitivity.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/EXP-001.yaml"),
+        help="experiment config YAML (frozen params, FR-012)",
+    )
     sensitivity.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_sensitivity.md"))
     sensitivity.set_defaults(handler=_cmd_sensitivity)
 
     oos = sub.add_parser("oos", help="run EXP-001 out-of-sample testing")
     oos.add_argument("--source", type=Path, default=Path("datasets/XAUUSD_H1.csv"))
+    oos.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/EXP-001.yaml"),
+        help="experiment config YAML (frozen params, FR-012)",
+    )
     oos.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_oos.md"))
     oos.add_argument("--split", type=float, default=0.7, help="train fraction (default 0.7)")
     oos.set_defaults(handler=_cmd_oos)
 
     robustness = sub.add_parser("robustness", help="run EXP-001 robustness analysis")
     robustness.add_argument("--source", type=Path, default=Path("datasets/XAUUSD_H1.csv"))
+    robustness.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/EXP-001.yaml"),
+        help="experiment config YAML (frozen params, FR-012)",
+    )
     robustness.add_argument("--out", type=Path, default=Path("experiments/EXP-001/EXP-001_robustness.md"))
     robustness.add_argument("--periods", type=int, default=4, help="number of chronological slices (default 4)")
     robustness.add_argument(

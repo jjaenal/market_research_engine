@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.26
+version: 1.3.27
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1017,7 +1017,8 @@ Questions:
   deterministic functions) terbukti menahan beban experiment — dipertahankan;
 - yang gagal/belum terwujud: **strategi bukan plugin** (tidak ada
   `strategies/`) — **DONE (ARC-ACT-010)**; config YAML belum ada (hardcode
-  di CLI) — next (ARC-ACT-011); deduplikasi signal belum didefinisikan
+  di CLI) — **DONE (ARC-ACT-011, `configs/EXP-001.yaml`)**
+  ; deduplikasi signal belum didefinisikan
   (signal overlap, EXP-001 §15.3) — **DONE (ARC-ACT-012)**;
 - data kurang: timeframe selain H1, market ketiga+, biaya eksekusi nyata,
   label regime market (RQ regime dependency belum bisa dijawab);
@@ -1483,21 +1484,22 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (ARC-ACT-010/012/013/014 DONE — strategies/, ENG-003 §8.1, core/segments.py, mre/cli.py)
+M7 — Iteration (ARC-ACT-010..014 DONE — strategies/, configs/EXP-001.yaml, ENG-003 §8.1, core/segments.py, mre/cli.py)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: ARC-ACT-011)
+M7 — Iteration (lanjutan: re-run EXP-001 dengan cooldown > 0)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-ARC-ACT-011 Move Experiment Config to External File (YAML)
+ARC-008 §14 next research question: re-run EXP-001 pada biaya realistis
+dengan cooldown (deduplikasi) + regime selection
 ```
 
 ---
@@ -1891,6 +1893,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.26
+**Version:** 1.3.27
 
 **End of Document**

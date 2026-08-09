@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.4
+version: 1.0.5
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -197,6 +197,10 @@ aspirational, not implemented."
 - **Failed:** parameter tetap hidup di kode; reproducibility terikat pada
   commit, bukan pada berkas config yang versi-able.
 
+> **Resolved by ARC-ACT-011:** `configs/EXP-001.yaml` + loader
+> (`load_experiment_config()`); parameter frozen versi-able di berkas,
+> reproducibility berbasis berkas (FR-012).
+
 ## 6.3 Deduplikasi Signal Tidak Didefinisikan
 
 Semantik `combine()` (ENG-003 §8) menghasilkan signal overlap (§5.1).
@@ -253,6 +257,7 @@ bisa dijawab.
 - **Config eksternal**: konfigurasi experiment (frozen params) dipindah ke
   berkas config (YAML per Article 12 / FR-012) yang dibaca CLI —
   reproducibility berbasis berkas, bukan hardcode commit.
+  > **Resolved by ARC-ACT-011** (`configs/EXP-001.yaml` + loader).
 - **Deduplikasi signal**: definisikan semantik "satu signal per episode
   trigger+confirmation" (cooldown) sebagai opsi di `SignalRule`, sehingga
   experiment baru mendapat trade count yang merepresentasikan keputusan
@@ -298,6 +303,11 @@ karena mekanisme registrasi tidak mengubah interface engine.
 Pindahkan parameter frozen dari hardcode CLI ke berkas config (YAML,
 Article 12 / FR-012); CLI membaca berkas dan menghasilkan
 `ExperimentConfig`. Reproducibility berbasis berkas.
+
+**Status: DONE** (`configs/EXP-001.yaml` + `load_experiment_config()`).
+Frozen params hidup di berkas YAML yang dikomit (single source of
+truth, RSH-002 §9); CLI hanya menimpa path dataset/report saat run.
+`exp001_config()` adalah wrapper tipis di atas loader.
 
 ## ARC-ACT-012 — Define Signal Deduplication Semantics
 
@@ -411,6 +421,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.5   | 2026-08-09 | ARC-ACT-011 marked DONE (configs/EXP-001.yaml + loader) |
 | 1.0.4   | 2026-08-09 | ARC-ACT-010 marked DONE (strategies/ package + registry) |
 | 1.0.3   | 2026-08-09 | ARC-ACT-014 marked DONE (markdown utils, exp001_config, mre.cli) |
 | 1.0.2   | 2026-08-09 | ARC-ACT-013 marked DONE (core/segments.py) |
@@ -423,6 +434,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.4
+**Version:** 1.0.5
 
 **End of Document**

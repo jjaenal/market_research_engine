@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import subprocess
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 from mre.engines.event_engine import EventEngine, EventEngineConfig
 from mre.engines.reporting_engine import render
@@ -22,7 +24,7 @@ from mre.models.execution import ExecutionConfig
 from mre.models.report import Report, ReportConfig, ReportInput
 from mre.models.signal_rule import SignalRule
 from mre.models.statistics import StatisticsConfig
-from mre.strategies import EXP001_STRATEGY_ID, get as get_strategy
+from mre.strategies import get as get_strategy
 
 
 @dataclass(frozen=True)
@@ -130,47 +132,124 @@ def _git_head() -> str:
         return "unknown"
 
 
-_EXP001_HYPOTHESIS = (
-    "Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1 "
-    "menghasilkan expectancy positif setelah biaya transaksi."
-)
+def _section(raw: dict[str, Any], name: str) -> dict[str, Any]:
+    """Return the named YAML section or fail with a clear message (PRD-003 §7.3)."""
+    value = raw.get(name)
+    if not isinstance(value, dict):
+        raise ValueError(f"missing or invalid '{name}' section in experiment config")
+    return value
+
+
+def _strategy_summary(config: ExperimentConfig) -> dict[str, Any]:
+    """Flatten the resolved strategy into the report's Configuration table."""
+    rule = config.signal_definition[0]
+    payload = " ".join(f"{key} {value}" for key, value in (rule.trigger_payload or {}).items())
+    return {
+        "rsi_period": config.indicator_config.rsi_period,
+        "swing_left": config.event_config.swing_left,
+        "swing_right": config.event_config.swing_right,
+        "price_lookback": config.event_config.price_lookback,
+        "signal_window": rule.window,
+        "hold_bars": config.execution_config.hold_bars,
+        "trigger_payload": f"{rule.trigger} {payload}".strip(),
+    }
+
+
+def load_experiment_config(path: Path) -> ExperimentConfig:
+    """Load a frozen experiment config from a YAML file (FR-012, ARC-008 ARC-ACT-011).
+
+    The YAML is the single source of truth for the experiment parameters
+    (RSH-002 §9); run-time concerns (``code_version``, ``generated_on``,
+    dataset paths) are filled by the loader, not frozen in the file.
+    Rejects invalid YAML and missing sections with clear messages
+    (PRD-003 §7.3). The signal definition is resolved from the strategy
+    plugin registry by ``strategy_id`` (ARC-ACT-010).
+    """
+    if not path.exists():
+        raise ValueError(f"experiment config file not found: {path}")
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        raise ValueError(f"invalid YAML in {path}: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ValueError(f"experiment config must be a YAML mapping: {path}")
+
+    experiment = _section(raw, "experiment")
+    experiment_id = experiment.get("id", "")
+    title = experiment.get("title", "")
+    hypothesis = experiment.get("hypothesis", "")
+    strategy_id = experiment.get("strategy_id", "")
+
+    dataset = _section(raw, "dataset")
+    data_config = DataConfig(
+        symbol=dataset.get("symbol", "XAUUSD"),
+        timeframe=dataset.get("timeframe", "H1"),
+        timezone=dataset.get("timezone", "UTC"),
+        source=dataset.get("source", "csv"),
+    )
+
+    indicator = _section(raw, "indicator")
+    indicator_config = IndicatorConfig(rsi_period=int(indicator.get("rsi_period", 14)))
+
+    event = _section(raw, "event")
+    event_config = EventEngineConfig(
+        swing_left=int(event.get("swing_left", 2)),
+        swing_right=int(event.get("swing_right", 2)),
+        price_lookback=int(event.get("price_lookback", 20)),
+    )
+
+    execution = _section(raw, "execution")
+    execution_config = ExecutionConfig(
+        position_size=float(execution.get("position_size", 1.0)),
+        commission_rate=float(execution.get("commission_rate", 0.0)),
+        slippage_rate=float(execution.get("slippage_rate", 0.0)),
+        hold_bars=int(execution.get("hold_bars", 10)),
+        stop_loss=execution.get("stop_loss"),
+        take_profit=execution.get("take_profit"),
+    )
+
+    statistics = _section(raw, "statistics")
+    statistics_config = StatisticsConfig(min_sample=int(statistics.get("min_sample", 30)))
+
+    paths = _section(raw, "paths")
+    config = ExperimentConfig(
+        experiment_id=experiment_id,
+        title=title,
+        hypothesis=hypothesis,
+        code_version=_git_head(),
+        generated_on=datetime.now(timezone.utc).date().isoformat(),
+        raw_dataset=Path(paths.get("raw_dataset", "datasets/XAUUSD_H1.csv")),
+        normalized_dataset=Path(paths.get("normalized_dataset", "experiments/EXP-001/dataset/XAUUSD_H1_normalized.csv")),
+        report_path=Path(paths.get("report_path", "experiments/EXP-001/EXP-001_report.md")),
+        data_config=data_config,
+        indicator_config=indicator_config,
+        event_config=event_config,
+        strategy_id=strategy_id,
+        execution_config=execution_config,
+        statistics_config=statistics_config,
+    )
+    return replace(config, strategy=_strategy_summary(config))
+
+
+DEFAULT_EXPERIMENT_CONFIG = Path("configs/EXP-001.yaml")
 
 
 def exp001_config(
     out: Path = Path("experiments/EXP-001/EXP-001_report.md"),
     *,
     source: Path = Path("datasets/XAUUSD_H1.csv"),
-    experiment_id: str = "EXP-001",
-    title: str = "RSI Trendline Breakout Baseline",
-    hypothesis: str = _EXP001_HYPOTHESIS,
+    config_path: Path = DEFAULT_EXPERIMENT_CONFIG,
 ) -> ExperimentConfig:
-    """Build the frozen EXP-001 config (single source of truth, ARC-008 ARC-ACT-014).
+    """Build the frozen EXP-001 config from the external YAML file (ARC-008 ARC-ACT-011).
 
-    Shared by the baseline, sensitivity, OOS, and robustness CLIs so the
-    frozen parameters live in exactly one place (RSH-002 §9, FR-012).
-    The signal definition is resolved from the strategy plugin registry by
-    ``strategy_id`` (ARC-008 ARC-ACT-010); the Signal Engine interface is
-    unchanged — the plugin only supplies configuration (Article 12).
+    The frozen experiment parameters live in ``configs/EXP-001.yaml``
+    (single source of truth, RSH-002 §9, FR-012); the CLI only overrides
+    the run-time dataset source and report output path. The signal
+    definition is resolved from the strategy plugin registry by
+    ``strategy_id`` (ARC-ACT-010).
     """
-    return ExperimentConfig(
-        experiment_id=experiment_id,
-        title=title,
-        hypothesis=hypothesis,
-        code_version=_git_head(),
-        generated_on=datetime.now(timezone.utc).date().isoformat(),
-        strategy={
-            "rsi_period": 14,
-            "swing_left": 2,
-            "swing_right": 2,
-            "price_lookback": 20,
-            "signal_window": 5,
-            "hold_bars": 10,
-            "trigger_payload": "RSI_TRENDLINE_BROKEN slope__lt 0.0",
-        },
-        raw_dataset=source,
-        report_path=out,
-        strategy_id=EXP001_STRATEGY_ID,
-    )
+    config = load_experiment_config(config_path)
+    return replace(config, raw_dataset=source, report_path=out)
 
 
 def main(argv: list[str] | None = None) -> int:

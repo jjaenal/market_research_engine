@@ -1,0 +1,44 @@
+# EXP-001 frozen experiment configuration (RSH-002 §9, FR-012, ARC-008 ARC-ACT-011).
+#
+# This file is the single source of truth for the EXP-001 experiment.
+# The CLI reads it and produces the frozen ExperimentConfig. Reproducibility
+# is file-based: the same config + same dataset + same commit -> same output.
+# Run-time concerns (code_version, generated_on, dataset paths) are filled
+# by the loader, not frozen here.
+experiment:
+  id: EXP-001
+  title: RSI Trendline Breakout Baseline
+  hypothesis: >-
+    Breakout RSI trendline yang dikonfirmasi harga pada XAUUSD H1
+    menghasilkan expectancy positif setelah biaya transaksi.
+  strategy_id: rsi_trendline_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H1
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.0
+  slippage_rate: 0.0
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H1.csv
+  normalized_dataset: experiments/EXP-001/dataset/XAUUSD_H1_normalized.csv
+  report_path: experiments/EXP-001/EXP-001_report.md
