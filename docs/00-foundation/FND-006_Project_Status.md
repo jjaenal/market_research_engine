@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.29
+version: 1.3.31
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -521,7 +521,9 @@ Conclusion (PARTIALLY SUPPORTED — edge hanya pada biaya nol/near-zero)
     ↓ (TODO-028 Review Architecture Based on Evidence — ARC-008)
 Architecture Review (CORE HOLDS, PERIPHERY DRIFTS — ARC-ACT-010..014)
     ↓ (M7 re-run: cooldown + regime selection + biaya realistis — ARC-008 §14.1, EXP-001 §19.6)
-Iteration (RQ dijawab TIDAK — edge tidak bertahan pada biaya realistis)
+Iteration (RQ-006 dijawab TIDAK — edge tidak bertahan pada biaya realistis)
+    ↓ (RQ-007 pre-registered: risk management SL/TP ATR-multiple — ARC-008 §14.2)
+Risk Management Re-run (SL/TP ATR-multiple — breakeven naik, edge tetap tidak bertahan; RQ-007 TIDAK — ARC-008 §14.3, EXP-001 §19.7)
 ```
 
 Expected research questions:
@@ -844,6 +846,13 @@ Does performance survive out-of-sample testing?
 
 RQ-006
 Does the edge remain after realistic costs?
+
+RQ-007 (pre-registered, ARC-008 §14.2)
+Does adding ATR-multiple stop-loss/take-profit restore
+positive expectancy at realistic costs?
+
+RQ-007 answer: No — SL/TP raises breakeven cost (~4-6 bps/side) but
+does not restore edge at 0.05%/side (ARC-008 §14.3, EXP-001 §19.7).
 ```
 
 ---
@@ -1448,6 +1457,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.29
+**Version:** 1.3.31
 
 **End of Document**

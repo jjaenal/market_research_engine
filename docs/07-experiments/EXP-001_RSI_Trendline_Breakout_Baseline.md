@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.5
+version: 1.0.6
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -632,6 +632,54 @@ Expectancy per skenario (n = jumlah signal setelah filter):
 - Slot regime kini tersedia di arsitektur (`regime_config`,
   `indicators/regime.py`), menutup data gap ARC-008 §7.
 
+## 19.7 M7 Iteration Re-run — Risk Management (SL/TP ATR-multiple)
+
+Ditambahkan pada iterasi M7 (ARC-008 §14.2/§14.3): RQ-007 — apakah
+SL/TP berbasis ATR-multiple memulihkan expectancy positif pada biaya
+eksekusi realistis. Mekanisme: `stop_loss_atr`/`take_profit_atr` baru di
+`ExecutionConfig`; SL/TP dihitung dari ATR (period 14) pada entry bar
+(no lookahead), `src/mre/engines/simulation_engine.py`. Baseline tanpa
+SL/TP sebagai control (RQ-007 pre-registered, RSH-001 §7.2).
+
+Expectancy per skenario (n = 1403 signal, cooldown 0, tanpa regime):
+
+| SL/TP (ATR)       | 0.0      | 0.02%    | 0.05%    |
+| ----------------- | -------- | -------- | -------- |
+| none (baseline)   | 0.8683   | 0.1539   | −0.9176  |
+| SL 1.0            | 1.0165   | 0.3021   | −0.7696  |
+| SL 1.0 / TP 4.0   | 1.0534   | 0.3390   | −0.7326  |
+| SL 2.0 / TP 4.0   | 0.8974   | 0.1830   | −0.8886  |
+
+Breakeven cost (titik expectancy menyeberang nol):
+
+| Skenario             | Breakeven/sisi |
+| -------------------- | -------------- |
+| all, no SL/TP        | 26 bps         |
+| all, SL 1.0/TP 4.0   | 30 bps         |
+| high, no SL/TP       | 36 bps         |
+| high, SL 1.0/TP 4.0  | 42 bps         |
+
+### 19.7.1 Temuan
+
+- **SL/TP memperbaiki tolerance biaya**: breakeven cost naik ~4–6 bps/sisi
+  (all 26→30; high 36→42) dan expectancy pada 0.02% membaik (0.34 vs 0.15
+  baseline all).
+- **Namun tidak memulihkan edge pada 0.05%/sisi**: seluruh kombinasi
+  negatif di 0.05%, termasuk kombinasi terkuat (cooldown 10 + regime high +
+  SL 1.0/TP 4.0 → −0.51).
+- **Verdict RQ-007: TIDAK** — kriteria pre-registration (expectancy > 0
+  pada biaya realistis 0.05%) tidak terpenuhi. Konklusi baseline (§19.1)
+  diperkuat untuk ketiga kalinya: edge hanya bertahan pada biaya
+  nol/near-zero.
+
+### 19.7.2 Implikasi
+
+- Risk management tidak cukup memitigasi biaya untuk edge ini; arah
+  selanjutnya adalah biaya eksekusi nyata venue atau transformasi
+  strategi (ARC-008 §14.3).
+- Mekanisme SL/TP ATR-multiple kini tersedia di arsitektur untuk
+  eksperimen/strategi lain.
+
 ---
 
 # 20. Traceability
@@ -693,6 +741,7 @@ Expectancy per skenario (n = jumlah signal setelah filter):
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.6   | 2026-08-09 | M7 re-run RQ-007 dicatat (§19.7): SL/TP ATR-multiple + biaya realistis; breakeven naik namun edge tetap tidak bertahan |
 | 1.0.5   | 2026-08-09 | M7 re-run dicatat (§19.6): deduplikasi (cooldown) + ATR regime selection + biaya realistis; verdict diperkuat |
 | 1.0.4   | 2026-08-09 | Research conclusion (TODO-027) dicatat (§19) |
 | 1.0.3   | 2026-08-09 | OOS (TODO-025) dan robustness (TODO-026) dicatat (§17, §18) |
@@ -706,6 +755,6 @@ Expectancy per skenario (n = jumlah signal setelah filter):
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.5
+**Version:** 1.0.6
 
 **End of Document**

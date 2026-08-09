@@ -6,6 +6,7 @@ import math
 from collections.abc import Sequence
 from datetime import datetime
 
+from mre.indicators.atr import atr
 from mre.models.candle import Candle
 from mre.models.execution import ExecutionConfig
 from mre.models.order import Order
@@ -34,6 +35,10 @@ def simulate(
 
     index_of = {c.timestamp: i for i, c in enumerate(candles)}
 
+    atr_series = None
+    if cfg.stop_loss_atr is not None or cfg.take_profit_atr is not None:
+        atr_series = atr(candles, cfg.atr_period)
+
     trades: list[Trade] = []
     for k, signal in enumerate(signals):
         side = _side(signal.signal_type)
@@ -45,7 +50,8 @@ def simulate(
         entry_candle = candles[entry_bar]
         entry_price = _apply_slippage(entry_candle.open, side, entry=True, rate=cfg.slippage_rate)
 
-        exit_bar, exit_raw = _find_exit(candles, entry_bar, side, cfg)
+        stop_level, take_level = _resolve_stop_take(entry_bar, entry_price, side, cfg, atr_series)
+        exit_bar, exit_raw = _find_exit(candles, entry_bar, side, cfg, stop_level, take_level)
         exit_candle = candles[exit_bar]
         exit_price = _apply_slippage(exit_raw, side, entry=False, rate=cfg.slippage_rate)
 
@@ -106,18 +112,53 @@ def _apply_slippage(price: float, side: str, entry: bool, rate: float) -> float:
     return price * (1.0 - rate) if entry else price * (1.0 + rate)
 
 
+def _resolve_stop_take(
+    entry_bar: int,
+    entry_price: float,
+    side: str,
+    cfg: ExecutionConfig,
+    atr_series: Sequence[float] | None,
+) -> tuple[float | None, float | None]:
+    """Resolve SL/TP price levels for one trade.
+
+    Absolute levels (``stop_loss``/``take_profit``) are used as given.
+    ATR-multiple levels (RQ-007, ARC-008 §14.2) are anchored to the entry
+    price using the ATR value at the entry bar (no lookahead: ATR at index
+    ``entry_bar`` uses only candles up to that bar). ATR-multiple levels
+    take precedence when both are configured. Warm-up (ATR is NaN) leaves
+    the level unset (no SL/TP).
+    """
+    stop_level = cfg.stop_loss
+    take_level = cfg.take_profit
+
+    if atr_series is not None:
+        atr_value = atr_series[entry_bar]
+        if not math.isnan(atr_value):
+            if cfg.stop_loss_atr is not None:
+                distance = cfg.stop_loss_atr * atr_value
+                stop_level = entry_price - distance if side == "long" else entry_price + distance
+            if cfg.take_profit_atr is not None:
+                distance = cfg.take_profit_atr * atr_value
+                take_level = entry_price + distance if side == "long" else entry_price - distance
+    return stop_level, take_level
+
+
 def _find_exit(
     candles: Sequence[Candle],
     entry_bar: int,
     side: str,
     cfg: ExecutionConfig,
+    stop_level: float | None = None,
+    take_level: float | None = None,
 ) -> tuple[int, float]:
+    stop_level = cfg.stop_loss if stop_level is None else stop_level
+    take_level = cfg.take_profit if take_level is None else take_level
     scheduled = entry_bar + cfg.hold_bars
     for j in range(entry_bar, len(candles)):
         c = candles[j]
 
-        if cfg.stop_loss is not None:
-            sl = cfg.stop_loss
+        if stop_level is not None:
+            sl = stop_level
             if side == "long":
                 if c.open <= sl:
                     return j, c.open
@@ -129,8 +170,8 @@ def _find_exit(
                 if c.high >= sl:
                     return j, sl
 
-        if cfg.take_profit is not None:
-            tp = cfg.take_profit
+        if take_level is not None:
+            tp = take_level
             if side == "long":
                 if c.open >= tp:
                     return j, c.open

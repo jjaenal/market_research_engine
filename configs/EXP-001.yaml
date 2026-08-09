@@ -46,6 +46,10 @@ execution:
   hold_bars: 10
   stop_loss: null
   take_profit: null
+  # Risk management (RQ-007, ARC-008 §14.2): ATR-multiple SL/TP. null = off.
+  # stop_loss_atr: 2.0   # stop = entry - 2*ATR (long)
+  # take_profit_atr: 3.0 # take = entry + 3*ATR (long)
+  atr_period: 14
 
 statistics:
   min_sample: 30

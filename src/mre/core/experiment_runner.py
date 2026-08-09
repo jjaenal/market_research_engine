@@ -212,6 +212,11 @@ def _strategy_summary(config: ExperimentConfig) -> dict[str, Any]:
         "regime_atr_short": regime.atr_short_period,
         "regime_atr_long": regime.atr_long_period,
         "hold_bars": config.execution_config.hold_bars,
+        "stop_loss": config.execution_config.stop_loss,
+        "take_profit": config.execution_config.take_profit,
+        "stop_loss_atr": config.execution_config.stop_loss_atr,
+        "take_profit_atr": config.execution_config.take_profit_atr,
+        "atr_period": config.execution_config.atr_period,
         "trigger_payload": f"{rule.trigger} {payload}".strip(),
     }
 
@@ -274,6 +279,9 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
         hold_bars=int(execution.get("hold_bars", 10)),
         stop_loss=execution.get("stop_loss"),
         take_profit=execution.get("take_profit"),
+        stop_loss_atr=execution.get("stop_loss_atr"),
+        take_profit_atr=execution.get("take_profit_atr"),
+        atr_period=int(execution.get("atr_period", 14)),
     )
 
     statistics = _section(raw, "statistics")

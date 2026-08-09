@@ -139,6 +139,65 @@ def test_data_exhaustion_exits_at_last_close() -> None:
     assert trade.pnl == pytest.approx(4.0)
 
 
+def test_stop_loss_atr_anchored_to_entry() -> None:
+    closes = [10.0, 10.0, 12.0, 11.0, 9.0, 8.0, 8.0, 8.0]
+    trades = simulate(
+        [_signal("LONG", 0)],
+        _candles(closes),
+        _cfg(hold_bars=10, stop_loss_atr=1.0, atr_period=5),
+    )
+    (trade,) = trades
+    assert trade.exit.price < 10.0
+    assert trade.result == "LOSS"
+    assert trade.position.closed_at < _ts(4) or trade.exit.price < 9.0
+
+
+def test_take_profit_atr_anchored_to_entry() -> None:
+    closes = [10.0, 10.0, 12.0, 13.0, 14.0, 15.0, 15.0, 15.0]
+    trades = simulate(
+        [_signal("LONG", 0)],
+        _candles(closes),
+        _cfg(hold_bars=10, take_profit_atr=1.0, atr_period=5),
+    )
+    (trade,) = trades
+    assert trade.exit.price > 10.0
+    assert trade.result == "WIN"
+
+
+def test_atr_sl_tp_precedence_over_absolute() -> None:
+    closes = [10.0, 10.2, 10.1, 10.3, 10.2, 10.0, 8.5, 8.0, 8.0, 8.0]
+    absolute_only = simulate(
+        [_signal("LONG", 4)], _candles(closes), _cfg(hold_bars=10, stop_loss=8.0)
+    )
+    with_atr = simulate(
+        [_signal("LONG", 4)],
+        _candles(closes),
+        _cfg(hold_bars=10, stop_loss=8.0, stop_loss_atr=1.0, atr_period=4),
+    )
+    (a,) = absolute_only
+    (b,) = with_atr
+    assert b.exit.price != a.exit.price  # ATR level used, not the absolute 8.0
+
+
+def test_atr_sl_tp_warmup_skipped() -> None:
+    closes = [10.0, 10.0, 12.0, 14.0]
+    trades = simulate(
+        [_signal("LONG", 0)],
+        _candles(closes),
+        _cfg(hold_bars=10, stop_loss_atr=1.0, atr_period=100),
+    )
+    (trade,) = trades
+    assert trade.exit.price == 14.0  # hold_bars path, no SL triggered
+
+
+def test_atr_sl_tp_deterministic() -> None:
+    closes = [10.0, 10.0, 12.0, 11.0, 9.0, 8.0, 9.0, 10.0]
+    cfg = _cfg(hold_bars=5, stop_loss_atr=2.0, take_profit_atr=3.0, atr_period=5)
+    a = simulate([_signal("LONG", 0)], _candles(closes), cfg)
+    b = simulate([_signal("LONG", 0)], _candles(closes), cfg)
+    assert a == b
+
+
 def test_no_future_information() -> None:
     closes = [10.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]
     cfg = _cfg(hold_bars=3)
