@@ -1,12 +1,12 @@
 ---
 title: RSI Trendline Breakout Baseline
 document_id: EXP-001
-version: 1.0.2
+version: 1.0.3
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-09
 
 depends_on:
   - RSH-001
@@ -414,14 +414,120 @@ parameter menghasilkan metrik identik dengan baseline (FR-010).
 
 ---
 
-# 17. Conclusion
+# 17. Out-of-Sample Testing (TODO-025)
+
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage,
+no retroactive allocation); strategi frozen (konfigurasi EXP-001)
+dijalankan tanpa perubahan pada kedua segmen.
+
+Report: `experiments/EXP-001/EXP-001_oos.md`
+(Code Version `7a8479b`).
+
+Split point: index 70.000 (2021-04-29 18:00 UTC) — 70% train, 30% test.
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 1403     | 943    | 453    | -            |
+| Win Rate      | 0.4954   | 0.4931 | 0.5033 | -            |
+| Expectancy    | 0.8683   | 0.1187 | 2.4996 | +2004.9%     |
+| Profit Factor | 1.2087   | 1.0371 | 1.4042 | +35.4%       |
+| Net P&L       | 1218.23  | 111.98 | 1132.30| +911.2%      |
+| Max DD        | 402.24   | 243.55 | 402.24 | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **edge tetap positif out-of-sample** (expectancy > 0, PF > 1,
+  sample cukup pada test set);
+- tidak ada degradasi besar in-sample → OOS (RSH-003 §7) — justru
+  **meningkat**: expectancy test (2.4996) jauh di atas train (0.1187);
+- perbandingan deskriptif; threshold per RSH-004 dapat dikonfigurasi
+  per experiment.
+
+---
+
+# 18. Robustness Analysis (TODO-026)
+
+Metodologi per **RSH-003 §10**: kombinasi parameter/data beragam;
+frozen config dievaluasi terhadap perubahan rentang data, market,
+dan biaya transaksi (deskriptif, bukan optimasi — RSH-001 §12).
+
+Report: `experiments/EXP-001/EXP-001_robustness.md`
+(Code Version `7a8479b`).
+
+## 18.1 Time Period Stability (4 slice kronologis)
+
+| Slice    | Trades | Win Rate | Expectancy | PF    | Net P&L  | Max DD  |
+| -------- | ------ | -------- | ---------- | ----- | -------- | ------- |
+| period-1 | 397    | 0.5038   | 0.2196     | 1.0625| 87.17    | 243.55  |
+| period-2 | 293    | 0.5051   | 0.1938     | 1.0756| 56.78    | 124.91  |
+| period-3 | 329    | 0.4559   | -0.1677    | 0.9531| -55.17   | 219.95  |
+| period-4 | 379    | 0.5198   | 3.1131     | 1.4721| 1179.88  | 402.24  |
+
+- 3/4 slice expectancy positif; **slice ke-3 negatif** (−0.1677,
+  PF < 1) — edge tidak stabil secara temporal, mengindikasikan
+  ketergantungan regime market;
+- slice ke-4 mendominasi Net P&L baseline (1179.88 dari 1218.23).
+
+## 18.2 Cross-Market (XAGUSD H1, frozen config)
+
+| Market | Trades | Win Rate | Expectancy | PF    | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ----- | ------- | ------ |
+| XAGUSD | 1122   | 0.5045   | 0.0397     | 1.3050| 44.52   | 16.90  |
+
+- edge positif **tipis** ter-reproduksi out-of-market (expectancy 0.0397
+  dengan PF 1.3050) — arah bertahan namun magnitude jauh lebih kecil.
+
+## 18.3 Execution Cost & Slippage (fraksi notional per sisi)
+
+| commission | slippage | Expectancy | PF    | Net P&L  |
+| ---------- | -------- | ---------- | ----- | -------- |
+| 0          | 0        | 0.8683     | 1.2087| 1218.23  |
+| 0.0002     | 0        | 0.1539     | 1.0340| 215.96   |
+| 0.0005     | 0        | -0.9176    | 0.8210| -1287.44 |
+| 0          | 0.0002   | 0.1539     | 1.0340| 215.96   |
+| 0          | 0.0005   | -0.9176    | 0.8210| -1287.44 |
+| 0.0002     | 0.0002   | -0.5604    | 0.8862| -786.30  |
+| 0.0005     | 0.0005   | -2.7036    | 0.5651| -3793.10 |
+
+- edge **tidak bertahan** terhadap biaya transaksi realistis: biaya
+  per sisi 0.02% (round-trip ~0.04%) menyisakan expectancy hampir nol;
+  pada 0.05% per sisi expectancy negatif;
+- baseline dijalankan tanpa biaya (EXP-001 §9.4) — hipotesis "setelah
+  biaya transaksi" belum teruji pada skenario biaya nyata.
+
+## 18.4 Parameter Combinations (price_lookback / rsi_period)
+
+| price_lookback | rsi_period | Trades | Expectancy | PF    |
+| -------------- | ---------- | ------ | ---------- | ----- |
+| 20 (baseline)  | 14         | 1403   | 0.8683     | 1.2087|
+| 10             | 7          | 2324   | 0.4653     | 1.1113|
+| 10             | 21         | 2354   | 0.2249     | 1.0505|
+| 30             | 7          | 1157   | 0.5684     | 1.1338|
+| 30             | 21         | 1119   | 0.3664     | 1.0793|
+
+- seluruh kombinasi (termasuk corner harga) tetap expectancy positif
+  dan sample cukup — tidak ada kombinasi fragile pada grid ini.
+
+## 18.5 Assessment Ringkas
+
+- temporal robustness **lemah** (1/4 periode negatif);
+- cross-market robustness **tipis** (XAGUSD positif namun marginal);
+- execution-cost robustness **gagal** pada biaya realistis;
+- parameter-combination robustness **stabil** (5/5 positif).
+
+Timeframe tidak divariasikan: hanya data H1 yang tersedia.
+
+---
+
+# 19. Conclusion
 
 Ditentukan oleh peneliti setelah Result tersedia
 (PRD-006 §9 — conclusion manual, bukan otomatis).
 
 ---
 
-# 18. Traceability
+# 20. Traceability
 
 | Item          | Requirement / TODO           |
 | ------------- | ---------------------------- |
@@ -430,11 +536,13 @@ Ditentukan oleh peneliti setelah Result tersedia
 | Metrics       | RSH-002 §8, FND-008 §25      |
 | Reproducibility | FR-010, NFR-001, RSH-002 §9  |
 | Sensitivity   | RSH-003 §9, TODO-024         |
+| Out-of-sample | RSH-003 §6/§7, TODO-025      |
+| Robustness    | RSH-003 §10, TODO-026        |
 | Conclusion    | FR-011, RSH-001 §13          |
 
 ---
 
-# 19. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -448,7 +556,7 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 ---
 
-# 20. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -474,10 +582,11 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 ---
 
-# 21. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                      |
 | ------- | ---------- | ---------------------------- |
+| 1.0.3   | 2026-08-09 | OOS (TODO-025) dan robustness (TODO-026) dicatat (§17, §18) |
 | 1.0.2   | 2026-08-08 | Sensitivity analysis (TODO-024) dicatat (§16) |
 | 1.0.1   | 2026-08-08 | Run baseline (TODO-023); signal definition diarahkan LONG via trigger_payload |
 | 1.0.0   | 2026-08-08 | Initial EXP-001 definition (TODO-022) |
@@ -488,6 +597,6 @@ Ditentukan oleh peneliti setelah Result tersedia
 
 **Document ID:** EXP-001
 
-**Version:** 1.0.2
+**Version:** 1.0.3
 
 **End of Document**

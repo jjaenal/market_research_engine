@@ -1,12 +1,12 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.19
+version: 1.3.20
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-09
 
 depends_on:
   - FND-001
@@ -170,8 +170,8 @@ M1 Product Definition
 | TODO-022 | Create EXP-001                        |       P1 | DONE        |
 | TODO-023 | Run Baseline Experiment               |       P1 | DONE        |
 | TODO-024 | Perform Sensitivity Analysis          |       P1 | DONE        |
-| TODO-025 | Perform Out-of-Sample Testing         |       P1 | PLANNED     |
-| TODO-026 | Perform Robustness Analysis           |       P1 | PLANNED     |
+| TODO-025 | Perform Out-of-Sample Testing         |       P1 | DONE        |
+| TODO-026 | Perform Robustness Analysis           |       P1 | DONE        |
 | TODO-027 | Produce Research Conclusion           |       P1 | PLANNED     |
 | TODO-028 | Review Architecture Based on Evidence |       P2 | PLANNED     |
 | TODO-029 | Strategy Expansion                    |       P3 | DEFERRED    |
@@ -910,12 +910,21 @@ RR = 3.0
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
 ## Objective
 
 Evaluate whether observed edge
 generalizes to unseen data.
+
+## Result
+
+- module: `src/mre/core/out_of_sample.py` (RSH-003 §6/§7);
+- report: `experiments/EXP-001/EXP-001_oos.md` (gitignored);
+- split 70/30 (index 70.000, 2021-04-29); train 943 trades (exp 0.1187),
+  test 453 trades (exp 2.4996, PF 1.4042);
+- **edge tetap positif out-of-sample dan meningkat** — tidak ada degradasi
+  in-sample → OOS (RSH-003 §7); tercatat di EXP-001 §17.
 
 ---
 
@@ -923,19 +932,25 @@ generalizes to unseen data.
 
 **Priority:** P1
 
-**Status:** PLANNED
+**Status:** DONE
 
-## Dimensions
+## Objective
 
-```text
-Parameter
-Time Period
-Market
-Timeframe
-Execution Cost
-Slippage
-RR
-```
+Evaluate stability of results
+over varying data and assumptions.
+
+## Result
+
+- module: `src/mre/core/robustness.py` (RSH-003 §10);
+- report: `experiments/EXP-001/EXP-001_robustness.md` (gitignored);
+- dimensions tercatat di EXP-001 §18:
+  - time period (4 slice): 3/4 expectancy positif — slice ke-3 negatif
+    (temporal robustness lemah);
+  - cross-market (XAGUSD H1): expectancy positif tipis (0.0397);
+  - execution cost: edge **tidak bertahan** pada biaya realistis
+    (0.05%/sisi → expectancy negatif);
+  - parameter combinations: 5/5 positif (stabil);
+- timeframe tidak divariasikan (hanya data H1 tersedia).
 
 ---
 
@@ -1441,21 +1456,21 @@ Saat ini:
 
 ```text
 CURRENT
-M1 Product Definition Review (PRD-008)
+M6 — Validation
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M2 — Architecture
+M6 — Validation (lanjut)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-TODO-009 Define System Architecture
+TODO-027 Produce Research Conclusion
 ```
 
 ---
