@@ -1,7 +1,7 @@
 ---
 title: Architecture Review Based on Evidence
 document_id: ARC-008
-version: 1.0.8
+version: 1.0.9
 status: Result
 category: Architecture
 owner: Market Research Engine Core Team
@@ -483,6 +483,38 @@ namun **tidak memulihkan edge** pada 0.05%/sisi — kriteria pre-registration
 (expectancy > 0 pada 0.05%) tidak terpenuhi di semua kombinasi. Konklusi
 baseline EXP-001 §19 diperkuat lagi.
 
+## 14.4 M7 Iteration Conclusion
+
+Iterasi M7 ditutup dengan mencatat seluruh jawaban research question
+(per FND-007 §38, iterasi selesai ketika pertanyaan penelitian berikutnya
+terdefinisi jelas — dan seluruh mitigasi telah diuji):
+
+```text
+M7 ITERATION CONCLUSION
+Rangkuman: edge RSI trendline breakout bertahan hanya pada biaya
+nol/near-zero.
+
+RQ-006 (dedup + regime):      TIDAK — edge tidak bertahan pada biaya realistis (§14.1)
+RQ-007 (risk management):     TIDAK — SL/TP ATR-multiple menaikkan breakeven
+                              namun tidak memulihkan edge (§14.3)
+
+Mitigasi yang diuji dan GAGAL memulihkan edge pada >= 0.05%/sisi:
+  1. deduplikasi signal (cooldown > 0)
+  2. regime selection (ATR volatility high/low)
+  3. risk management (SL/TP ATR-multiple)
+
+Kesimpulan arsitektur: CORE HOLDS — pipeline, frozen config, dan
+re-run machinery (cooldown, regime, SL/TP) semua bekerja deterministik;
+yang diuji adalah strategi, bukan arsitektur. Temuan strategi bersifat
+evidence untuk experiment berikutnya (EXP-002 atau seterusnya).
+```
+
+Project kembali ke Research/Experiment phase untuk mendefinisikan
+strategi berikutnya (FND-007 §38, Project dapat kembali ke Research;
+Expansion FND-007 §39). Hipotesis EXP-001 **ditolak sebagai strategi
+yang dapat diperdagangkan pada biaya realistis**; ini adalah successful
+research outcome (FND-007 §37 — "No Edge → Reject Hypothesis").
+
 ---
 
 # 15. Approval
@@ -500,7 +532,8 @@ Berdasarkan review pada dokumen ini:
 ╠══════════════════════════════════════╣
 ║ M7 — ITERATION                       ║
 ║                                      ║
-║ READY FOR NEXT RESEARCH QUESTION     ║
+║ CLOSED — ALL RQs ANSWERED (TIDAK)    ║
+║ RETURN TO RESEARCH/EXPERIMENT        ║
 ╚══════════════════════════════════════╝
 ```
 
@@ -525,6 +558,7 @@ Berdasarkan review pada dokumen ini:
 
 | Version | Date       | Changes                                    |
 | ------- | ---------- | ------------------------------------------ |
+| 1.0.9   | 2026-08-09 | M7 iteration closed (§14.4): both RQs answered TIDAK; edge survives only at zero/near-zero cost; project returns to Research/Experiment |
 | 1.0.8   | 2026-08-09 | RQ-007 answered (§14.3): SL/TP ATR-multiple raises breakeven cost but does not restore edge at 0.05%/side |
 | 1.0.7   | 2026-08-09 | RQ-007 pre-registered (§14.2): risk management SL/TP ATR-multiple |
 | 1.0.6   | 2026-08-09 | M7 re-run recorded (§14.1): cooldown + ATR regime + cost grid; RQ answered TIDAK; regime slot added (indicators/regime.py, regime_config) |
@@ -541,6 +575,6 @@ Berdasarkan review pada dokumen ini:
 
 **Document ID:** ARC-008
 
-**Version:** 1.0.8
+**Version:** 1.0.9
 
 **End of Document**

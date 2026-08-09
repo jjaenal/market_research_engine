@@ -1,7 +1,7 @@
 ---
 title: Project Roadmap
 document_id: FND-007
-version: 1.1.0
+version: 1.1.1
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -872,6 +872,16 @@ M6 selesai apabila:
 
 # 35. M7 — Iteration
 
+## Current Status
+
+```text
+COMPLETE — Iteration ditutup (ARC-008 §14.4, EXP-001 §19.8).
+RQ-006 (dedup + regime) dan RQ-007 (SL/TP ATR-multiple) dijawab TIDAK;
+hipotesis EXP-001 DITOLAK pada biaya realistis. Exit criterion (§38)
+terpenuhi — project kembali ke Research/Experiment untuk mendefinisikan
+strategi berikutnya (FND-006 §17, FND-008 §64).
+```
+
 ## Objective
 
 Mengubah hasil experiment
@@ -1721,6 +1731,6 @@ Begin Product Definition.
 
 **Document ID:** FND-007
 
-**Version:** 1.1.0
+**Version:** 1.1.1
 
 **End of Document**

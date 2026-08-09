@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.31
+version: 1.3.32
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -524,6 +524,11 @@ Architecture Review (CORE HOLDS, PERIPHERY DRIFTS — ARC-ACT-010..014)
 Iteration (RQ-006 dijawab TIDAK — edge tidak bertahan pada biaya realistis)
     ↓ (RQ-007 pre-registered: risk management SL/TP ATR-multiple — ARC-008 §14.2)
 Risk Management Re-run (SL/TP ATR-multiple — breakeven naik, edge tetap tidak bertahan; RQ-007 TIDAK — ARC-008 §14.3, EXP-001 §19.7)
+    ↓ (M7 iteration closed — ARC-008 §14.4, EXP-001 §19.8)
+ITERATION CLOSED (hipotesis EXP-001 DITOLAK pada biaya realistis;
+edge hanya bertahan pada biaya nol/near-zero)
+    ↓ (FND-007 §38 — project kembali ke Research/Experiment)
+Next: definisikan strategi berikutnya (EXP-002 atau seterusnya)
 ```
 
 Expected research questions:
@@ -853,6 +858,11 @@ positive expectancy at realistic costs?
 
 RQ-007 answer: No — SL/TP raises breakeven cost (~4-6 bps/side) but
 does not restore edge at 0.05%/side (ARC-008 §14.3, EXP-001 §19.7).
+
+M7 iteration conclusion: all RQs answered; hypothesis EXP-001 REJECTED at
+realistic costs — edge only survives at zero/near-zero cost. Project
+returns to Research/Experiment to define the next strategy (ARC-008 §14.4,
+EXP-001 §19.8).
 ```
 
 ---
@@ -890,7 +900,7 @@ Current health:
 | Engineering        | 🟡 Not Started |
 | Research           | 🟡 Not Started |
 | Testing            | 🟡 Not Started |
-| Experimentation    | 🟡 Not Started |
+| Experimentation    | 🟢 Healthy     |
 
 Overall:
 
@@ -1060,7 +1070,7 @@ Major milestones:
 | M4 — Engine Implementation | ✅ Done        |
 | M5 — Baseline Experiment   | ✅ Done        |
 | M6 — Validation            | ✅ Done        |
-| M7 — Iteration             | 🟡 In Progress |
+| M7 — Iteration             | ✅ Done        |
 
 ---
 
@@ -1457,6 +1467,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.31
+**Version:** 1.3.32
 
 **End of Document**
