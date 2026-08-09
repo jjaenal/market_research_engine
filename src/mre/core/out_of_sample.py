@@ -3,16 +3,15 @@
 from __future__ import annotations
 
 import argparse
-import csv
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 from mre.core.experiment_runner import ExperimentConfig, _exp001_signal_definition, _git_head, compute_report
-from mre.loaders.csv_loader import REQUIRED_COLUMNS, load_dataset
+from mre.loaders.csv_loader import load_dataset
 from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
-from mre.models.candle import Candle
 from mre.models.statistics import TradeStatistics
+from mre.utils.candle_csv import write_candle_csv
 
 
 @dataclass(frozen=True)
@@ -30,26 +29,6 @@ def _split_index(candle_count: int, split_fraction: float) -> int:
     if not 0.0 < split_fraction < 1.0:
         raise ValueError("split_fraction must be in (0, 1)")
     return int(round(candle_count * split_fraction))
-
-
-def _write_segment(candles: tuple[Candle, ...], target: Path) -> Path:
-    """Write a compliant segment CSV (same contract as normalized output)."""
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(list(REQUIRED_COLUMNS))
-        for candle in candles:
-            writer.writerow(
-                [
-                    candle.timestamp.isoformat(),
-                    f"{candle.open:g}",
-                    f"{candle.high:g}",
-                    f"{candle.low:g}",
-                    f"{candle.close:g}",
-                    f"{candle.volume:g}",
-                ]
-            )
-    return target
 
 
 def run_oos(
@@ -72,8 +51,8 @@ def run_oos(
     idx = _split_index(len(candles), split_fraction)
 
     dir_path = out_dir if out_dir is not None else normalized.parent
-    train_path = _write_segment(candles[:idx], dir_path / "XAUUSD_H1_train.csv")
-    test_path = _write_segment(candles[idx:], dir_path / "XAUUSD_H1_test.csv")
+    train_path = write_candle_csv(candles[:idx], dir_path / "XAUUSD_H1_train.csv")
+    test_path = write_candle_csv(candles[idx:], dir_path / "XAUUSD_H1_test.csv")
 
     baseline = compute_report(config, normalized).statistics
     train = compute_report(config, train_path).statistics
