@@ -57,6 +57,13 @@ class SignalRule:
     declarative payload filter (e.g. ``{"slope__lt": 0.0}`` selects a
     specific break direction). Direction selection lives in the Signal
     Engine, not the detectors (ENG-002 §8).
+
+    ``cooldown`` (default 0 = disabled) is the minimum number of candle
+    references between consecutive Signals emitted by this rule
+    (ARC-008 ARC-ACT-012). When enabled, after a Signal is emitted, any
+    subsequent Signal whose reference is less than
+    ``previous_reference + cooldown`` is suppressed — one decision per
+    episode instead of one per trigger (avoids signal overlap, EXP-001 §15.3).
     """
 
     signal_type: str
@@ -65,6 +72,7 @@ class SignalRule:
     window: int
     source_strategy: str = ""
     trigger_payload: Mapping[str, Any] = field(default_factory=dict)
+    cooldown: int = 0
 
     def __post_init__(self) -> None:
         if not self.signal_type:
@@ -77,6 +85,8 @@ class SignalRule:
             raise ValueError("confirmations must not contain duplicates")
         if self.window < 1:
             raise ValueError("window must be >= 1")
+        if self.cooldown < 0:
+            raise ValueError("cooldown must be >= 0")
         for key in self.trigger_payload:
             if not isinstance(key, str):
                 raise ValueError("trigger_payload keys must be strings")

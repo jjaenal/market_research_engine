@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.22
+version: 1.3.23
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1482,21 +1482,21 @@ Saat ini:
 
 ```text
 CURRENT
-M7 — Iteration (TODO-028 Architecture Review DONE — ARC-008)
+M7 — Iteration (ARC-ACT-012 Signal Dedup DONE — ENG-003 §8.1)
 ```
 
 Setelah itu:
 
 ```text
 NEXT MAJOR PHASE
-M7 — Iteration (lanjutan: ARC-ACT-010..014)
+M7 — Iteration (lanjutan: ARC-ACT-013..014)
 ```
 
 Kemudian:
 
 ```text
 NEXT TASK
-ARC-ACT-012 Define Signal Deduplication Semantics
+ARC-ACT-013 Unify Segment Runner (OOS + robustness)
 ```
 
 ---
@@ -1890,6 +1890,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.22
+**Version:** 1.3.23
 
 **End of Document**

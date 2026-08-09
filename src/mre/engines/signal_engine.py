@@ -17,6 +17,13 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
     required type. The resulting Signal timestamp is the latest of its
     constituent Events (FND-009 §13.5).
 
+    Deduplication (SignalRule.cooldown, ARC-008 ARC-ACT-012): when a rule
+    has ``cooldown > 0``, consecutive Signals from that rule are suppressed
+    unless separated by at least ``cooldown`` candle references (measured
+    at the Signal reference, i.e. the confirmation candle). This collapses
+    overlapping triggers that reuse the same confirmation into one decision
+    per episode (EXP-001 §15.3). ``cooldown = 0`` keeps legacy behavior.
+
     Raises ValueError if the definition is empty or an Event reference
     is not an integer (required for window semantics).
     """
@@ -36,6 +43,7 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
             for event_type in rule.confirmations
         }
 
+        last_signal_ref: int | None = None
         for trigger in triggers:
             trigger_ref = _ref(trigger)
             selected: list[Event] = [trigger]
@@ -54,6 +62,10 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
                 continue
 
             selected.sort(key=lambda e: (e.timestamp, e.event_type, _ref(e)))
+            signal_ref = _ref(selected[-1])
+            if rule.cooldown > 0 and last_signal_ref is not None and signal_ref < last_signal_ref + rule.cooldown:
+                continue
+
             signals.append(
                 Signal(
                     signal_type=rule.signal_type,
@@ -64,6 +76,7 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
                     experiment_id=trigger.experiment_id,
                 )
             )
+            last_signal_ref = signal_ref
 
     return tuple(signals)
 

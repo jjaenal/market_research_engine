@@ -65,6 +65,21 @@ def test_rule_defaults_to_empty_payload_filter() -> None:
     assert rule.trigger_payload == {}
 
 
+def test_rule_default_cooldown_disabled() -> None:
+    rule = SignalRule(signal_type="LONG", trigger="A", confirmations=("B",), window=3)
+    assert rule.cooldown == 0
+
+
+def test_rule_accepts_cooldown() -> None:
+    rule = SignalRule(signal_type="LONG", trigger="A", confirmations=("B",), window=3, cooldown=5)
+    assert rule.cooldown == 5
+
+
+def test_rule_rejects_negative_cooldown() -> None:
+    with pytest.raises(ValueError):
+        SignalRule(signal_type="LONG", trigger="A", confirmations=("B",), window=3, cooldown=-1)
+
+
 def test_rule_accepts_payload_filter() -> None:
     rule = SignalRule(
         signal_type="LONG",
