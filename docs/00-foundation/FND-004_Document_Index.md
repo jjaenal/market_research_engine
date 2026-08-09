@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.37
+version: 1.1.38
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -134,6 +134,7 @@ docs/02-architecture/
 | ARC-005 | Plugin Architecture | `docs/02-architecture/ARC-005_Plugin_Architecture.md` | 1.1.0   | Approved |
 | ARC-006 | Module Architecture | `docs/02-architecture/ARC-006_Module_Architecture.md` | 1.1.0   | Approved |
 | ARC-007 | Architecture Review | `docs/02-architecture/ARC-007_Architecture_Review.md` | 1.1.0   | Approved |
+| ARC-008 | Architecture Review Based on Evidence | `docs/02-architecture/ARC-008_Architecture_Review_Based_on_Evidence.md` | 1.0.0 | Result |
 
 ---
 
@@ -491,7 +492,7 @@ Contoh:
 ```text
 ARC-003
 Status: Deprecated
-Superseded By: ARC-008
+Superseded By: ARC-999 (contoh)
 ```
 
 ---
@@ -800,6 +801,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.37
+**Version:** 1.1.38
 
 **End of Document**
