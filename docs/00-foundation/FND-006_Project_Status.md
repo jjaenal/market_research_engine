@@ -609,6 +609,14 @@ Stationarity Mitigations (regime high ATR 14/100 + SL/TP ATR 1.0/4.0 +
 cooldown 10) pada XAUUSD H4, venue cost 1.0 bps/side; config frozen identik
 EXP-007 §9 kecuali tiga mitigasi §9.3–§9.5; target: expectancy > 0 DAN OOS
 train & test > 0 (stasionaritas — kriteria yang gagal di EXP-007)
+    ↓ (TODO-049 Run EXP-008)
+EXP-008 REJECTED per kriteria pre-registered (mitigasi gabungan @ 1.0
+bps/side → expectancy +2.6211, n=167 ≥ 30; breakeven ≈ 8.8 bps/side ≥ 1.0
+bps; OOS test +9.5649 positif namun OOS train −0.6073 negatif — tidak
+stasioner; 2/4 slice temporal positif, 5/5 combos positif, XAGUSD +0.0216
+tipis; 3/4 kriteria §13 terpenuhi, stasionaritas TIDAK — EXP-008 §15–§18;
+mitigasi gabungan = mekanisme risk/cost-tolerance efektif (22× expectancy,
+breakeven 1.32 → 8.8 bps, Max DD −78%) namun BUKAN mekanisme stasionaritas)
 ```
 
 Expected research questions:
@@ -1084,6 +1092,22 @@ bps/side, same `datasets/XAUUSD_H4.csv`). Decision criteria (EXP-008 §13):
 expectancy > 0 with n ≥ 30, breakeven ≥ 1.0 bps/side, OOS test > 0, OOS
 train > 0 (stationarity — the criterion that failed in EXP-007). Pre-
 registered in `docs/07-experiments/EXP-008_Swing_Breakout_Combined_Mitigations.md`.
+
+EXP-008 RESULT (TODO-048/049, doc 1.0.1): **REJECTED** per pre-registered
+criteria (EXP-008 §13) — 3/4 met, stationarity not. Baseline @ 1.0 bps/side
+on XAUUSD H4 with combined mitigations (regime high + SL/TP ATR 1.0/4.0 +
+cooldown 10): expectancy **+2.6211** (n=167 ≥ 30), PF 1.40, win rate 0.359,
+Max DD 207 (vs 923 in EXP-007); breakeven ≈ **8.8 bps/side** (highest on any
+XAUUSD line). OOS test **+9.5649** (positive) but OOS train **−0.6073**
+(negative — NOT stationary); 2/4 temporal slices positive (period-4-of-4
++11.69), 5/5 combos positive, XAGUSD thin positive (+0.0216), negative only
+at 10 bps/side on the cost grid. Key finding: the combined mitigations are a
+**highly effective risk/cost-tolerance mechanism** (22× expectancy, breakeven
+1.32 → 8.8 bps, Max DD −78%) but **NOT a stationarity mechanism** — the edge
+remains temporally non-stationary (concentrated in the 2022–2026 bullish
+period). Candidates (EXP-008 §18.3): close the Swing Breakout line, retest on
+other timeframe/instrument, or different stationarity mitigation (separate
+pre-registration).
 ```
 
 ---
@@ -1688,6 +1712,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.40
+**Version:** 1.3.41
 
 **End of Document**
