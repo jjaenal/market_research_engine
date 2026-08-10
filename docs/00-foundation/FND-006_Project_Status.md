@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.34
+version: 1.3.35
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -534,8 +534,11 @@ EXP-002 PRE-REGISTERED (re-test edge pada biaya venue nyata XAUUSD,
 spread + komisi + slippage retail ECN ~1.0 bps/side — EXP-002 §6/§9.5)
     ↓ (TODO-036 EXP-002 run — venue cost grid)
 EXP-002 SUPPORTED (verdict pre-registered: representative 1.0 bps/side →
-expectancy 0.5111, n=1403 ≥ 30; breakeven ≈ 2.43 bps/side — EXP-002 §16.1)
-    ↓ (TODO-037 EXP-002 OOS/robustness pada venue cost grid)
+expectancy 0.5111, n=1403 ≥ 30; breakeven ≈ 2.43 bps/side — EXP-002 §18.1)
+    ↓ (TODO-037 EXP-002 OOS/robustness — venue cost)
+EXP-002 OOS/ROBUSTNESS DONE (test exp 1.9810 positif OOS, namun train
+negatif & 1/4 slice temporal positif → edge tidak stasioner; belum cukup
+bukti tradable — EXP-002 §16/§17/§18.3)
 ```
 
 Expected research questions:
@@ -878,7 +881,14 @@ XAUUSD venue execution costs (~1.0 bps/side) instead of the synthetic
 EXP-002 run (TODO-036): SUPPORTED per pre-registered criteria — expectancy
 0.5111 at representative 1.0 bps/side (n=1403 ≥ 30), breakeven ≈ 2.43
 bps/side; grid 0.5–2.0 bps/side all positive. Verdict M7 refined (EXP-002
-§16.1). Next: TODO-037 EXP-002 OOS/robustness.
+§18.1).
+
+EXP-002 OOS/robustness (TODO-037): edge positive OOS (test expectancy
+1.9810, PF 1.3077) but NOT stationary — train negative (−0.1605), only 1/4
+temporal slices positive at venue cost; XAGUSD positive thin (0.0342).
+Conclusion (EXP-002 §18.3): SUPPORTED for representative venue price, but
+temporal non-stationarity means insufficient evidence as tradable strategy
+yet — recommend regime segmentation / newer data.
 ```
 
 ---
@@ -1483,6 +1493,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.34
+**Version:** 1.3.35
 
 **End of Document**

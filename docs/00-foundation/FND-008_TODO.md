@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.33
+version: 1.3.34
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -182,7 +182,7 @@ M1 Product Definition
 | TODO-034 | M3 Research Review                    |       P1 | DONE        |
 | TODO-035 | Create EXP-002 (real venue cost)      |       P1 | DONE        |
 | TODO-036 | Run EXP-002 (real venue cost)         |       P1 | DONE        |
-| TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | IN PROGRESS  |
+| TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | DONE        |
 
 ---
 
@@ -1522,9 +1522,10 @@ Kemudian:
 
 ```text
 NEXT TASK
-EXP-002 run selesai (TODO-036): SUPPORTED pada venue cost grid
-(breakeven ~2.43 bps/side). Berikutnya: TODO-037 EXP-002
-OOS/robustness pada venue cost grid.
+EXP-002 OOS/robustness selesai (TODO-037): edge positif OOS (test exp
+1.9810) namun tidak stasioner — train negatif, 1/4 slice temporal positif.
+Berikutnya: evaluasi tradable vs research-only (regime segmentation,
+data baru) atau definisikan experiment berikutnya.
 ```
 
 ---
@@ -1847,12 +1848,13 @@ Re-test hipotesis EXP-001 terhadap biaya eksekusi venue nyata
 Dijalankan via TODO-036 (EXP-002 §15): venue cost grid seluruhnya
 expectancy positif (0.5–2.0 bps/side), representative 1.0 bps/side →
 expectancy 0.5111 (n=1403 ≥ 30); breakeven ≈ 2.43 bps/side.
-Verdict pre-registered: **SUPPORTED** (EXP-002 §16).
+Verdict pre-registered: **SUPPORTED** (EXP-002 §18).
 
 ## Next
 
 ```text
-TODO-037 EXP-002 OOS/robustness pada venue cost grid
+TODO-037 EXP-002 OOS/robustness pada venue cost grid — DONE (edge positif
+OOS namun tidak stasioner; EXP-002 §16/§17)
 ```
 
 ---
@@ -1886,12 +1888,13 @@ Jalankan strategi frozen `configs/EXP-002.yaml` pada venue cost grid
   0.3325/0.1539 (seluruhnya positif);
 - breakeven ≈ 2.43 bps/side;
 - verdict: SUPPORTED — edge bertahan pada biaya venue nyata
-  (EXP-002 §16.1); verdict M7 diperhalus.
+  (EXP-002 §18.1); verdict M7 diperhalus.
 
 ## Next
 
 ```text
-TODO-037 EXP-002 OOS/robustness pada venue cost grid
+TODO-037 EXP-002 OOS/robustness pada venue cost grid — DONE (edge positif
+OOS namun tidak stasioner; EXP-002 §16/§17)
 ```
 
 ---
@@ -1900,7 +1903,7 @@ TODO-037 EXP-002 OOS/robustness pada venue cost grid
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -1919,13 +1922,24 @@ segmen OOS dan slice temporal/market lain, reuse `run_on_slice`
 ## Deliverable
 
 - OOS train/test dan robustness (periods, markets, costs) untuk EXP-002;
-- catatan hasil pada EXP-002 (section lanjutan).
+- catatan hasil pada EXP-002 (§16/§17) dan Conclusion diperbarui (§18).
+
+## Result
+
+- OOS (split 70/30): test expectancy 1.9810 (PF 1.3077), namun train
+  negatif (−0.1605) — edge positif OOS namun tidak stasioner;
+- robustness temporal: hanya 1/4 slice positif pada biaya venue;
+- cross-market XAGUSD: expectancy 0.0342 (PF 1.2579) positif tipis;
+- kombos parameter: 3/5 positif (baseline + 10/7 + 30/7);
+- kesimpulan (EXP-002 §18.3): SUPPORTED untuk harga representative venue,
+  namun non-stasionaritas temporal → belum cukup bukti sebagai strategi
+  tradable; rekomendasi regime segmentation + data terbaru.
 
 ## Next
 
 ```text
-Evaluasi hasil OOS/robustness; putuskan status tradable vs masih
-research-only (FND-007 §38).
+Evaluasi tradable vs research-only (regime volatility segmentation,
+data baru) atau definisikan experiment berikutnya.
 ```
 
 ---
@@ -2032,6 +2046,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.33
+**Version:** 1.3.34
 
 **End of Document**
