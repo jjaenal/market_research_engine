@@ -596,13 +596,13 @@ memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk
 strategi berbasis harga (EXP-005 §18.2, EXP-006 §18.2). Kandidat lanjutan:
 eksplorasi instrumen/konteks pasar lain dengan pre-registration terpisah.
     ↓ (keputusan peneliti, EXP-006 §18.3; TODO-046 Create EXP-007)
-EXP-007 PRE-REGISTERED (kelas strategi baru — Swing Breakout (Fractal
-Structure): swing-high fractal menetapkan level resistensi struktural,
-kemudian price confirmation menembus level tersebut dalam window — trigger
-SWING_HIGH → confirmation PRICE_CONFIRMATION, kebalikan urutan Price
-Breakout; plugin `swing_breakout` (ARC-ACT-010); config frozen identik
-EXP-006 §9 kecuali strategy_id; dataset XAUUSD H4 sama; venue cost 1.0
-bps/side — EXP-007 §6/§8/§9/§13)
+EXP-007 REJECTED per kriteria pre-registered (Swing Breakout fractal-structure
+baseline @ 1.0 bps/side → expectancy +0.1170, n=425 ≥ 30; breakeven ≈ 1.32
+bps ≥ 1.0 bps; OOS test +4.2421 positif namun OOS train −1.8114 negatif —
+tidak stasioner; 1/4 slice temporal positif, 3/5 combos positif, XAGUSD
++0.0056 tipis; 3/4 kriteria §13 terpenuhi, stasionaritas TIDAK — EXP-007
+§15–§18; gross edge pertama di line XAUUSD: positif di biaya nol +0.4775,
+namun edge tidak stasioner temporal dan toleransi biaya sempit)
 ```
 
 Expected research questions:
@@ -1051,22 +1051,20 @@ Price Breakout H1 EXP-005, Price Breakout H4 EXP-006) all fail to show a
 tradable edge at realistic venue costs (EXP-006 §18.2). Line Price Breakout
 is now CLOSED (EXP-006 §18.3).
 
-EXP-007 (pre-registered, TODO-046): tests a NEW strategy class — **Swing
-Breakout (Fractal Structure)** — on XAUUSD H4, per the researcher decision
-(EXP-006 §18.3) to explore a structurally different strategy rather than
-mine parameters of a failed line. A LONG signal fires when a swing-high
-fractal (structural resistance level, swing detector left/right = 2) is
-broken by a price confirmation (close > N-bar highest high) within the
-confirmation window; entry at the breakout (price confirmation) candle.
-Trigger `SWING_HIGH` → confirmation `PRICE_CONFIRMATION` — the structural
-complement of Price Breakout (EXP-005/006) where the Donchian breakout
-fires first and the swing-high fractal confirms after. New plugin
-`swing_breakout` (`src/mre/strategies/exp007.py`, ARC-ACT-010 — consumes
-only existing Event types, no engine change). Config frozen identical to
-EXP-006 §9 except strategy_id (venue cost 1.0 bps/side, no regime filter,
-no SL/TP, same XAUUSD H4 dataset `datasets/XAUUSD_H4.csv`). Decision
-criteria (EXP-007 §13): expectancy > 0 with n >= 30, breakeven >= 1.0
-bps/side, OOS test AND train both positive. Run = TODO-047 (pending).
+EXP-007 RESULT (TODO-046/047, doc 1.0.1): **REJECTED** per pre-registered
+criteria (EXP-007 §13) — 3/4 met, stationarity not. Baseline @ 1.0 bps/side
+on XAUUSD H4: expectancy **+0.1170** (n=425 ≥ 30), PF 1.013, win rate 0.508;
+breakeven ≈ **1.32 bps/side** ≥ 1.0 bps. OOS test **+4.2421** (positive) but
+OOS train **−1.8114** (negative — NOT stationary); the edge is concentrated
+in the recent period (period-4-of-4 +5.90, 1/4 temporal slices positive).
+Robustness: 3/5 combos positive (lookback 10 best +0.90), XAGUSD thin
+positive (+0.0056). Key finding: this is the **first line on XAUUSD with a
+gross edge** — expectancy positive even at ZERO cost (+0.4775), unlike
+EXP-005/006 (already negative at 0 bps/side) — but the edge is temporally
+non-stationary with a narrow cost tolerance (breakeven only ~0.32 bps above
+the 1.0 bps venue cost). Candidates (EXP-007 §18.3): stationarity mitigations
+(regime filter / SL/TP / cooldown), retest on other timeframe/instrument, or
+close the Swing Breakout line.
 ```
 
 ---

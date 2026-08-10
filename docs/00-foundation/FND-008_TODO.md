@@ -191,7 +191,8 @@ M1 Product Definition
 | TODO-043 | Run EXP-005 (Price Breakout)         |       P1 | DONE        |
 | TODO-044 | Create EXP-006 (Price Breakout H4)   |       P1 | DONE        |
 | TODO-045 | Run EXP-006 (Price Breakout H4)      |       P1 | DONE        |
-| TODO-046 | Create EXP-007 (Swing Breakout H4)   |       P1 | IN PROGRESS |
+| TODO-046 | Create EXP-007 (Swing Breakout H4)   |       P1 | DONE        |
+| TODO-047 | Run EXP-007 (Swing Breakout H4)      |       P1 | DONE        |
 
 ---
 
@@ -1542,7 +1543,7 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-046 Create EXP-007 (Swing Breakout H4) — IN PROGRESS.
+Sekarang: TODO-046/047 Create + Run EXP-007 (Swing Breakout H4) — DONE.
 Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
 secara formal setelah EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge
 tidak menunjukkan profil tradable yang cukup pada biaya venue realistis
@@ -1563,13 +1564,17 @@ nol (−7.9576), breakeven < 0 bps; OOS train −5.0451 & test −14.2008
 Line Price Breakout DITUTUP (EXP-006 §18.3) — hipotesis "edge spesifik H4"
 TIDAK terdukung; kegagalan lintas timeframe (H1 + H4) memperkuat kesimpulan
 bahwa XAUUSD tidak tradable pada biaya realistis untuk strategi berbasis
-harga (EXP-005 §18.2, EXP-006 §18.2). EXP-007 (pre-registered, TODO-046):
-**kelas strategi baru** Swing Breakout (Fractal Structure) — plugin
-`swing_breakout` (`src/mre/strategies/exp007.py`, ARC-ACT-010), trigger
-`SWING_HIGH` (fractal menetapkan level resistensi) → confirmation
-`PRICE_CONFIRMATION` (penembusan level dalam window); config frozen identik
-EXP-006 §9 kecuali strategy_id; dataset XAUUSD H4 sama; venue cost 1.0
-bps/side; pre-registration EXP-007 §6/§9/§13; run = TODO-047 (pending).
+harga (EXP-005 §18.2, EXP-006 §18.2). EXP-007 (**kelas strategi baru** —
+Swing Breakout Fractal Structure, plugin `swing_breakout`, `SWING_HIGH`
+trigger → `PRICE_CONFIRMATION` confirmation; config frozen identik EXP-006
+§9 kecuali strategy_id; dataset XAUUSD H4 sama; venue cost 1.0 bps/side;
+TODO-046 DONE pre-registration 1.0.0; TODO-047 DONE, doc 1.0.1): REJECTED
+per kriteria §13 — expectancy +0.1170 @ 1.0 bps/side (n=425 >= 30) dan
+breakeven ≈ 1.32 bps/side terpenuhi (3/4 kriteria), namun OOS train −1.8114
+negatif (tidak stasioner) walau OOS test +4.2421 positif; 1/4 slice positif,
+3/5 combos positif, XAGUSD +0.0056 (tipis) (EXP-007 §15–§18). Temuan kunci:
+**gross edge pertama di line XAUUSD** (positif di biaya nol +0.4775) namun
+edge tidak stasioner temporal dan toleransi biaya sempit.
 ```
 
 ---
@@ -2192,6 +2197,10 @@ juga, pre-register eksplorasi berbeda (timeframe/instrument/entry-filter),
 atau hentikan riset edge XAUUSD H1.
 → TODO-044 Create EXP-006 (Price Breakout H4) — DONE
 → TODO-045 Run EXP-006 (Price Breakout H4) — DONE
+→ TODO-046 Create EXP-007 (Swing Breakout H4) — DONE
+→ TODO-047 Run EXP-007 (Swing Breakout H4) — DONE (REJECTED: 3/4 criteria
+met — expectancy +0.1170, breakeven ≈1.32 bps, OOS test +4.24 — but OOS
+train −1.81 not stationary; gross edge exists at zero cost; EXP-007 §18)
 ```
 
 ---
@@ -2237,7 +2246,7 @@ instrumen/konteks pasar lain dengan pre-registration terpisah.
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -2264,7 +2273,15 @@ yang sama, venue cost 1.0 bps/side).
 ## Next
 
 ```text
-TODO-047 Run EXP-007 (Swing Breakout H4) — PENDING
+TODO-047 Run EXP-007 (Swing Breakout H4) — DONE (EXP-007 doc 1.0.1):
+REJECTED per kriteria §13 — 3/4 kriteria terpenuhi (expectancy +0.1170 @
+1.0 bps/side, n=425 >= 30; breakeven ≈ 1.32 bps/side >= 1.0 bps; OOS test
++4.2421 positif) namun OOS train −1.8114 negatif (tidak stasioner);
+1/4 slice positif, 3/5 combos positif, XAGUSD +0.0056 (tipis) (EXP-007
+§15–§18). Temuan kunci: gross edge pertama di line XAUUSD (positif di biaya
+nol +0.4775) namun edge tidak stasioner temporal dan toleransi biaya sempit.
+Kandidat lanjutan (EXP-007 §18.3): mitigasi stasionaritas (regime/SL/TP/
+cooldown), uji timeframe/instrument lain, atau tutup line Swing Breakout.
 ```
 
 ---
