@@ -1,0 +1,61 @@
+# EXP-003 frozen experiment configuration (RSH-002 §9, FR-012, ARC-008 §14).
+#
+# EXP-003 tests whether the EXP-002 edge (SUPPORTED at venue costs but
+# temporally non-stationary — EXP-002 §16/§17) is concentrated in the
+# HIGH volatility regime. Signals are filtered to only those confirmed
+# when short ATR (14) >= long ATR (100) — volatility expansion — via the
+# M7 regime machinery (`selected_regime`, ARC-008 §14, EXP-002 §18.3).
+#
+# Venue cost model is frozen IDENTICAL to EXP-002 (1.0 bps/side total:
+# commission_rate 0.00003 + slippage_rate 0.00007) so any difference in
+# results is attributable to the regime filter alone.
+experiment:
+  id: EXP-003
+  title: RSI Trendline Breakout — Volatility Regime Segmentation
+  hypothesis: >-
+    Edge RSI trendline breakout pada XAUUSD H1 terkonsentrasi pada regime
+    volatilitas TINGGI (ATR short >= ATR long); menyaring sinyal ke regime
+    high menghasilkan expectancy positif DAN stasioner setelah biaya
+    eksekusi venue nyata (1.0 bps/side).
+  strategy_id: rsi_trendline_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H1
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+# Volatility regime selection (ARC-008 §14, M7 machinery). selected_regime
+# "high" = only trade signals confirmed in the high (expanding) regime.
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: "high"
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H1.csv
+  normalized_dataset: experiments/EXP-003/dataset/XAUUSD_H1_normalized.csv
+  report_path: experiments/EXP-003/EXP-003_report.md
