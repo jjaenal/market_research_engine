@@ -1,12 +1,12 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.33
+version: 1.3.34
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-09
+last_updated: 2026-08-10
 
 depends_on:
   - FND-001
@@ -532,6 +532,10 @@ Next: definisikan strategi berikutnya (EXP-002 atau seterusnya)
     ↓ (TODO-035 EXP-002 pre-registered — biaya eksekusi venue nyata)
 EXP-002 PRE-REGISTERED (re-test edge pada biaya venue nyata XAUUSD,
 spread + komisi + slippage retail ECN ~1.0 bps/side — EXP-002 §6/§9.5)
+    ↓ (TODO-036 EXP-002 run — venue cost grid)
+EXP-002 SUPPORTED (verdict pre-registered: representative 1.0 bps/side →
+expectancy 0.5111, n=1403 ≥ 30; breakeven ≈ 2.43 bps/side — EXP-002 §16.1)
+    ↓ (TODO-037 EXP-002 OOS/robustness pada venue cost grid)
 ```
 
 Expected research questions:
@@ -870,6 +874,11 @@ EXP-001 §19.8).
 EXP-002 (pre-registered, TODO-035): re-test the edge against real retail
 XAUUSD venue execution costs (~1.0 bps/side) instead of the synthetic
 2-5 bps/side grid used in M7.
+
+EXP-002 run (TODO-036): SUPPORTED per pre-registered criteria — expectancy
+0.5111 at representative 1.0 bps/side (n=1403 ≥ 30), breakeven ≈ 2.43
+bps/side; grid 0.5–2.0 bps/side all positive. Verdict M7 refined (EXP-002
+§16.1). Next: TODO-037 EXP-002 OOS/robustness.
 ```
 
 ---
@@ -1474,6 +1483,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.33
+**Version:** 1.3.34
 
 **End of Document**
