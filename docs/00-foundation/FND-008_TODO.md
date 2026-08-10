@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.37
+version: 1.3.38
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -185,6 +185,8 @@ M1 Product Definition
 | TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | DONE        |
 | TODO-038 | Create EXP-003 (volatility regime)   |       P1 | DONE        |
 | TODO-039 | Run EXP-003 (volatility regime)      |       P1 | DONE        |
+| TODO-040 | Create EXP-004 (SL/TP venue cost)    |       P1 | IN PROGRESS |
+| TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | PENDING     |
 
 ---
 
@@ -1530,12 +1532,14 @@ per kriteria pre-registered — regime high (ATR 14>=100) → expectancy 0.8887
 +2.4853 (stasioner), 2/4 slice temporal positif, 4/5 combos positif
 (EXP-003 §18). Validasi tradable (EXP-003 §17.5/§17.6/§18.4): 8-slice
 robustness 4/8 positif, split-point OOS 3/4 stasioner, combined filter 4/5
-kombinasi non-ekstrem positif. Evaluasi data terbaru (di luar 100.000
-candle) DITUNDA — spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari
-sumber gratis reliabel (Yahoo delisted, Dukascopy 503/404, Stooq/Investing
-JS-challenge); GC=F futures beda instrumen/model biaya venue. Berikutnya:
-simpulkan status tradable (tergantung ketersediaan data spot terbaru) atau
-definisikan experiment berikutnya.
+kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
+(EXP-003 §18.5). Evaluasi data terbaru (di luar 100.000 candle) DITUNDA —
+spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
+(Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
+futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
+Sekarang: TODO-040 Create EXP-004 (ATR-multiple SL/TP at venue cost) —
+re-test edge regime high dengan SL/TP ATR-multiple pada biaya venue nyata
+(1.0 bps/side) yang belum pernah diuji M7 (grid sintetis 2–5 bps/side).
 ```
 
 ---
@@ -2016,6 +2020,61 @@ definisikan experiment berikutnya.
 
 ---
 
+# 83. TODO-040 — Create EXP-004 (ATR-multiple SL/TP at Venue Cost)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-004 — RSI Trendline Breakout ATR-multiple SL/TP at Venue Cost
+(pre-registration, EXP-004 §6/§9/§13).
+
+Re-test the EXP-003 high-regime edge (SUPPORTED) with ATR-multiple SL/TP
+(RQ-007 machinery, ARC-008 §14.2) at REAL venue execution costs (1.0
+bps/side) — M7 (ARC-008 §14.3) tested SL/TP only on the synthetic 2–5
+bps/side grid and answered RQ-007 TIDAK at 0.05%/side.
+
+## Deliverable
+
+- `configs/EXP-004.yaml` (frozen: identik EXP-003 + `stop_loss_atr: 1.0`
+  / `take_profit_atr: 4.0`);
+- pre-registration EXP-004 (hipotesis, variabel, kriteria keputusan
+  sebelum run).
+
+## Next
+
+```text
+TODO-041 Run EXP-004 (SL/TP venue cost) — PENDING
+```
+
+---
+
+# 84. TODO-041 — Run EXP-004 (ATR-multiple SL/TP at Venue Cost)
+
+**Priority:** P1
+
+**Status:** PENDING
+
+## Experiment
+
+EXP-004 — Run (ATR-multiple SL/TP, regime high, venue cost 1.0 bps/side).
+
+## Deliverable
+
+- baseline + OOS + robustness pada `configs/EXP-004.yaml`;
+- catatan hasil pada EXP-004 (§15–§17) dan Conclusion (§18).
+
+## Next
+
+```text
+Evaluasi tradable (data terbaru tetap deferred path, EXP-003 §18.5) atau
+definisikan experiment berikutnya.
+```
+
+---
+
 # Appendix A — Quick TODO
 
 ```text
@@ -2118,6 +2177,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.37
+**Version:** 1.3.38
 
 **End of Document**

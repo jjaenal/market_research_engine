@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.38
+version: 1.3.39
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -553,6 +553,14 @@ EXP-003 TRADABLE VALIDATION (8-slice robustness 4/8 positif; split-point
 OOS 3/4 stasioner; combined filter 4/5 kombinasi non-ekstrem positif;
 validasi data terbaru ditunda — spot XAUUSD H1 pasca 2026-05-26 tidak
 tersedia dari sumber gratis reliabel — EXP-003 §18.4)
+    ↓ (kesimpulan formal, EXP-003 §18.5)
+EXP-003 BELUM TRADABLE (bukti mendukung namun tidak cukup untuk deklarasi
+tradable penuh; validasi data terbaru = deferred path yang TIDAK
+memblokir experiment berikutnya — EXP-003 §18.5)
+    ↓ (TODO-040 Create EXP-004)
+EXP-004 PRE-REGISTERED (re-test edge regime high dengan ATR-multiple SL/TP
+pada biaya venue nyata 1.0 bps/side — M7 hanya menguji grid sintetis 2–5
+bps/side; config frozen identik EXP-003 + SL 1.0/TP 4.0 — EXP-004 §6/§9/§13)
 ```
 
 Expected research questions:
@@ -928,6 +936,20 @@ spot XAUUSD H1 past 2026-05-26 not available from reliable free sources
 challenge); GC=F futures is a different instrument with a different venue
 cost model — cannot substitute spot without re-pre-registration. Evidence
 supports but does not yet conclude tradable.
+
+EXP-003 formal conclusion (EXP-003 §18.5): BELUM TRADABLE (NOT YET
+TRADABLE) — evidence supports the SUPPORTED verdict but is insufficient
+for full tradable declaration; newer-data validation closed as a deferred
+path that does NOT block the next experiment.
+
+EXP-004 (pre-registered, TODO-040): re-test the EXP-003 high-regime edge
+(SUPPORTED) with ATR-multiple SL/TP (RQ-007 machinery, ARC-008 §14.2) at
+REAL venue execution costs (1.0 bps/side) — M7 (ARC-008 §14.3) tested
+SL/TP only on the synthetic 2-5 bps/side grid and answered RQ-007 TIDAK.
+Config frozen identical to EXP-003 (regime high, 1.0 bps/side) + SL 1.0 /
+TP 4.0 ATR-multiple. Decision criteria (EXP-004 §13): expectancy > 0,
+breakeven >= 3.44 bps/side (EXP-003 control), OOS test AND train both
+positive. Run = TODO-041 (pending).
 ```
 
 ---
@@ -1532,6 +1554,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.38
+**Version:** 1.3.39
 
 **End of Document**
