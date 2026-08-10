@@ -1,0 +1,74 @@
+# EXP-006 frozen experiment configuration (RSH-002 §9, FR-012, ARC-011 pattern).
+#
+# EXP-006 re-tests the Price Breakout (Donchian-style) strategy on a DIFFERENT
+# timeframe — XAUUSD H4 — after the H1 baseline (EXP-005) was REJECTED per
+# pre-registered criteria: expectancy negative even at zero cost, breakeven
+# < 0 bps/side, OOS train/test negative (EXP-005 §15–§18).
+#
+# Purpose: test whether the Price Breakout edge is timeframe-specific. H1
+# showed no gross edge (structural failure, EXP-005 §18.2); H4 changes the
+# signal horizon (price_lookback 20 H1 bars ≈ 5 H4 bars, hold_bars 10 H4
+# bars ≈ 2.5 days) while keeping the exact same strategy definition
+# (PRICE_CONFIRMATION + SWING_HIGH, plugin `price_breakout`, ARC-ACT-010).
+#
+# Config is frozen IDENTICAL to EXP-005 (venue cost 1.0 bps/side:
+# commission_rate 0.00003 + slippage_rate 0.00007; no regime filter, no
+# SL/TP; same indicator/event/execution/statistics sections) EXCEPT:
+#   - dataset.timeframe: H4
+#   - dataset paths point at the H4 files (datasets/XAUUSD_H4.csv)
+# so any difference in results is attributable to the timeframe alone.
+#
+# Dataset: XAUUSD_H4.csv (26816 candles, 2009-07-13 .. 2026-04-14), a
+# separate H4 export (NOT aggregated from the local H1 file; its H1-adjacent
+# range 2009-07-13 .. 2009-09-10 pre-dates the H1 dataset start, and its
+# tail ends 2026-04-14).
+experiment:
+  id: EXP-006
+  title: Price Breakout (Donchian-style) — H4 Timeframe
+  hypothesis: >-
+    Edge Price Breakout Donchian-style bersifat spesifik timeframe: pada
+    XAUUSD H4 (bukan H1) strategi momentum murni menghasilkan expectancy
+    positif setelah biaya eksekusi venue nyata (1.0 bps/side), meskipun
+    pada H1 gagal bahkan sebelum biaya (EXP-005).
+  strategy_id: price_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H4
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: ""
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  stop_loss_atr: null
+  take_profit_atr: null
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H4.csv
+  normalized_dataset: experiments/EXP-006/dataset/XAUUSD_H4_normalized.csv
+  report_path: experiments/EXP-006/EXP-006_report.md
