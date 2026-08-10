@@ -193,6 +193,7 @@ M1 Product Definition
 | TODO-045 | Run EXP-006 (Price Breakout H4)      |       P1 | DONE        |
 | TODO-046 | Create EXP-007 (Swing Breakout H4)   |       P1 | DONE        |
 | TODO-047 | Run EXP-007 (Swing Breakout H4)      |       P1 | DONE        |
+| TODO-048 | Create EXP-008 (combined mitigations)|       P1 | IN PROGRESS |
 
 ---
 
@@ -1543,7 +1544,8 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-046/047 Create + Run EXP-007 (Swing Breakout H4) — DONE.
+Sekarang: TODO-046/047 Create + Run EXP-007 (Swing Breakout H4) — DONE;
+TODO-048 Create EXP-008 (combined mitigations) — IN PROGRESS.
 Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
 secara formal setelah EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge
 tidak menunjukkan profil tradable yang cukup pada biaya venue realistis
@@ -2201,6 +2203,7 @@ atau hentikan riset edge XAUUSD H1.
 → TODO-047 Run EXP-007 (Swing Breakout H4) — DONE (REJECTED: 3/4 criteria
 met — expectancy +0.1170, breakeven ≈1.32 bps, OOS test +4.24 — but OOS
 train −1.81 not stationary; gross edge exists at zero cost; EXP-007 §18)
+→ TODO-048 Create EXP-008 (combined mitigations) — IN PROGRESS
 ```
 
 ---
@@ -2282,6 +2285,46 @@ REJECTED per kriteria §13 — 3/4 kriteria terpenuhi (expectancy +0.1170 @
 nol +0.4775) namun edge tidak stasioner temporal dan toleransi biaya sempit.
 Kandidat lanjutan (EXP-007 §18.3): mitigasi stasionaritas (regime/SL/TP/
 cooldown), uji timeframe/instrument lain, atau tutup line Swing Breakout.
+```
+
+---
+
+# 89. TODO-048 — Create EXP-008 (Combined Stationarity Mitigations)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-008 — **Swing Breakout (Fractal Structure) — Combined Stationarity
+Mitigations** pada **XAUUSD H4**. EXP-007 REJECTED per kriteria §13
+(EXP-007 §15–§18): baseline & breakeven terpenuhi, OOS test positif, namun
+OOS train negatif (tidak stasioner); temuan kunci = gross edge pertama di
+line XAUUSD (+0.4775 di biaya nol). Keputusan peneliti (EXP-007 §18.3
+kandidat 1): **mitigasi stasionaritas** — bukan parameter mining. EXP-008
+menerapkan **tiga mitigasi sekaligus** (semua machinery yang sudah ada, tanpa
+perubahan arsitektur) pada strategi `swing_breakout` yang sama: regime filter
+`high` (ATR 14/100, EXP-003 machinery), SL/TP ATR-multiple 1.0/4.0 (RQ-007
+machinery, pola EXP-004), cooldown 10 (ENG-003 §8.1). Config frozen identik
+EXP-007 §9 kecuali tiga mitigasi §9.3–§9.5 (venue cost 1.0 bps/side, dataset
+`XAUUSD_H4.csv` yang sama).
+
+## Deliverable
+
+- `configs/EXP-008.yaml` (frozen: identik EXP-007 — venue cost 1.0 bps/side,
+  dataset H4 — kecuali regime high + SL/TP ATR 1.0/4.0 + cooldown 10);
+- pre-registration EXP-008 (hipotesis, variabel, kriteria keputusan
+  sebelum run) — `docs/07-experiments/EXP-008_Swing_Breakout_Combined_Mitigations.md`.
+
+## Next
+
+```text
+TODO-049 Run EXP-008 (combined mitigations) — pre-registered (doc 1.0.0,
+kriteria §13): expectancy > 0, breakeven >= 1.0 bps/side, OOS test > 0, OOS
+train > 0 (stasionaritas — target utama). Run baseline + OOS + robustness
+dengan CLI (selalu --source datasets/XAUUSD_H4.csv + rm -rf
+experiments/EXP-008/dataset sebelum re-run).
 ```
 
 ---
@@ -2388,6 +2431,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.38
+**Version:** 1.3.39
 
 **End of Document**

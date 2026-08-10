@@ -1,0 +1,84 @@
+# EXP-008 frozen experiment configuration (RSH-002 §9, FR-012, ARC-011 pattern).
+#
+# EXP-008 re-tests the EXP-007 edge (Swing Breakout fractal-structure on
+# XAUUSD H4 — REJECTED per pre-registered criteria: expectancy +0.1170 @ 1.0
+# bps/side and breakeven ≈1.32 bps/side met, but OOS train −1.8114 negative →
+# NOT stationary; 1/4 temporal slices positive; EXP-007 §15–§18) with
+# COMBINED stationarity mitigations.
+#
+# EXP-007 was the FIRST line on XAUUSD with a gross edge (expectancy positive
+# at zero cost +0.4775, unlike EXP-005/006) but the edge is temporally
+# non-stationary (concentrated in the recent high-volatility period). The
+# researcher decision (EXP-007 §18.3, TODO-048) is to re-test the same
+# strategy with combined mitigations rather than mine parameters.
+#
+# Combined mitigations (all existing machinery, all applied simultaneously):
+#   1) Volatility regime filter (EXP-003 pattern, ARC-008 §14): regime high
+#      (ATR short 14 >= ATR long 100) — the edge is concentrated in the recent
+#      high-vol period, so filtering to high regime targets the non-stationarity.
+#   2) ATR-multiple SL/TP (RQ-007 machinery, EXP-004 pattern): stop_loss_atr
+#      1.0 / take_profit_atr 4.0 / atr_period 14 — tighter risk control.
+#   3) Signal cooldown 10 (ENG-003 §8.1, ARC-008 ARC-ACT-012): one decision
+#      per episode, reduces over-trading / signal overlap.
+#
+# Config is frozen IDENTICAL to EXP-007 §9 (venue cost 1.0 bps/side:
+# commission_rate 0.00003 + slippage_rate 0.00007; dataset XAUUSD H4;
+# event/indicator/statistics sections) EXCEPT:
+#   - regime.selected_regime: "high"
+#   - execution.stop_loss_atr: 1.0, take_profit_atr: 4.0
+#   - signal.cooldown: 10
+# so any difference in results is attributable to the mitigations combined.
+experiment:
+  id: EXP-008
+  title: Swing Breakout (Fractal Structure) — Combined Stationarity Mitigations
+  hypothesis: >-
+    Menerapkan mitigasi stasionaritas gabungan (filter regime volatilitas
+    HIGH, SL/TP ATR-multiple 1.0/4.0, dan cooldown 10) pada edge Swing
+    Breakout fractal-structure XAUUSD H4 (EXP-007 gross edge, namun tidak
+    stasioner temporal) menghasilkan expectancy positif DAN stasioner
+    (OOS train & test positif) setelah biaya eksekusi venue nyata
+    (1.0 bps/side).
+  strategy_id: swing_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H4
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+# Volatility regime selection (ARC-008 §14, M7 machinery) — identical to
+# EXP-003/004: only trade signals confirmed in the high (expanding) regime.
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: "high"
+
+signal:
+  cooldown: 10
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  stop_loss_atr: 1.0
+  take_profit_atr: 4.0
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H4.csv
+  normalized_dataset: experiments/EXP-008/dataset/XAUUSD_H4_normalized.csv
+  report_path: experiments/EXP-008/EXP-008_report.md
