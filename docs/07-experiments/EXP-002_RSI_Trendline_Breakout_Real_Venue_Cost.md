@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout — Real Venue Execution Cost
 document_id: EXP-002
-version: 1.0.1
+version: 1.0.2
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -40,7 +40,7 @@ sekarang `Result`, pre-registration `Defined`).
 
 Dokumen ini berawal sebagai **pre-registration** (RSH-001 §7.2):
 hipotesis, variabel, dan kriteria keputusan dinyatakan **sebelum**
-experiment dijalankan; run dan conclusion dicatat kemudian (§15, §16).
+experiment dijalankan; run dan conclusion dicatat kemudian (§15, §18).
 
 Motivasi (evidence input dari M7, ARC-008 §14.4):
 
@@ -311,7 +311,10 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
 - jika SUPPORTED, verdict M7 diperhalus: edge bertahan pada biaya venue
   nyata meski gagal pada grid sintetis 0.05%/side;
 - jika REJECTED, konklusi M7 diperkuat (edge tidak bertahan bahkan pada
-  biaya venue nyata).
+  biaya venue nyata);
+- OOS/robustness (TODO-037, §16/§17) memberi konteks tambahan tentang
+  stasionaritas edge — keputusan pre-registered tetap berdasarkan kriteria
+  di atas, bukan hasil OOS/robustness.
 
 ---
 
@@ -395,9 +398,115 @@ di sekitar titik nol:
 
 ---
 
-# 16. Conclusion
+# 16. Out-of-Sample Testing (TODO-037)
 
-## 16.1 Verdict (pre-registered criteria, §13)
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage, no
+retroactive allocation); strategi frozen (konfigurasi EXP-002) dijalankan
+tanpa perubahan pada kedua segmen — biaya tetap 1.0 bps/side
+(representative, §11.2). Reuse `run_on_slice` (ARC-ACT-013).
+
+Report: `experiments/EXP-002/EXP-002_oos.md`
+(Code Version `1d117da`).
+
+Split point: index 70.000 (2021-04-29 18:00 UTC) — 70% train, 30% test.
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 1403     | 943    | 453    | -            |
+| Win Rate      | 0.4783   | 0.4761 | 0.4857 | -            |
+| Expectancy    | 0.5111   | −0.1605| 1.9810 | −1334.4%     |
+| Profit Factor | 1.1177   | 0.9520 | 1.3077 | +37.4%       |
+| Net P&L       | 717.09   | −151.34| 897.41 | −693.0%      |
+| Max DD        | 643.88   | 331.12 | 415.71 | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **edge tetap positif out-of-sample** pada biaya venue (test expectancy
+  1.9810 > 0, PF 1.3077 > 1, sample cukup) — edge tidak hilang di segmen
+  tak terlihat;
+- namun **train segment negatif** pada biaya venue (−0.1605): seluruh
+  keuntungan terkonsentrasi di paruh terakhir data — sinyal bahwa edge
+  mungkin tidak stasioner, atau memang biaya venue hanya tertutup oleh
+  periode volatilitas tinggi akhir (2019+);
+- perbandingan deskriptif; threshold per RSH-004 dapat dikonfigurasi
+  per experiment.
+
+---
+
+# 17. Robustness (TODO-037)
+
+Metodologi per **RSH-003 §10**: strategi frozen (konfigurasi EXP-002,
+biaya venue representative 1.0 bps/side) dijalankan pada slice waktu
+kronologis, market lain, dan kombinasi parameter dekat-baseline.
+Reuse `run_on_slice` (ARC-ACT-013).
+
+Report: `experiments/EXP-002/EXP-002_robustness.md`
+(Code Version `1d117da`).
+
+## 17.1 Time Period Stability
+
+| Slice | Trades | Win Rate | Expectancy | PF    | Net P&L  | Max DD  |
+| ----- | ------ | -------- | ---------- | ----- | -------- | ------- |
+| period-1-of-4 | 397 | 0.4861 | −0.0688 | 0.9812 | −27.31 | 263.34 |
+| period-2-of-4 | 293 | 0.4915 | −0.0550 | 0.9795 | −16.13 | 137.39 |
+| period-3-of-4 | 329 | 0.4347 | −0.4824 | 0.8714 | −158.70| 267.88 |
+| period-4-of-4 | 379 | 0.5040 | 2.5646  | 1.3740 | 971.97 | 415.71 |
+
+Interpretasi: hanya **1/4 slice positif** pada biaya venue — robustness
+temporal lemah, konsisten dengan temuan OOS (§16): edge muncul terutama di
+slice terakhir.
+
+## 17.2 Cross-Market (XAGUSD, same timeframe)
+
+| Market | Trades | Win Rate | Expectancy | PF    | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ----- | ------- | ------ |
+| XAGUSD | 1122   | 0.5000   | 0.0342     | 1.2579| 38.40   | 19.69  |
+
+Interpretasi: edge positif tipis ter-reproduksi di XAGUSD (expectancy
+0.0342, PF 1.2579) — konsisten dengan EXP-001 §18.2.
+
+## 17.3 Execution Cost (frozen EXP-002 config)
+
+Grid biaya EXP-002 sudah dilaporkan pada §15.2 (venue-derived, seluruhnya
+positif 0–2.0 bps/side). Grid di bawah ini memakai grid biaya sintetis
+robustness (0.0002/0.0005 = 2/5 bps/side, komisi dan/atau slippage) sebagai
+pembanding M7 (EXP-001 §18.3):
+
+| comm/slip | Expectancy | PF    |
+| --------- | ---------- | ----- |
+| 0 / 0     | 0.8683     | 1.2087|
+| 0.0002 / 0| 0.1539     | 1.0340|
+| 0.0005 / 0| −0.9176    | 0.8210|
+| 0 / 0.0002| 0.1539     | 1.0340|
+| 0 / 0.0005| −0.9176    | 0.8210|
+| 0.0002/0.0002 | −0.5604 | 0.8862|
+| 0.0005/0.0005 | −2.7036 | 0.5651|
+
+Interpretasi: konsisten dengan M7 — edge gagal pada 0.05%/sisi (5 bps)
+sintetis; namun **venue nyata (~0.4–1.2 bps/side) berada di bawah
+breakeven 2.43 bps** (§15.3), sehingga kombinasi venue-actual tetap positif.
+
+## 17.4 Parameter Combinations (price_lookback / rsi_period)
+
+| Combo             | Trades | Expectancy | PF    | Net P&L  |
+| ----------------- | ------ | ---------- | ----- | -------- |
+| 20 / 14 (baseline)| 1403   | 0.5111     | 1.1177| 717.09   |
+| 10 / 7            | 2324   | 0.1132     | 1.0260| 263.11   |
+| 10 / 21           | 2354   | −0.1317    | 0.9716| −310.13  |
+| 30 / 7            | 1157   | 0.2040     | 1.0460| 236.08   |
+| 30 / 21           | 1119   | −0.0020    | 0.9996| −2.29    |
+
+Interpretasi: 3/5 kombinasi positif (termasuk baseline); kombinasi
+menjauh dari baseline (rsi 21) menjadi negatif pada biaya venue — edge
+tidak fragile di sekitar optimum (RSH-003 §10), namun sensitif pada
+kombinasi ekstrem.
+
+---
+
+# 18. Conclusion
+
+## 18.1 Verdict (pre-registered criteria, §13)
 
 ```text
 SUPPORTED
@@ -410,7 +519,7 @@ Verdict M7 diperhalus (sesuai interpretasi tambahan §13): **edge bertahan
 pada biaya venue nyata** (0.5–2.0 bps/side seluruhnya expectancy positif)
 meski gagal pada grid sintetis 0.05%/side (ARC-008 §14.4, EXP-001 §19.8).
 
-## 16.2 Implikasi
+## 18.2 Implikasi
 
 - Definisi "biaya realistis" M7 (2–5 bps/side sintetis) **konservatif
   terhadap venue nyata**: real retail XAUUSD ECN ~0.4–1.2 bps/side (§9.5)
@@ -423,39 +532,54 @@ meski gagal pada grid sintetis 0.05%/side (ARC-008 §14.4, EXP-001 §19.8).
 - margin ke nol pada biaya venue nyata: 1.0 bps/side → margin 1.43 bps
   (breakeven − biaya) — **tipis**; kejutan biaya (news/illiquidity) atau
   biaya non-ECN (markup spread broker markup) dapat menghapusnya;
-- tetap berlaku prinsip FND-009 (backtest ≠ proof): hasil ini
-  **in-sample + venue-cost model**, belum divalidasi OOS/robustness untuk
-  EXP-002 (bisa menjadi EXP-002 lanjutan atau EXP-003).
+- **OOS/robustness (TODO-037) memberi peringatan penting**: edge positif
+  OOS (test exp 1.9810, §16) namun **tidak stasioner** — train negatif,
+  hanya 1/4 slice temporal positif pada biaya venue (§17.1). Keuntungan
+  terkonsentrasi di paruh terakhir data (volatilitas 2019+).
 
-## 16.3 Keputusan Lanjutan (peneliti)
+## 18.3 Keputusan Lanjutan (peneliti)
 
-Hipotesis EXP-002 **didukung secara pre-registered**. Sebelum
-memperlakukan edge sebagai tradable, evidence berikut direkomendasikan:
+Hipotesis EXP-002 **didukung secara pre-registered** untuk harga
+representative venue (1.0 bps/side). Namun OOS/robustness (TODO-037)
+memperhalus interpretasi:
 
-- EXP-002 OOS/robustness pada venue cost grid (reuse `run_on_slice`,
-  ARC-ACT-013);
-- validasi slippage model terhadap data tick (jika tersedia);
-- pertimbangan margin biaya tipis (1.43 bps) terhadap akurasi model biaya.
+- **edge tidak cukup bukti sebagai strategi tradable saat ini**:
+  non-stasionaritas temporal (train negatif, 1/4 slice positif) berarti
+  konfirmasi OOS positif hanya pada periode volatilitas tinggi — belum
+  cukup untuk menyatakan edge bertahan secara konsisten;
+- rekomendasi sebelum tradable:
+  - segmentasi temporal (regime volatility selection, M7 machinery) untuk
+    melihat apakah edge terkonsentrasi pada regime high saja;
+  - validasi slippage model terhadap data tick (jika tersedia);
+  - pertimbangan margin biaya tipis (1.43 bps) terhadap akurasi model biaya;
+  - evaluasi ulang dengan data terbaru (di luar 100.000 candle, jika
+    tersedia).
+- Verdict M7 tetap diperhalus: pada **biaya venue nyata** edge tidak
+  sepenuhnya gagal (grid venue positif), namun robustness temporal lemah
+  membuat status "tradable" belum terpenuhi — konsisten dengan FND-009
+  (backtest ≠ proof).
 
 ---
 
-# 17. Record Lifecycle
+# 19. Record Lifecycle
 
 ```text
 Defined (spesifikasi + konfigurasi frozen)    ← 2026-08-09 (pre-registration)
     ↓ (TODO-035 Run EXP-002)
 Run          ← 2026-08-10 (TODO-036, §15)
     ↓
-Result (metrics dicatat)    ← saat ini (§15.1)
+Result (metrics dicatat)    ← 2026-08-10 (§15)
     ↓
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§16)
+OOS / robustness            ← 2026-08-10 (TODO-037, §16/§17)
+    ↓
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18)
     ↓
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 18. Traceability
+# 20. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -464,11 +588,13 @@ Reviewed (validasi, RSH-003)
 | Metrics         | RSH-002 §8, FND-008 §25      |
 | Reproducibility | FR-010, NFR-001, RSH-002 §9  |
 | Venue cost      | RSH-003 §10 (cost dimension) |
+| Out-of-sample   | RSH-003 §6/§7, TODO-037      |
+| Robustness      | RSH-003 §10, TODO-037        |
 | Conclusion      | FR-011, RSH-001 §13          |
 
 ---
 
-# 19. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -482,7 +608,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 20. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -512,11 +638,12 @@ Venue cost basis (eksternal, dikompilasi saat pre-registration):
 
 ---
 
-# 21. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
-| 1.0.1   | 2026-08-10 | EXP-002 run (TODO-036) dicatat (§15): venue cost grid + breakeven ≈ 2.43 bps/side; verdict SUPPORTED (§16.1) — edge bertahan pada biaya venue nyata, verdict M7 diperhalus |
+| 1.0.2   | 2026-08-10 | EXP-002 OOS/robustness (TODO-037) dicatat (§16/§17): edge positif OOS (test exp 1.9810) namun tidak stasioner — train negatif, 1/4 slice temporal positif; Conclusion diperbarui (§18.2/§18.3) |
+| 1.0.1   | 2026-08-10 | EXP-002 run (TODO-036) dicatat (§15): venue cost grid + breakeven ≈ 2.43 bps/side; verdict SUPPORTED (§18.1) — edge bertahan pada biaya venue nyata, verdict M7 diperhalus |
 | 1.0.0   | 2026-08-09 | Initial EXP-002 pre-registration (TODO-035): real venue execution cost re-test |
 
 ---
@@ -525,6 +652,6 @@ Venue cost basis (eksternal, dikompilasi saat pre-registration):
 
 **Document ID:** EXP-002
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**
