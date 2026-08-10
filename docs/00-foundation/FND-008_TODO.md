@@ -189,7 +189,8 @@ M1 Product Definition
 | TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | DONE        |
 | TODO-042 | Create EXP-005 (Price Breakout)      |       P1 | DONE        |
 | TODO-043 | Run EXP-005 (Price Breakout)         |       P1 | DONE        |
-| TODO-044 | Create EXP-006 (Price Breakout H4)   |       P1 | IN PROGRESS |
+| TODO-044 | Create EXP-006 (Price Breakout H4)   |       P1 | DONE        |
+| TODO-045 | Run EXP-006 (Price Breakout H4)      |       P1 | DONE        |
 
 ---
 
@@ -1550,13 +1551,20 @@ config identik EXP-002 (venue cost 1.0 bps/side). Hasil (EXP-005 §15–§18):
 expectancy −3.4848 @ 1.0 bps/side (n=3882), breakeven < 0 bps (negatif
 bahkan di biaya nol −3.1186), OOS train −2.6301 & test −5.2396, 0/4 slice
 positif, 0/5 combos, XAGUSD negatif; verdict REJECTED — 0/4 kriteria
-pre-registered terpenuhi. Sekarang: TODO-044 Create EXP-006 (Price Breakout
-H4) — IN PROGRESS. Dua kelas strategi (RSI + Price Breakout) gagal pada
-XAUUSD H1 (EXP-005 §18.2); EXP-006 menguji apakah edge Price Breakout
+pre-registered terpenuhi. EXP-006 menguji apakah edge Price Breakout
 bersifat spesifik timeframe dengan strategi identik pada XAUUSD H4
 (`datasets/XAUUSD_H4.csv`, 26.816 candle, 2009-07-13..2026-04-14) — config
-frozen identik EXP-005 §9 kecuali timeframe → H4; pre-registration EXP-006
-§6/§9/§13; run = TODO-045 (pending).
+frozen identik EXP-005 §9 kecuali timeframe → H4 (TODO-044 DONE, pre-registration
+EXP-006 1.0.0; TODO-045 DONE, doc 1.0.1): REJECTED per kriteria §13 —
+expectancy −8.3297 @ 1.0 bps/side (n=1188 >= 30), negatif bahkan di biaya
+nol (−7.9576), breakeven < 0 bps; OOS train −5.0451 & test −14.2008
+(keduanya negatif); 0/4 slice, 0/5 combos, XAGUSD −0.1232 (EXP-006 §15–§18).
+Sekarang: line Price Breakout DITUTUP (EXP-006 §18.3) — hipotesis "edge
+spesifik H4" TIDAK terdukung; kegagalan lintas timeframe (H1 + H4)
+memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk
+strategi berbasis harga (EXP-005 §18.2, EXP-006 §18.2). Kandidat lanjutan:
+eksplorasi instrumen/konteks pasar lain dengan pre-registration terpisah
+(EXP-006 §18.3).
 ```
 
 ---
@@ -2177,7 +2185,8 @@ EXP-005) sama-sama gagal menunjukkan edge tradable pada XAUUSD H1 di biaya
 venue realistis. Kandidat lanjutan (EXP-005 §18.3): tutup line Price Breakout
 juga, pre-register eksplorasi berbeda (timeframe/instrument/entry-filter),
 atau hentikan riset edge XAUUSD H1.
-→ TODO-044 Create EXP-006 (Price Breakout H4) — IN PROGRESS
+→ TODO-044 Create EXP-006 (Price Breakout H4) — DONE
+→ TODO-045 Run EXP-006 (Price Breakout H4) — DONE
 ```
 
 ---
@@ -2186,7 +2195,7 @@ atau hentikan riset edge XAUUSD H1.
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -2207,7 +2216,14 @@ kecuali dataset/timeframe → H4 (`datasets/XAUUSD_H4.csv`, 26.816 candle,
 ## Next
 
 ```text
-TODO-045 Run EXP-006 (Price Breakout H4) — PENDING
+TODO-045 Run EXP-006 (Price Breakout H4) — DONE (EXP-006 doc 1.0.1):
+REJECTED per kriteria §13 — expectancy −8.3297 @ 1.0 bps/side (n=1188),
+negatif bahkan di biaya nol (−7.9576), breakeven < 0 bps; OOS train −5.0451
+& test −14.2008 (keduanya negatif); 0/4 slice temporal, 0/5 combos, XAGUSD
+−0.1232; 0/4 kriteria terpenuhi (EXP-006 §15–§18). Hipotesis "edge spesifik
+H4" TIDAK terdukung — kegagalan lintas timeframe (H1 + H4). Line Price
+Breakout DITUTUP (EXP-006 §18.3). Kandidat lanjutan: eksplorasi
+instrumen/konteks pasar lain dengan pre-registration terpisah.
 ```
 
 ---

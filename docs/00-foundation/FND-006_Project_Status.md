@@ -585,10 +585,16 @@ bahkan di biaya nol −3.1186; OOS train −2.6301 & test −5.2396, keduanya
 negatif; 0/4 slice temporal, 0/5 combos, XAGUSD negatif; 0/4 kriteria §13
 terpenuhi — EXP-005 §15–§18)
     ↓ (keputusan peneliti, EXP-005 §18.3; TODO-044 Create EXP-006)
-EXP-006 PRE-REGISTERED (uji apakah edge Price Breakout bersifat spesifik
-timeframe: strategi identik pada XAUUSD H4 — dataset `XAUUSD_H4.csv` 26.816
-candle 2009-07-13..2026-04-14; config frozen identik EXP-005 §9 kecuali
-timeframe → H4; venue cost 1.0 bps/side — EXP-006 §6/§9/§13)
+EXP-006 REJECTED per kriteria pre-registered (Price Breakout H4 baseline @
+1.0 bps/side → expectancy −8.3297, n=1188 ≥ 30; breakeven < 0 bps — negatif
+bahkan di biaya nol −7.9576; OOS train −5.0451 & test −14.2008, keduanya
+negatif; 0/4 slice temporal, 0/5 combos, XAGUSD negatif; 0/4 kriteria §13
+terpenuhi — EXP-006 §15–§18; hipotesis "edge spesifik H4" TIDAK terdukung)
+    ↓ (keputusan peneliti, EXP-006 §18.3; line Price Breakout DITUTUP)
+Line Price Breakout CLOSED — kegagalan lintas timeframe (H1 + H4)
+memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk
+strategi berbasis harga (EXP-005 §18.2, EXP-006 §18.2). Kandidat lanjutan:
+eksplorasi instrumen/konteks pasar lain dengan pre-registration terpisah.
 ```
 
 Expected research questions:
@@ -1021,16 +1027,22 @@ the cross-line conclusion: two distinct strategy classes on XAUUSD H1
 (RSI Trendline Breakout EXP-001..004 and Price Breakout EXP-005) both
 fail to show a tradable edge at realistic venue costs (EXP-005 §18.2).
 
-EXP-006 (pre-registered, TODO-044): tests whether the Price Breakout edge is
-timeframe-specific by running the IDENTICAL strategy and frozen config
-(EXP-005 §9, venue cost 1.0 bps/side) on XAUUSD H4 instead of H1. New
-dataset `datasets/XAUUSD_H4.csv` (26,816 candles, 2009-07-13..2026-04-14) —
-a separate H4 export, NOT aggregated from the local H1 file (range differs:
-starts earlier 2009-07-13, ends earlier 2026-04-14). The price_lookback 20
-and hold_bars 10 express an ~4x longer horizon on H4 (≈5 days lookback,
-≈2.5 days hold vs ≈1 day / ≈10 h on H1). Decision criteria (EXP-006 §13):
-expectancy > 0 with n >= 30, breakeven >= 1.0 bps/side, OOS test AND train
-both positive. Run = TODO-045 (pending).
+EXP-006 RESULT (TODO-044/045, doc 1.0.1): REJECTED — 0/4 criteria met.
+Baseline @ 1.0 bps/side on XAUUSD H4: expectancy **−8.3297** (n=1188 ≥ 30),
+PF 0.429, win rate 0.370. Critically, expectancy is **negative even at
+ZERO cost** (−7.9576 @ comm=0/slip=0), so the gross edge is absent and
+breakeven is below 0 bps/side. OOS train −5.0451 and test −14.2008 (both
+negative, test worse than train +181.5%); 0/4 temporal slices positive; 0/5
+parameter combos positive; XAGUSD negative (−0.1232). The failure is
+structural (loss-making before costs), not a venue-cost artifact, and the
+hypothesis that the edge is H4-timeframe-specific (EXP-006 §6) is NOT
+supported — the strategy fails with similar magnitude (more negative
+expectancy) on both H1 and H4. This strengthens the cross-line conclusion:
+three testing lines on XAUUSD (RSI Trendline Breakout H1 EXP-001..004,
+Price Breakout H1 EXP-005, Price Breakout H4 EXP-006) all fail to show a
+tradable edge at realistic venue costs (EXP-006 §18.2). Line Price Breakout
+is now CLOSED (EXP-006 §18.3); candidates: explore other instruments/market
+contexts with a separate pre-registration.
 ```
 
 ---
