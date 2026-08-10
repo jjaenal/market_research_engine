@@ -189,6 +189,7 @@ M1 Product Definition
 | TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | DONE        |
 | TODO-042 | Create EXP-005 (Price Breakout)      |       P1 | DONE        |
 | TODO-043 | Run EXP-005 (Price Breakout)         |       P1 | DONE        |
+| TODO-044 | Create EXP-006 (Price Breakout H4)   |       P1 | IN PROGRESS |
 
 ---
 
@@ -1549,7 +1550,13 @@ config identik EXP-002 (venue cost 1.0 bps/side). Hasil (EXP-005 §15–§18):
 expectancy −3.4848 @ 1.0 bps/side (n=3882), breakeven < 0 bps (negatif
 bahkan di biaya nol −3.1186), OOS train −2.6301 & test −5.2396, 0/4 slice
 positif, 0/5 combos, XAGUSD negatif; verdict REJECTED — 0/4 kriteria
-pre-registered terpenuhi.
+pre-registered terpenuhi. Sekarang: TODO-044 Create EXP-006 (Price Breakout
+H4) — IN PROGRESS. Dua kelas strategi (RSI + Price Breakout) gagal pada
+XAUUSD H1 (EXP-005 §18.2); EXP-006 menguji apakah edge Price Breakout
+bersifat spesifik timeframe dengan strategi identik pada XAUUSD H4
+(`datasets/XAUUSD_H4.csv`, 26.816 candle, 2009-07-13..2026-04-14) — config
+frozen identik EXP-005 §9 kecuali timeframe → H4; pre-registration EXP-006
+§6/§9/§13; run = TODO-045 (pending).
 ```
 
 ---
@@ -2170,6 +2177,37 @@ EXP-005) sama-sama gagal menunjukkan edge tradable pada XAUUSD H1 di biaya
 venue realistis. Kandidat lanjutan (EXP-005 §18.3): tutup line Price Breakout
 juga, pre-register eksplorasi berbeda (timeframe/instrument/entry-filter),
 atau hentikan riset edge XAUUSD H1.
+→ TODO-044 Create EXP-006 (Price Breakout H4) — IN PROGRESS
+```
+
+---
+
+# 87. TODO-044 — Create EXP-006 (Price Breakout H4)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-006 — Price Breakout (Donchian-style) diuji ulang pada **XAUUSD H4**
+setelah line H1 REJECTED (EXP-005 §15–§18). Keputusan peneliti (EXP-005
+§18.3): uji apakah edge bersifat **spesifik timeframe** — strategi identik
+(plugin `price_breakout`, ARC-ACT-010), config frozen identik EXP-005 §9
+kecuali dataset/timeframe → H4 (`datasets/XAUUSD_H4.csv`, 26.816 candle,
+2009-07-13..2026-04-14; bukan agregasi dari H1 lokal — range berbeda).
+
+## Deliverable
+
+- `configs/EXP-006.yaml` (frozen: identik EXP-005 — venue cost 1.0 bps/side,
+  tanpa regime filter, tanpa SL/TP; dataset/timeframe → H4);
+- pre-registration EXP-006 (hipotesis, variabel, kriteria keputusan
+  sebelum run) — `docs/07-experiments/EXP-006_Price_Breakout_H4_Timeframe.md`.
+
+## Next
+
+```text
+TODO-045 Run EXP-006 (Price Breakout H4) — PENDING
 ```
 
 ---
