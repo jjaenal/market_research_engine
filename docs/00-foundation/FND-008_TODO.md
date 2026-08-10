@@ -1,12 +1,12 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.32
+version: 1.3.33
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-09
+last_updated: 2026-08-10
 
 depends_on:
   - FND-001
@@ -180,7 +180,9 @@ M1 Product Definition
 | TODO-032 | M1 Product Definition Review          |       P1 | DONE        |
 | TODO-033 | M2 Architecture Review                |       P1 | DONE        |
 | TODO-034 | M3 Research Review                    |       P1 | DONE        |
-| TODO-035 | Create EXP-002 (real venue cost)      |       P1 | IN PROGRESS |
+| TODO-035 | Create EXP-002 (real venue cost)      |       P1 | DONE        |
+| TODO-036 | Run EXP-002 (real venue cost)         |       P1 | DONE        |
+| TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | IN PROGRESS  |
 
 ---
 
@@ -1520,9 +1522,9 @@ Kemudian:
 
 ```text
 NEXT TASK
-EXP-002 pre-registered (TODO-035): re-test edge terhadap biaya eksekusi
-venue nyata XAUUSD (spread + komisi + slippage retail ECN, ~1.0 bps/side)
-alih-alih grid sintetis 0.02%-0.05%/sisi. Berikutnya: TODO-036 run EXP-002.
+EXP-002 run selesai (TODO-036): SUPPORTED pada venue cost grid
+(breakeven ~2.43 bps/side). Berikutnya: TODO-037 EXP-002
+OOS/robustness pada venue cost grid.
 ```
 
 ---
@@ -1818,7 +1820,7 @@ Readiness: 95%
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -1840,10 +1842,90 @@ Re-test hipotesis EXP-001 terhadap biaya eksekusi venue nyata
   (status: Defined — pre-registration);
 - `configs/EXP-002.yaml` (config frozen, venue-derived costs).
 
+## Result
+
+Dijalankan via TODO-036 (EXP-002 §15): venue cost grid seluruhnya
+expectancy positif (0.5–2.0 bps/side), representative 1.0 bps/side →
+expectancy 0.5111 (n=1403 ≥ 30); breakeven ≈ 2.43 bps/side.
+Verdict pre-registered: **SUPPORTED** (EXP-002 §16).
+
 ## Next
 
 ```text
-TODO-036 Run EXP-002 (baseline on venue cost grid)
+TODO-037 EXP-002 OOS/robustness pada venue cost grid
+```
+
+---
+
+# 79. TODO-036 — Run EXP-002 (Real Venue Cost)
+
+**Priority:** P1
+
+**Status:** DONE
+
+## Experiment
+
+```text
+EXP-002 — Run (venue cost grid)
+```
+
+## Objective
+
+Jalankan strategi frozen `configs/EXP-002.yaml` pada venue cost grid
+(§11.2) dan evaluasi terhadap kriteria pre-registered (§13).
+
+## Deliverable
+
+- `experiments/EXP-002/EXP-002_report.md` (representative 1.0 bps/side);
+- EXP-002 §15 (grid + breakeven) dan §16 (conclusion) dicatat.
+
+## Result
+
+- Representative 1.0 bps/side: expectancy 0.5111, PF 1.1177, n=1403;
+- grid 0/0.5/1.0/1.5/2.0 bps/side → expectancy 0.8683/0.6897/0.5111/
+  0.3325/0.1539 (seluruhnya positif);
+- breakeven ≈ 2.43 bps/side;
+- verdict: SUPPORTED — edge bertahan pada biaya venue nyata
+  (EXP-002 §16.1); verdict M7 diperhalus.
+
+## Next
+
+```text
+TODO-037 EXP-002 OOS/robustness pada venue cost grid
+```
+
+---
+
+# 80. TODO-037 — EXP-002 OOS/robustness (Real Venue Cost)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+```text
+EXP-002 — OOS/robustness pada venue cost grid
+```
+
+## Objective
+
+Validasi edge EXP-002 di luar sampel dan lintas periode/market pada
+venue cost grid (RSH-003 §6/§7/§10): strategi frozen
+`configs/EXP-002.yaml` (1.0 bps/side representative) dijalankan pada
+segmen OOS dan slice temporal/market lain, reuse `run_on_slice`
+(ARC-ACT-013).
+
+## Deliverable
+
+- OOS train/test dan robustness (periods, markets, costs) untuk EXP-002;
+- catatan hasil pada EXP-002 (section lanjutan).
+
+## Next
+
+```text
+Evaluasi hasil OOS/robustness; putuskan status tradable vs masih
+research-only (FND-007 §38).
 ```
 
 ---
@@ -1950,6 +2032,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.32
+**Version:** 1.3.33
 
 **End of Document**

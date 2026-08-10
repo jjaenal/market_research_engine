@@ -1,12 +1,12 @@
 ---
 title: RSI Trendline Breakout — Real Venue Execution Cost
 document_id: EXP-002
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-09
-last_updated: 2026-08-09
+last_updated: 2026-08-10
 
 depends_on:
   - RSH-001
@@ -24,7 +24,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Pre-register EXP-002 — re-test the EXP-001 edge under real retail XAUUSD venue execution costs (spread + commission + slippage)
+purpose: Record EXP-002 run (TODO-036) — re-test the EXP-001 edge under real retail XAUUSD venue execution costs (spread + commission + slippage); verdict SUPPORTED per pre-registered criteria
 ---
 
 # RSI Trendline Breakout — Real Venue Execution Cost
@@ -35,12 +35,12 @@ purpose: Pre-register EXP-002 — re-test the EXP-001 edge under real retail XAU
 
 # 1. Purpose
 
-EXP-002 mendefinisikan **experiment kedua** MRE (RSH-002 §10 lifecycle —
-state `Defined`).
+EXP-002 adalah **experiment kedua** MRE (RSH-002 §10 lifecycle — state
+sekarang `Result`, pre-registration `Defined`).
 
-Dokumen ini adalah **pre-registration** (RSH-001 §7.2): hipotesis,
-variabel, dan kriteria keputusan dinyatakan **sebelum** experiment
-dijalankan.
+Dokumen ini berawal sebagai **pre-registration** (RSH-001 §7.2):
+hipotesis, variabel, dan kriteria keputusan dinyatakan **sebelum**
+experiment dijalankan; run dan conclusion dicatat kemudian (§15, §16).
 
 Motivasi (evidence input dari M7, ARC-008 §14.4):
 
@@ -340,23 +340,122 @@ Output dirender oleh Reporting Engine (ENG-007) dengan Experiment ID.
 
 ---
 
-# 15. Record Lifecycle
+# 15. Run (TODO-036)
+
+Strategi dijalankan **frozen** (config `configs/EXP-002.yaml` = `EXP-002`),
+tanpa perubahan pada parameter strategi — hanya biaya eksekusi yang
+bervariasi pada grid venue-derived (§11.2). Determinisme diverifikasi:
+grid point zero-cost (0.8683) identik dengan baseline EXP-001 §15 (0.868)
+— kontrol determinisme (FR-010, NFR-001).
+
+Report: `experiments/EXP-002/EXP-002_report.md` (Code Version `c0ce79e`).
+
+## 15.1 Representative Scenario (1.0 bps/side, config frozen)
+
+| Metric             | Value   |
+| ------------------ | ------- |
+| Trade Count        | 1403    |
+| Win Count          | 671     |
+| Loss Count         | 732     |
+| Win Rate           | 0.4783  |
+| Loss Rate          | 0.5217  |
+| Average Win        | 10.1465 |
+| Average Loss       | 8.32137 |
+| Risk/Reward        | 1.21934 |
+| Expectancy         | 0.5111  |
+| Profit Factor      | 1.1177  |
+| Gross Profit       | 6808.33 |
+| Gross Loss         | 6091.24 |
+| Net P&L            | 717.095 |
+| Maximum Drawdown   | 643.884 |
+| Winning Streak     | 11      |
+| Losing Streak      | 12      |
+| Evidence Sufficient| True (n=1403 ≥ 30) |
+
+## 15.2 Venue-Derived Cost Grid
+
+| Scenario     | comm      | slip       | Total bps/side | Expectancy | PF     | Win Rate | n    | Net P&L   |
+| ------------ | --------- | ---------- | -------------- | ---------- | ------ | -------- | ---- | --------- |
+| Zero cost    | 0         | 0          | 0              | 0.8683     | 1.2087 | 0.4954   | 1403 | 1218.23   |
+| ECN tight    | 0.00002   | 0.00003    | 0.5            | 0.6897     | 1.1623 | 0.4847   | 1403 | 967.66    |
+| ECN rep.     | 0.00003   | 0.00007    | 1.0            | 0.5111     | 1.1177 | 0.4783   | 1403 | 717.09    |
+| ECN wide     | 0.00005   | 0.00010    | 1.5            | 0.3325     | 1.0750 | 0.4647   | 1403 | 466.53    |
+| Conservative | 0.00007   | 0.00013    | 2.0            | 0.1539     | 1.0340 | 0.4547   | 1403 | 215.96    |
+
+## 15.3 Breakeven Cost
+
+Breakeven (titik expectancy menyeberang nol), dihitung dengan grid halus
+di sekitar titik nol:
+
+- 2.40 bps/side → expectancy +0.0111 (PF 1.0024);
+- 2.45 bps/side → expectancy −0.0068 (PF 0.9985);
+- verifikasi halus: 2.43 bps/side → expectancy +0.0003 (PF 1.0001);
+  2.44 bps/side → expectancy −0.0032 (PF 0.9993);
+- **breakeven ≈ 2.43 bps/side**.
+
+---
+
+# 16. Conclusion
+
+## 16.1 Verdict (pre-registered criteria, §13)
 
 ```text
-Defined (spesifikasi + konfigurasi frozen)   ← saat ini (pre-registration)
+SUPPORTED
+- expectancy pada skenario representative (1.0 bps/side) = 0.5111 > 0
+  dengan n = 1403 >= min_sample (30): TERPENUHI;
+- biaya breakeven/side ≈ 2.43 bps >= 1.0 bps: TERPENUHI.
+```
+
+Verdict M7 diperhalus (sesuai interpretasi tambahan §13): **edge bertahan
+pada biaya venue nyata** (0.5–2.0 bps/side seluruhnya expectancy positif)
+meski gagal pada grid sintetis 0.05%/side (ARC-008 §14.4, EXP-001 §19.8).
+
+## 16.2 Implikasi
+
+- Definisi "biaya realistis" M7 (2–5 bps/side sintetis) **konservatif
+  terhadap venue nyata**: real retail XAUUSD ECN ~0.4–1.2 bps/side (§9.5)
+  berada jauh di bawah grid tempat edge gagal;
+- edge RSI trendline breakout memiliki **cost tolerance ≈ 2.43 bps/side**
+  — konsisten dengan interpolasi linier grid M7 (EXP-001 §19.7 / ARC-008
+  §14.3: 0.1539 @ 0.02% → −0.9176 @ 0.05% ≈ 2.43 bps/side; catatan: angka
+  breakeven "26 bps" pada tabel M7 tidak konsisten dengan grid-nya dan
+  tidak ter-reproduksi di sini);
+- margin ke nol pada biaya venue nyata: 1.0 bps/side → margin 1.43 bps
+  (breakeven − biaya) — **tipis**; kejutan biaya (news/illiquidity) atau
+  biaya non-ECN (markup spread broker markup) dapat menghapusnya;
+- tetap berlaku prinsip FND-009 (backtest ≠ proof): hasil ini
+  **in-sample + venue-cost model**, belum divalidasi OOS/robustness untuk
+  EXP-002 (bisa menjadi EXP-002 lanjutan atau EXP-003).
+
+## 16.3 Keputusan Lanjutan (peneliti)
+
+Hipotesis EXP-002 **didukung secara pre-registered**. Sebelum
+memperlakukan edge sebagai tradable, evidence berikut direkomendasikan:
+
+- EXP-002 OOS/robustness pada venue cost grid (reuse `run_on_slice`,
+  ARC-ACT-013);
+- validasi slippage model terhadap data tick (jika tersedia);
+- pertimbangan margin biaya tipis (1.43 bps) terhadap akurasi model biaya.
+
+---
+
+# 17. Record Lifecycle
+
+```text
+Defined (spesifikasi + konfigurasi frozen)    ← 2026-08-09 (pre-registration)
     ↓ (TODO-035 Run EXP-002)
-Run
+Run          ← 2026-08-10 (TODO-036, §15)
     ↓
-Result (metrics dicatat)
+Result (metrics dicatat)    ← saat ini (§15.1)
     ↓
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§16)
     ↓
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 16. Traceability
+# 18. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -369,7 +468,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 17. Compliance
+# 19. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -383,7 +482,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 18. References
+# 20. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -413,18 +512,19 @@ Venue cost basis (eksternal, dikompilasi saat pre-registration):
 
 ---
 
-# 19. Revision History
+# 21. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.1   | 2026-08-10 | EXP-002 run (TODO-036) dicatat (§15): venue cost grid + breakeven ≈ 2.43 bps/side; verdict SUPPORTED (§16.1) — edge bertahan pada biaya venue nyata, verdict M7 diperhalus |
 | 1.0.0   | 2026-08-09 | Initial EXP-002 pre-registration (TODO-035): real venue execution cost re-test |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-002
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**
