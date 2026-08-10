@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout — Volatility Regime Segmentation
 document_id: EXP-003
-version: 1.0.2
+version: 1.0.3
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -668,6 +668,33 @@ positif), dan stasionaritas split-point (3/4 split) **mendukung** tetapi
 belum **menyimpulkan** tradable — deklarasi tradable penuh menunggu
 validasi data terbaru di luar 100.000 candle.
 
+## 18.5 Kesimpulan Formal Status Tradable
+
+Berdasarkan seluruh evidence EXP-003 (§15–§17) dan validasi lanjutan
+(§17.5/§17.6/§18.4), peneliti **secara formal menyimpulkan**:
+
+> **Status strategi: BELUM TRADABLE (NOT YET TRADABLE).**
+>
+> - Verdict pre-registered EXP-003: **SUPPORTED** (§18.1) — edge
+>   terkonsentrasi pada regime volatilitas high dan stasioner
+>   train+test pada biaya venue nyata (1.0 bps/side).
+> - Validasi lanjutan memperkuat dukungan (4/8 slice halus positif,
+>   3/4 split-point stasioner, 4/5 kombinasi non-ekstrem positif) namun
+>   **tidak cukup** untuk deklarasi tradable penuh.
+> - Validasi pada data terbaru di luar 100.000 candle (rekomendasi
+>   §18.3) **DITUTUP sebagai deferred validation path**: spot XAUUSD H1
+>   pasca 2026-05-26 tidak tersedia dari sumber gratis yang reliabel;
+>   `GC=F` futures adalah instrumen berbeda dengan model biaya venue
+>   berbeda sehingga tidak dapat menggantikan spot tanpa pre-registrasi
+>   ulang. Path ini TIDAK memblokir experiment berikutnya.
+> - Tindak lanjut: EXP-004 (pre-registered) menguji ulang edge regime
+>   high dengan **ATR-multiple SL/TP pada biaya venue nyata** — mekanisme
+>   M7 (RQ-007) yang belum pernah diuji pada biaya venue 1.0 bps/side
+>   (M7 memakai grid sintetis 2–5 bps/side, ARC-008 §14.3).
+
+Catatan: kesimpulan ini bersifat deskriptif per RSH-003 (bukan proof);
+verdict pre-registered §13 tetap menjadi dasar SUPPORTED/NOT.
+
 ---
 
 # 19. Record Lifecycle
@@ -681,7 +708,9 @@ Result (metrics dicatat)    ← 2026-08-10 (§15)
     ↓
 OOS / robustness            ← 2026-08-10 (§16/§17)
     ↓
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18)
+Validasi tradable           ← 2026-08-10 (§17.5/§17.6/§18.4)
+    ↓
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18.5: BELUM TRADABLE)
     ↓
 Reviewed (validasi, RSH-003)
 ```
@@ -747,6 +776,7 @@ Reviewed (validasi, RSH-003)
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.3   | 2026-08-10 | Kesimpulan formal status tradable (§18.5): BELUM TRADABLE (NOT YET TRADABLE) — bukti mendukung namun tidak cukup untuk deklarasi tradable; validasi data terbaru DITUTUP sebagai deferred validation path (spot XAUUSD H1 pasca 2026-05-26 tidak tersedia, GC=F beda instrumen); tidak memblokir experiment berikutnya (EXP-004 pre-registered) |
 | 1.0.2   | 2026-08-10 | Tradable-validation addendum (§17.5–§17.6, §18.4): 8-slice robustness (4/8 positif), split-point sensitivity OOS (3/4 split stasioner), combined filter (4/5 kombinasi non-ekstrem positif); validasi data terbaru ditunda (spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel — Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F futures beda instrumen & beda model biaya venue |
 | 1.0.1   | 2026-08-10 | EXP-003 run (TODO-039) dicatat (§15–§17): regime high → expectancy 0.8887 @ 1.0 bps/side (n=698), breakeven ≈ 3.44 bps/side, OOS train +0.1297 & test +2.4853, 2/4 slice temporal positif, 4/5 combos positif; verdict SUPPORTED (§18) — edge terkonsentrasi pada regime high & stasioner train+test |
 | 1.0.0   | 2026-08-10 | Initial EXP-003 pre-registration (TODO-038): volatility regime segmentation re-test |
@@ -757,6 +787,6 @@ Reviewed (validasi, RSH-003)
 
 **Document ID:** EXP-003
 
-**Version:** 1.0.2
+**Version:** 1.0.3
 
 **End of Document**

@@ -1,0 +1,68 @@
+# EXP-004 frozen experiment configuration (RSH-002 §9, FR-012, ARC-008 §14.2).
+#
+# EXP-004 re-tests the EXP-003 edge (SUPPORTED: regime high → expectancy
+# 0.8887 @ 1.0 bps/side) with ATR-multiple SL/TP (RQ-007 machinery). M7
+# (ARC-008 §14.3) tested SL/TP only on the synthetic 2–5 bps/side grid and
+# answered RQ-007 TIDAK at 0.05%/side; EXP-004 re-tests at REAL venue
+# execution costs (1.0 bps/side) where EXP-002/EXP-003 already showed the
+# unfiltered and high-regime edges survive.
+#
+# Config is frozen IDENTICAL to EXP-003 (regime high, venue cost 1.0
+# bps/side: commission_rate 0.00003 + slippage_rate 0.00007) EXCEPT the
+# execution section adds ATR-multiple SL/TP (stop_loss_atr 1.0 /
+# take_profit_atr 4.0 — the strongest M7 combo, ARC-008 §14.3) so any
+# difference in results is attributable to the SL/TP rule alone.
+experiment:
+  id: EXP-004
+  title: RSI Trendline Breakout — ATR-multiple SL/TP at Venue Cost
+  hypothesis: >-
+    Menambahkan SL/TP ATR-multiple (SL 1.0 / TP 4.0, ATR period 14) pada
+    edge RSI trendline breakout regime volatilitas HIGH (EXP-003 SUPPORTED)
+    mempertahankan atau memperbaiki expectancy positif DAN menaikkan
+    tolerance biaya (breakeven/side) setelah biaya eksekusi venue nyata
+    (1.0 bps/side) — berbeda dari M7 (RQ-007 TIDAK) yang diuji pada grid
+    sintetis 2–5 bps/side.
+  strategy_id: rsi_trendline_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H1
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+# Volatility regime selection (ARC-008 §14, M7 machinery) — identical to
+# EXP-003: only trade signals confirmed in the high (expanding) regime.
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: "high"
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  stop_loss_atr: 1.0
+  take_profit_atr: 4.0
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H1.csv
+  normalized_dataset: experiments/EXP-004/dataset/XAUUSD_H1_normalized.csv
+  report_path: experiments/EXP-004/EXP-004_report.md
