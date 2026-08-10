@@ -603,6 +603,12 @@ tidak stasioner; 1/4 slice temporal positif, 3/5 combos positif, XAGUSD
 +0.0056 tipis; 3/4 kriteria §13 terpenuhi, stasionaritas TIDAK — EXP-007
 §15–§18; gross edge pertama di line XAUUSD: positif di biaya nol +0.4775,
 namun edge tidak stasioner temporal dan toleransi biaya sempit)
+    ↓ (keputusan peneliti, EXP-007 §18.3 kandidat 1; TODO-048 Create EXP-008)
+EXP-008 DEFINED (pre-registered, doc 1.0.0): Swing Breakout — Combined
+Stationarity Mitigations (regime high ATR 14/100 + SL/TP ATR 1.0/4.0 +
+cooldown 10) pada XAUUSD H4, venue cost 1.0 bps/side; config frozen identik
+EXP-007 §9 kecuali tiga mitigasi §9.3–§9.5; target: expectancy > 0 DAN OOS
+train & test > 0 (stasionaritas — kriteria yang gagal di EXP-007)
 ```
 
 Expected research questions:
@@ -1065,6 +1071,19 @@ non-stationary with a narrow cost tolerance (breakeven only ~0.32 bps above
 the 1.0 bps venue cost). Candidates (EXP-007 §18.3): stationarity mitigations
 (regime filter / SL/TP / cooldown), retest on other timeframe/instrument, or
 close the Swing Breakout line.
+
+EXP-008 DEFINED (TODO-048, doc 1.0.0): Swing Breakout — Combined Stationarity
+Mitigations, per researcher decision (EXP-007 §18.3 candidate 1). Re-tests
+the EXP-007 gross edge on XAUUSD H4 with three mitigations combined in one
+frozen config (all existing machinery, no architecture change): volatility
+regime filter HIGH (ATR short 14 ≥ long 100, EXP-003 pattern) — the edge is
+concentrated in the recent high-vol period; ATR-multiple SL/TP 1.0/4.0
+(RQ-007 machinery, EXP-004 pattern); cooldown 10 (ENG-003 §8.1). Config
+frozen identical to EXP-007 §9 except the three mitigations (venue cost 1.0
+bps/side, same `datasets/XAUUSD_H4.csv`). Decision criteria (EXP-008 §13):
+expectancy > 0 with n ≥ 30, breakeven ≥ 1.0 bps/side, OOS test > 0, OOS
+train > 0 (stationarity — the criterion that failed in EXP-007). Pre-
+registered in `docs/07-experiments/EXP-008_Swing_Breakout_Combined_Mitigations.md`.
 ```
 
 ---
@@ -1669,6 +1688,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.39
+**Version:** 1.3.40
 
 **End of Document**
