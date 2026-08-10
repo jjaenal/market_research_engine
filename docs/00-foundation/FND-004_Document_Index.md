@@ -235,7 +235,7 @@ docs/07-experiments/
 | EXP-005 | Price Breakout (Donchian-style) Baseline | `docs/07-experiments/EXP-005_Price_Breakout_Baseline.md` | 1.0.1 | Result |
 | EXP-006 | Price Breakout (Donchian-style) H4 Timeframe | `docs/07-experiments/EXP-006_Price_Breakout_H4_Timeframe.md` | 1.0.1 | Result |
 | EXP-007 | Swing Breakout (Fractal Structure) H4 Timeframe | `docs/07-experiments/EXP-007_Swing_Breakout_H4_Fractal_Structure.md` | 1.0.1 | Result |
-| EXP-008 | Swing Breakout (Fractal Structure) Combined Mitigations | `docs/07-experiments/EXP-008_Swing_Breakout_Combined_Mitigations.md` | 1.0.0 | Defined |
+| EXP-008 | Swing Breakout (Fractal Structure) Combined Mitigations | `docs/07-experiments/EXP-008_Swing_Breakout_Combined_Mitigations.md` | 1.0.1 | Result |
 
 Experiment documents will be added as research
 experiments are conducted.
@@ -808,6 +808,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.53
+**Version:** 1.1.54
 
 **End of Document**

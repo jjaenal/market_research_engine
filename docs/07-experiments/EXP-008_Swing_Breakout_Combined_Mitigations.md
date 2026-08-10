@@ -1,8 +1,8 @@
 ---
 title: Swing Breakout (Fractal Structure) — Combined Stationarity Mitigations
 document_id: EXP-008
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-11
@@ -25,7 +25,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Pre-register EXP-008 (TODO-048) — re-test the EXP-007 edge (Swing Breakout fractal-structure on XAUUSD H4) with COMBINED stationarity mitigations after EXP-007 was REJECTED per pre-registered criteria (EXP-007 §15–§18): expectancy +0.1170 @ 1.0 bps/side (n=425) and breakeven ≈ 1.32 bps/side both met, OOS test +4.2421 positive, but OOS train −1.8114 negative → NOT stationary. Researcher decision (EXP-007 §18.3 candidate 1): stationarity mitigations, not parameter mining — regime filter (EXP-003 machinery) + ATR-multiple SL/TP (RQ-007 machinery) + cooldown combined in one frozen config
+purpose: Pre-register EXP-008 (TODO-048) and record the run (TODO-049) — re-test the EXP-007 edge (Swing Breakout fractal-structure on XAUUSD H4) with COMBINED stationarity mitigations after EXP-007 was REJECTED per pre-registered criteria (EXP-007 §15–§18): expectancy +0.1170 @ 1.0 bps/side (n=425) and breakeven ≈ 1.32 bps/side both met, OOS test +4.2421 positive, but OOS train −1.8114 negative → NOT stationary. Researcher decision (EXP-007 §18.3 candidate 1): stationarity mitigations, not parameter mining — regime filter (EXP-003 machinery) + ATR-multiple SL/TP (RQ-007 machinery) + cooldown combined in one frozen config. Result (1.0.1): REJECTED per pre-registered criteria — expectancy +2.6211 @ 1.0 bps/side (n=167 ≥ 30) and breakeven ≈ 8.8 bps/side ≥ 1.0 bps both met, OOS test +9.5649 (positive) but OOS train −0.6073 (negative, NOT stationary); robustness improved strongly (2/4 slices, 5/5 combos, XAGUSD +0.0216, negative only at 10 bps) yet the edge remains temporally non-stationary (EXP-008 §15–§18)
 ---
 
 # Swing Breakout (Fractal Structure) — Combined Stationarity Mitigations
@@ -37,7 +37,7 @@ purpose: Pre-register EXP-008 (TODO-048) — re-test the EXP-007 edge (Swing Bre
 # 1. Purpose
 
 EXP-008 adalah **experiment kedelapan** MRE (RSH-002 §10 lifecycle — state
-sekarang `Defined`, pre-registration). EXP-007 (Swing Breakout fractal-structure,
+sekarang `Result`, pre-registration + hasil run). EXP-007 (Swing Breakout fractal-structure,
 XAUUSD H4, plugin `swing_breakout`) telah dijalankan (TODO-047) dan **REJECTED**
 per kriteria pre-registered §13 (EXP-007 §15–§18): baseline expectancy
 **+0.1170** @ 1.0 bps/side (n=425 >= 30) dan breakeven ≈ 1.32 bps/side >= 1.0 bps
@@ -63,11 +63,15 @@ arsitektur) untuk menstabilkan edge di seluruh periode dataset:
 3. **Cooldown** (10, ENG-003 §8.1, ARC-008 ARC-ACT-012): satu keputusan per
    episode — mengurangi over-trading / overlap sinyal di periode yang sama.
 
-Jika kombinasi ini menghasilkan expectancy positif DAN stasioner (OOS
-train & test positif) pada biaya venue nyata, kelas strategi struktur-fractal
-layak dilanjutkan. Jika tidak, bukti memperkuat kesimpulan bahwa edge Swing
-Breakout tidak dapat distabilkan oleh mitigasi yang tersedia (EXP-007 §18.3
-kandidat 2/3: timeframe/instrument lain atau tutup line).
+Hasil (TODO-049, doc 1.0.1): **REJECTED** per kriteria pre-registered §13 —
+expectancy **+2.6211** @ 1.0 bps/side (n=167 >= 30) dan breakeven ≈ 8.8
+bps/side >= 1.0 bps terpenuhi, OOS test **+9.5649** positif, **namun OOS
+train −0.6073 negatif** (tidak stasioner); robustness membaik drastis — 2/4
+slice temporal positif, **5/5 combos positif**, XAGUSD +0.0216 (tipis
+positif), negatif hanya di 10 bps/side (vs 2 bps di EXP-007). Temuan kunci:
+mitigasi gabungan **memperbaiki seluruh dimensi** (expectancy 22×, breakeven
+1.32 → 8.8 bps, Max DD −78%, combos 3/5 → 5/5) **kecuali stasionaritas** —
+edge masih terkonsentrasi di periode akhir (period-4-of-4 +11.69, §15–§18).
 
 ---
 
@@ -136,6 +140,13 @@ Jika EXP-008 gagal (kombinasi mitigasi tidak menstabilkan edge), bukti
 menunjukkan gross edge Swing Breakout tidak dapat dijadikan tradable oleh
 mitigasi yang tersedia pada biaya realistis — arah lanjutan adalah
 timeframe/instrument lain atau menutup line (EXP-007 §18.3).
+
+Hasil EXP-008 (§15–§18): mitigasi gabungan **memperbaiki seluruh dimensi
+profil edge** — expectancy naik 22× (+0.117 → +2.621), breakeven 1.32 → ≈ 8.8
+bps/side (6.7×), Max DD −78%, combos 3/5 → 5/5, XAGUSD tetap positif (tipis),
+negatif pada grid biaya hanya di 10 bps/side (vs 2 bps di EXP-007). **Namun
+stasionaritas tetap gagal**: OOS train −0.6073 (negatif), 2/4 slice temporal
+positif — edge masih terkonsentrasi di periode akhir (period-4-of-4 +11.69).
 
 ---
 
@@ -407,25 +418,261 @@ Serta (RSH-003):
 
 ---
 
-# 15. Record Lifecycle
+# 15. Run (TODO-049)
+
+Report: `experiments/EXP-008/EXP-008_report.md` (Code Version `5ea484e`).
+Konfigurasi frozen EXP-008 (Swing Breakout fractal-structure pada XAUUSD H4,
+venue cost 1.0 bps/side, regime high + SL/TP ATR 1.0/4.0 + cooldown 10)
+dijalankan tanpa modifikasi.
+
+## 15.1 Representative Scenario (1.0 bps/side)
+
+| Metric        | Value |
+| ------------- | ----- |
+| Trade Count   | 167   |
+| Win Rate      | 0.359281 |
+| Loss Rate     | 0.640719 |
+| Average Win   | 25.4145 |
+| Average Loss  | 10.1603 |
+| Risk/Reward   | 2.50135 |
+| Expectancy    | +2.62105 |
+| Profit Factor | 1.40262 |
+| Gross Profit  | 1524.87 |
+| Gross Loss    | 1087.15 |
+| Net P&L       | +437.715 |
+| Max Drawdown  | 207.468 |
+| Winning Streak| 3     |
+| Losing Streak | 8     |
+
+Perbandingan vs kontrol EXP-007 (Swing Breakout, H4, 1.0 bps/side, tanpa
+mitigasi — EXP-007 §15.1):
+
+| Metric        | EXP-007 (tanpa mitigasi) | EXP-008 (mitigasi gabungan) | Δ     |
+| ------------- | ----------------------- | --------------------------- | ----- |
+| Expectancy    | +0.1170                 | +2.6211                     | +22.4×|
+| Profit Factor | 1.0135                  | 1.4026                      | +38.4%|
+| Net P&L       | +49.74                  | +437.72                     | +8.8× |
+| Win Rate      | 0.5082                  | 0.3593                      | −29.3%|
+| Max DD        | 923.06                  | 207.47                      | −77.5%|
+| Trade Count   | 425                     | 167                         | −60.7%|
+
+Interpretasi: mitigasi gabungan **mengubah profil trade secara radikal** —
+win rate turun (0.508 → 0.359) namun Risk/Reward naik drastis (0.98 → 2.50)
+karena SL/TP ATR 1.0/4.0 memotong kerugian lebih dini (avg loss 17.67 →
+10.16) sementara avg win naik (17.33 → 25.41). Expectancy naik 22× dan Max
+DD turun 77.5%. Regime high + cooldown mengurangi trade count (425 → 167) —
+memfilter sinyal ke periode ber-volatilitas tinggi yang memang tempat edge
+berada (EXP-007 §17.1).
+
+## 15.2 Zero-Cost Context (grid biaya, variabel bebas §14)
+
+| Scenario     | comm      | slip      | Total bps/side | Expectancy | PF     | Net P&L    |
+| ------------ | --------- | --------- | -------------- | ---------- | ------ | ---------- |
+| Zero cost    | 0         | 0         | 0              | +2.9039    | 1.4567 | +484.95    |
+| ECN rep.     | 0.00003   | 0.00007   | 1.0            | +2.6211    | 1.4026 | +437.72    |
+| Sintetis 2+2 | 0.0002    | 0.0002    | 4.0            | +1.4755    | 1.2045 | +246.41    |
+| Sintetis 5+5 | 0.0005    | 0.0005    | 10             | −0.3561    | 0.9572 | −59.47     |
+
+Temuan kunci: **toleransi biaya jauh lebih besar** — breakeven ≈ 8.8 bps/side
+(vs ≈ 1.32 bps di EXP-007); expectancy tetap positif bahkan di 4 bps/side
+(sintetis grid M7) dan hanya negatif di 10 bps/side (vs negatif mulai 2 bps
+di EXP-007).
+
+## 15.3 Breakeven Cost
+
+Interpolasi grid biaya: pada 4 bps/side (comm=0.0002) +1.4755, pada 10
+bps/side (comm=0.0005) −0.3561 → slope ≈ −0.31/bps → **breakeven ≈ 8.8
+bps/side**. Kriteria "breakeven >= 1.0 bps" (§13) **TERPENUHI** (lebar).
+Sebagai konteks: ini breakeven **tertinggi di seluruh line XAUUSD** — 8.8×
+di atas biaya venue 1.0 bps (vs EXP-007 yang hanya ~0.32 bps margin).
+
+---
+
+# 16. Out-of-Sample Testing (TODO-049)
+
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage, no
+retroactive allocation); strategi frozen (konfigurasi EXP-008, 1.0 bps/side)
+dijalankan tanpa perubahan pada kedua segmen. Reuse `run_on_slice`
+(ARC-ACT-013).
+
+Report: `experiments/EXP-008/EXP-008_oos.md` (Code Version `5ea484e`).
+
+Split point: index 18.771 (2021-04-01 08:00 UTC) — 70% train, 30% test
+(mekanisme identik EXP-007 §16).
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 167      | 114    | 53     | -            |
+| Win Rate      | 0.3593   | 0.3421 | 0.3962 | -            |
+| Expectancy    | +2.6211  | −0.6073 | +9.5649 | −1674.9%   |
+| Profit Factor | 1.4026   | 0.8857 | 2.0526 | +131.8%      |
+| Net P&L       | +437.72  | −69.23 | +506.94 | −832.2%   |
+| Max DD        | 207.47   | 189.11 | 87.59  | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **test positif** (+9.5649, PF 2.05) — edge sangat kuat out-of-sample pada
+  segmen akhir;
+- **train negatif** (−0.6073) — edge TIDAK stasioner; paruh awal dataset
+  merugi, keuntungan terkonsentrasi di paruh akhir (konsisten §17.1
+  period-4-of-4 +11.69);
+- kriteria §13 (OOS test & train > 0) **TIDAK TERPENUHI** karena train negatif.
+
+Catatan: dibanding EXP-007 (train −1.8114 / test +4.2421), mitigasi
+**memperbaiki kedua segmen** (train −1.81 → −0.61, test +4.24 → +9.56) namun
+train masih negatif — perbaikan, bukan stasionaritas.
+
+---
+
+# 17. Robustness (TODO-049)
+
+Metodologi per **RSH-003 §10**: strategi frozen (konfigurasi EXP-008, 1.0
+bps/side) dijalankan tanpa perubahan. Descriptive only; thresholds per
+RSH-004.
+
+Report: `experiments/EXP-008/EXP-008_robustness.md` (Code Version `5ea484e`).
+
+## 17.1 Time Period Stability (4 slices)
+
+| Slice          | Trades | Win Rate | Expectancy | PF     | Net P&L   | Max DD   |
+| -------------- | ------ | -------- | ---------- | ------ | --------- | -------- |
+| period-1-of-4  | 45     | 0.4667   | +0.8363    | 1.1725 | +37.63    | 57.33    |
+| period-2-of-4  | 38     | 0.2895   | −2.8154    | 0.4780 | −106.99   | 110.78   |
+| period-3-of-4  | 36     | 0.2222   | −0.4656    | 0.9198 | −16.76    | 73.43    |
+| period-4-of-4  | 46     | 0.4348   | +11.6854   | 2.2182 | +537.53   | 87.59    |
+
+Interpretasi: **2/4 slice positif** (naik dari 1/4 di EXP-007) — periode
+terakhir (period-4-of-4) sangat kuat (+11.69, PF 2.22), periode pertama
+(period-1-of-4) kini tipis positif (+0.84, naik dari −2.15 di EXP-007),
+namun dua slice tengah (period-2/3) masih merugi. Konsisten dengan OOS train
+negatif: edge tetap terkonsentrasi di periode akhir, walau tidak se-ekstrem
+EXP-007 (slice pertama sudah membaik).
+
+## 17.2 Cross-Market (XAGUSD)
+
+| Market | Trades | Win Rate | Expectancy | PF     | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ------ | ------- | ------ |
+| XAGUSD | 469    | 0.3710   | +0.0216    | 1.2153 | +10.15  | 4.80   |
+
+Interpretasi: XAGUSD **tipis positif** (+0.0216, n=469, PF 1.22) — edge
+ter-reproduksi lemah di market lain (catatan: XAGUSD diuji pada timeframe H1,
+dataset XAGUSD H4 tidak tersedia). Konsisten dengan EXP-007 (+0.0056).
+
+## 17.3 Execution Cost (synthetic grid)
+
+| comm/slip     | Expectancy | PF    |
+| ------------- | ---------- | ----- |
+| 0 / 0         | +2.9039    | 1.4567|
+| 0.0002 / 0    | +2.1823    | 1.3208|
+| 0.0005 / 0    | +1.1000    | 1.1470|
+| 0 / 0.0002    | +2.1971    | 1.3252|
+| 0 / 0.0005    | +1.4480    | 1.2026|
+| 0.0002/0.0002 | +1.4755    | 1.2045|
+| 0.0005/0.0005 | −0.3561    | 0.9572|
+
+Interpretasi: **seluruh grid non-10bps positif** — negatif hanya pada 10
+bps/side (0.0005/0.0005); dibanding EXP-007 yang sudah negatif di 2 bps/side,
+toleransi biaya naik drastis (breakeven 1.32 → ≈ 8.8 bps/side).
+
+## 17.4 Parameter Combinations (price_lookback / rsi_period)
+
+| Combo             | Trades | Expectancy | PF    | Net P&L   |
+| ----------------- | ------ | ---------- | ----- | --------- |
+| 20 / 14 (baseline)| 167    | +2.6211    | 1.4026| +437.72   |
+| 10 / 7            | 229    | +2.5475    | 1.3993| +583.37   |
+| 10 / 21           | 229    | +2.5475    | 1.3993| +583.37   |
+| 30 / 7            | 141    | +3.3358    | 1.5085| +470.34   |
+| 30 / 21           | 141    | +3.3358    | 1.5085| +470.34   |
+
+Interpretasi: **5/5 kombinasi positif** (vs 3/5 di EXP-007) — seluruh
+kombinasi near-baseline profit, termasuk lookback 30 yang di EXP-007 negatif
+(−0.12). Sensitivitas parameter rendah — profil robust terhadap variasi
+parameter.
+
+---
+
+# 18. Conclusion
+
+## 18.1 Verdict (pre-registered criteria, §13)
+
+```text
+REJECTED
+- expectancy pada skenario representative (1.0 bps/side) = +2.6211 > 0
+  dengan n = 167 >= min_sample (30): TERPENUHI;
+- biaya breakeven/side ≈ 8.8 bps >= 1.0 bps: TERPENUHI (lebar);
+- OOS test expectancy = +9.5649 > 0: TERPENUHI;
+- OOS train expectancy = −0.6073 > 0 (stasioner): TIDAK TERPENUHI.
+```
+
+**3/4 kriteria pre-registered terpenuhi; OOS train (stasionaritas) tidak →
+verdict pre-registered REJECTED.**
+
+## 18.2 Implikasi
+
+- **mitigasi gabungan memperbaiki seluruh dimensi profil edge**: expectancy
+  +0.117 → +2.621 (22×), breakeven 1.32 → ≈ 8.8 bps/side (6.7×), Max DD
+  923 → 207 (−78%), combos 3/5 → 5/5, slices 1/4 → 2/4, XAGUSD tetap positif
+  (+0.0056 → +0.0216), negatif pada grid biaya hanya di 10 bps/side (vs 2
+  bps di EXP-007);
+- **namun stasionaritas tetap gagal**: OOS train −0.6073 (vs −1.8114 di
+  EXP-007 — membaik namun masih negatif), 2/4 slice temporal positif —
+  keuntungan tetap terkonsentrasi di periode akhir (period-4-of-4 +11.69);
+- **mekanisme perbaikan**: SL/TP ATR 1.0/4.0 mengubah profil (win rate turun,
+  RR 0.98 → 2.50, avg loss dipotong 43%) + regime high memfilter ke periode
+  ber-volatilitas tinggi; ini memperbaiki risk/cost-tolerance secara drastis
+  namun tidak menciptakan stasionaritas — edge di periode tengah (2016–2022)
+  tidak muncul walau sudah difilter regime high;
+- **kesimpulan**: mitigasi stasionaritas gabungan **gagal sebagai mekanisme
+  stasionaritas** (kriteria pre-registered §13) walau berhasil sebagai
+  **mekanisme risk/cost-tolerance**. Edge Swing Breakout H4 tetap non-
+  stasioner temporal — bukan karena biaya, bukan karena over-trading, bukan
+  karena volatilitas, melainkan karena struktur tren XAUUSD berubah antar
+  periode (2022–2026 bullish) yang tidak dapat "dipaksa stasioner" oleh
+  filter.
+
+## 18.3 Keputusan Lanjutan (peneliti)
+
+Hasil EXP-008: baseline, breakeven, dan OOS test terpenuhi (3/4 kriteria),
+namun OOS train masih negatif (tidak stasioner). Catatan kehati-hatian:
+
+- verdict berdasarkan kriteria pre-registered §13; hasil OOS/robustness
+  adalah konteks tambahan (RSH-003, deskriptif);
+- mitigasi gabungan adalah **mekanisme risk/cost-tolerance yang sangat
+  efektif** (breakeven 8.8 bps/side — tertinggi di line XAUUSD) namun
+  **bukan mekanisme stasionaritas** — ini temuan riset yang berguna untuk
+  eksperimen strategi lain;
+- kandidat langkah berikutnya (bukan parameter mining otomatis):
+  1) tutup line Swing Breakout dan akhiri riset edge XAUUSD berbasis harga
+     (dua kelas strategi — momentum + struktur — gagal pada H1 dan H4 di
+     kriteria stasionaritas; EXP-007 §18.3 kandidat 3), atau
+  2) pre-register evaluasi pada timeframe/instrument lain dengan
+     pre-registration terpisah (EXP-007 §18.3 kandidat 2), atau
+  3) jika line dilanjutkan: mitigasi stasionaritas yang berbeda (mis. regime
+     LOW untuk period-2/3, atau filter tren jangka panjang) — memerlukan
+     pre-registration terpisah, bukan mining pada EXP-008.
+
+---
+
+# 19. Record Lifecycle
 
 ```text
 Defined (spesifikasi + konfigurasi frozen)    <- 2026-08-11 (TODO-048)
     |
-Run          <- berikutnya (§15)
+Run          <- 2026-08-11 (§15)
     |
-Result (metrics dicatat)
+Result (metrics dicatat)    <- 2026-08-11 (§15)
     |
-OOS / robustness
+OOS / robustness            <- 2026-08-11 (§16/§17)
     |
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    <- saat ini (§18)
     |
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 16. Traceability
+# 20. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -446,7 +693,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 17. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -460,7 +707,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 18. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -486,16 +733,17 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 19. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
 | 1.0.0   | 2026-08-11 | Initial EXP-008 pre-registration (TODO-048): re-test Swing Breakout (EXP-007 REJECTED — 3/4 criteria, OOS train negatif) dengan mitigasi stasionaritas GABUNGAN — regime high (EXP-003 machinery), SL/TP ATR 1.0/4.0 (RQ-007 machinery), cooldown 10 (ENG-003 §8.1); config frozen identik EXP-007 §9 kecuali tiga mitigasi §9.3–§9.5; keputusan peneliti (EXP-007 §18.3 kandidat 1) |
+| 1.0.1   | 2026-08-11 | Result (TODO-049): REJECTED per kriteria pre-registered §13 — expectancy +2.6211 @ 1.0 bps/side (n=167 >= 30), breakeven ≈ 8.8 bps/side (keduanya terpenuhi), OOS test +9.5649 positif namun OOS train −0.6073 negatif (tidak stasioner); robustness membaik drastis — 2/4 slice positif, 5/5 combos positif, XAGUSD +0.0216 (tipis), negatif hanya di 10 bps/side; mitigasi = mekanisme risk/cost-tolerance yang sangat efektif namun BUKAN mekanisme stasionaritas (§15–§18) |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-008
 
-**Version:** 1.0.0
+**Version:** 1.0.1
