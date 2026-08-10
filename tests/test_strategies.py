@@ -5,9 +5,9 @@ from __future__ import annotations
 import pytest
 
 from mre.core.experiment_runner import ExperimentConfig, exp001_config
-from mre.models.event import PRICE_CONFIRMATION, RSI_TRENDLINE_BROKEN
+from mre.models.event import PRICE_CONFIRMATION, RSI_TRENDLINE_BROKEN, SWING_HIGH
 from mre.models.signal_rule import SignalRule
-from mre.strategies import EXP001_STRATEGY_ID, get, register, registered_ids
+from mre.strategies import EXP001_STRATEGY_ID, PRICE_BREAKOUT_STRATEGY_ID, get, register, registered_ids
 from mre.strategies.registry import _STRATEGIES
 
 
@@ -20,6 +20,17 @@ def test_exp001_strategy_registered() -> None:
     assert rule.trigger == RSI_TRENDLINE_BROKEN
     assert rule.confirmations == (PRICE_CONFIRMATION,)
     assert rule.source_strategy == EXP001_STRATEGY_ID
+
+
+def test_exp005_price_breakout_registered() -> None:
+    assert PRICE_BREAKOUT_STRATEGY_ID in registered_ids()
+    definition = get(PRICE_BREAKOUT_STRATEGY_ID)
+    assert len(definition) == 1
+    rule = definition[0]
+    assert rule.signal_type == "LONG"
+    assert rule.trigger == PRICE_CONFIRMATION
+    assert rule.confirmations == (SWING_HIGH,)
+    assert rule.source_strategy == PRICE_BREAKOUT_STRATEGY_ID
 
 
 def test_get_unknown_strategy_raises() -> None:

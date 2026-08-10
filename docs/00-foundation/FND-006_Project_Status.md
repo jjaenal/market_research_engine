@@ -568,6 +568,16 @@ hipotesis "SL/TP menaikkan tolerance biaya" TIDAK didukung; namun
 expectancy +31%, Max DD −61%, OOS train +0.2026 & test +2.9515 (stasioner),
 3/4 slice, 6/8 fine slice, 5/5 combos, 4/4 split-point — semua membaik vs
 EXP-003 — EXP-004 §15–§18)
+    ↓ (keputusan peneliti, EXP-004 §18.3)
+RSI TRENDLINE BREAKOUT LINE CLOSED (EXP-001..EXP-004 selesai — edge tidak
+menunjukkan profil tradable yang cukup pada biaya venue realistis; research
+outcome sukses namun negatif per FND-005 §37; line ditutup formal, bukan
+dilanjutkan parameter mining — EXP-001 §19.8, ARC-008 §14.4, EXP-004 §18.3)
+    ↓ (TODO-042 Create EXP-005 — Price Breakout baseline)
+EXP-005 PRE-REGISTERED (strategi BARU: Price Breakout Donchian-style —
+momentum murni, tanpa RSI, plugin `price_breakout`; config frozen identik
+EXP-002: venue cost 1.0 bps/side, tanpa regime filter, tanpa SL/TP; tidak
+ada perubahan arsitektur — EXP-005 §6/§9/§13)
 ```
 
 Expected research questions:
@@ -969,6 +979,25 @@ improved across the board: 3/4 slices (vs 2/4), 6/8 fine slices (vs 4/8),
 thin (0.0417). Conclusion (EXP-004 §18): REJECTED on the breakeven
 criterion but SL/TP strongly improves expectancy/drawdown/robustness at
 venue costs — value as an exit rule, not as a cost-tolerance add.
+
+RSI TRENDLINE BREAKOUT LINE CLOSED (researcher decision, EXP-004 §18.3):
+after four experiments (EXP-001..EXP-004) the RSI Trendline Breakout
+research line is formally closed — the edge does not demonstrate a
+sufficient tradable profile under realistic venue execution costs. Per
+FND-005 §37 this is a successful-but-negative research outcome, not a
+failure. Rather than further parameter mining on the same strategy, the
+researcher pre-registers a NEW strategy line.
+
+EXP-005 (pre-registered, TODO-042): FIRST experiment of a NEW strategy —
+Price Breakout (Donchian-style). Pure price momentum: PRICE_CONFIRMATION
+(close > N-bar highest high — Donchian upper channel) confirmed by a
+SWING_HIGH fractal; NO RSI input. Registered as plugin `price_breakout`
+(`src/mre/strategies/exp005.py`, ARC-ACT-010) — consumes only existing
+Event types, so NO architecture change. Config frozen identical to
+EXP-002 (venue cost 1.0 bps/side, no regime filter, no SL/TP) as a clean
+baseline. Decision criteria (EXP-005 §13): expectancy > 0 with n >= 30,
+breakeven >= 1.0 bps/side, OOS test AND train both positive. Run =
+TODO-043 (pending).
 ```
 
 ---
