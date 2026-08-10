@@ -1,8 +1,8 @@
 ---
 title: RSI Trendline Breakout — Volatility Regime Segmentation
 document_id: EXP-003
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-10
@@ -25,7 +25,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Pre-register EXP-003 (TODO-038) — test whether the EXP-002 edge (SUPPORTED at venue costs but non-stationary) is concentrated in the HIGH volatility regime and becomes stationary when filtered via the M7 regime machinery
+purpose: Record EXP-003 run (TODO-039) — volatility regime segmentation re-test; verdict SUPPORTED per pre-registered criteria (edge concentrated in HIGH regime, stationary train+test at venue cost)
 ---
 
 # RSI Trendline Breakout — Volatility Regime Segmentation
@@ -365,23 +365,257 @@ Output dirender oleh Reporting Engine (ENG-007) dengan Experiment ID.
 
 ---
 
-# 15. Record Lifecycle
+# 15. Run (TODO-039)
+
+Strategi dijalankan **frozen** (config `configs/EXP-003.yaml` = `EXP-003`),
+tanpa perubahan pada parameter strategi — hanya filter regime
+(`selected_regime: "high"`) yang membedakan dari EXP-002. Biaya venue
+1.0 bps/side (representative) identik dengan EXP-002. Determinisme
+diverifikasi: zero-cost point (1.2506) identik di baseline, grid, OOS dan
+robustness.
+
+Report: `experiments/EXP-003/EXP-003_report.md` (Code Version `4788eb3`).
+
+## 15.1 Representative Scenario (1.0 bps/side, regime high, config frozen)
+
+| Metric             | Value   |
+| ------------------ | ------- |
+| Trade Count        | 698     |
+| Win Count          | 322     |
+| Loss Count         | 376     |
+| Win Rate           | 0.4613  |
+| Loss Rate          | 0.5387  |
+| Average Win        | 11.3498 |
+| Average Loss       | 8.06992 |
+| Risk/Reward        | 1.40643 |
+| Expectancy         | 0.8887  |
+| Profit Factor      | 1.2044  |
+| Gross Profit       | 3654.63 |
+| Gross Loss         | 3034.29 |
+| Net P&L            | 620.342 |
+| Maximum Drawdown   | 516.251 |
+| Winning Streak     | 11      |
+| Losing Streak      | 13      |
+| Evidence Sufficient| True (n=698 ≥ 30) |
+
+## 15.2 Regime Comparison (1.0 bps/side, venue cost identical)
+
+| selected_regime | Trades | Expectancy | PF     | Win Rate | Net P&L   |
+| --------------- | ------ | ---------- | ------ | -------- | --------- |
+| (unfiltered)    | 1403   | 0.5111     | 1.1177 | 0.4783   | 717.09    |
+| low             | 704    | 0.1540     | 1.0356 | 0.4957   | 108.43    |
+| high            | 698    | 0.8887     | 1.2044 | 0.4613   | 620.34    |
+
+Interpretasi: edge **terkonsentrasi pada regime high** — expectancy(high)
+0.8887 jauh di atas unfiltered (0.5111) dan low (0.1540). Filter regime
+membuang ~50% sinyal (1403 → 698) namun meningkatkan expectancy per trade
++74% vs unfiltered.
+
+## 15.3 Venue-Derived Cost Grid (regime high)
+
+| Scenario     | comm      | slip       | Total bps/side | Expectancy | PF     | Net P&L   |
+| ------------ | --------- | ---------- | -------------- | ---------- | ------ | --------- |
+| Zero cost    | 0         | 0          | 0              | 1.2506     | 1.3006 | 872.92    |
+| ECN tight    | 0.00002   | 0.00003    | 0.5            | 1.0697     | 1.2515 | 746.63    |
+| ECN rep.     | 0.00003   | 0.00007    | 1.0            | 0.8887     | 1.2044 | 620.34    |
+| ECN wide     | 0.00005   | 0.00010    | 1.5            | 0.7078     | 1.1593 | 494.05    |
+| Conservative | 0.00007   | 0.00013    | 2.0            | 0.5269     | 1.1160 | 367.77    |
+
+Grid seluruhnya positif 0–2.0 bps/side (lebih lebar dari EXP-002, yang
+membalik di ≈2.43 bps/side).
+
+## 15.4 Breakeven Cost (regime high)
+
+Breakeven (titik expectancy menyeberang nol), dihitung dengan grid halus:
+
+- 3.38 bps/side → +0.0275 (PF 1.0057);
+- 3.44 bps/side → +0.0058 (PF 1.0012);
+- 3.46 bps/side → −0.0014 (PF 0.9997);
+- **breakeven ≈ 3.44 bps/side** (vs 2.43 bps/side unfiltered EXP-002 §15.3).
+
+Margin ke nol pada biaya venue nyata: 1.0 bps/side → margin **2.44 bps**
+(breakeven − biaya) — **~70% lebih lebar** dari margin unfiltered
+(1.43 bps, EXP-002 §18.2).
+
+---
+
+# 16. Out-of-Sample Testing (TODO-039)
+
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage, no
+retroactive allocation); strategi frozen (konfigurasi EXP-003, regime
+high) dijalankan tanpa perubahan pada kedua segmen — biaya tetap 1.0
+bps/side. Reuse `run_on_slice` (ARC-ACT-013); filter regime diterapkan
+otomatis oleh pipeline (no lookahead).
+
+Report: `experiments/EXP-003/EXP-003_oos.md` (Code Version `4788eb3`).
+
+Split point: index 70.000 (2021-04-29 18:00 UTC) — 70% train, 30% test
+(identik EXP-002 §16).
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 698      | 446    | 253    | -            |
+| Win Rate      | 0.4613   | 0.4596 | 0.4783 | -            |
+| Expectancy    | 0.8887   | 0.1297 | 2.4853 | +1816.6%     |
+| Profit Factor | 1.2044   | 1.0443 | 1.3680 | +31.0%       |
+| Net P&L       | 620.34   | 57.83  | 628.77 | +987.2%      |
+| Max DD        | 516.25   | 189.84 | 386.68 | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **train segment kini positif** (+0.1297) — tidak lagi negatif seperti
+  unfiltered EXP-002 (−0.1605): filter regime memperbaiki stasionaritas
+  (kriteria SUPPORTED §13);
+- **test tetap positif** (+2.4853, lebih tinggi dari EXP-002 +1.9810) —
+  edge bertahan out-of-sample;
+- edge masih lebih kuat di paruh akhir (test >> train), konsisten dengan
+  EXP-002, namun **train tidak lagi rugi** — poin kunci perbaikan regime
+  filter.
+
+---
+
+# 17. Robustness (TODO-039)
+
+Metodologi per **RSH-003 §10**: strategi frozen (konfigurasi EXP-003,
+regime high, biaya venue 1.0 bps/side) dijalankan pada slice waktu
+kronologis, market lain, dan kombinasi parameter dekat-baseline.
+Reuse `run_on_slice` (ARC-ACT-013).
+
+Report: `experiments/EXP-003/EXP-003_robustness.md`
+(Code Version `4788eb3`).
+
+## 17.1 Time Period Stability
+
+| Slice | Trades | Win Rate | Expectancy | PF    | Net P&L  | Max DD  |
+| ----- | ------ | -------- | ---------- | ----- | -------- | ------- |
+| period-1-of-4 | 172 | 0.4942 | 0.9849  | 1.3349 | 169.40 | 95.56 |
+| period-2-of-4 | 173 | 0.4509 | −0.1541 | 0.9442 | −26.65  | 75.53 |
+| period-3-of-4 | 139 | 0.4029 | −1.2684 | 0.6724 | −176.30 | 184.47|
+| period-4-of-4 | 217 | 0.4931 | 3.2113  | 1.4598 | 696.85 | 386.68|
+
+Interpretasi: **2/4 slice positif** (vs 1/4 unfiltered EXP-002 §17.1) —
+robustness temporal membaik, namun masih bergantung pada paruh terakhir
+(period-4 menyumbang sebagian besar P&L).
+
+## 17.2 Cross-Market (XAGUSD, same timeframe)
+
+| Market | Trades | Win Rate | Expectancy | PF    | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ----- | ------- | ------ |
+| XAGUSD | 533    | 0.5216   | 0.0409     | 1.3605| 21.80   | 9.42   |
+
+Interpretasi: edge positif tipis ter-reproduksi di XAGUSD (expectancy
+0.0409, PF 1.3605) — konsisten dengan EXP-002 §17.2 (0.0342).
+
+## 17.3 Execution Cost (synthetic grid, pembanding M7)
+
+Grid biaya sintetis robustness (0.0002/0.0005 = 2/5 bps/side) sebagai
+pembanding M7 (EXP-001 §18.3):
+
+| comm/slip | Expectancy | PF    |
+| --------- | ---------- | ----- |
+| 0 / 0     | 1.2506     | 1.3006|
+| 0.0002 / 0| 0.5269     | 1.1160|
+| 0.0005 / 0| −0.5587    | 0.8914|
+| 0 / 0.0002| 0.5269     | 1.1160|
+| 0 / 0.0005| −0.5587    | 0.8914|
+| 0.0002/0.0002 | −0.1968 | 0.9601|
+| 0.0005/0.0005 | −2.3680 | 0.6206|
+
+Interpretasi: konsisten dengan M7 — edge gagal pada 0.05%/sisi (5 bps)
+sintetis; namun breakeven high-regime 3.44 bps (§15.4) tetap jauh di atas
+biaya venue nyata (~1.0 bps/side).
+
+## 17.4 Parameter Combinations (price_lookback / rsi_period)
+
+| Combo             | Trades | Expectancy | PF    | Net P&L  |
+| ----------------- | ------ | ---------- | ----- | -------- |
+| 20 / 14 (baseline)| 698    | 0.8887     | 1.2044| 620.34   |
+| 10 / 7            | 960    | 0.2730     | 1.0600| 262.13   |
+| 10 / 21           | 964    | −0.2046    | 0.9582| −197.24  |
+| 30 / 7            | 559    | 0.4609     | 1.1029| 257.64   |
+| 30 / 21           | 552    | 0.4633     | 1.1021| 255.75   |
+
+Interpretasi: **4/5 kombinasi positif** (vs 3/5 unfiltered EXP-002 §17.4);
+kombinasi rsi 21 ekstrem (10/21) tetap negatif, konsisten dengan EXP-002.
+Baseline 20/14 tetap yang terbaik.
+
+---
+
+# 18. Conclusion
+
+## 18.1 Verdict (pre-registered criteria, §13)
 
 ```text
-Defined (spesifikasi + konfigurasi frozen)    ← saat ini (pre-registration)
-    ↓ (TODO-038 Create EXP-003)
-Run          ← TODO-039 Run EXP-003
+SUPPORTED
+- expectancy(high) pada skenario representative (1.0 bps/side) = 0.8887 > 0
+  dengan n = 698 >= min_sample (30): TERPENUHI;
+- biaya breakeven/side ≈ 3.44 bps >= 1.0 bps: TERPENUHI;
+- OOS test expectancy(high) = 2.4853 > 0: TERPENUHI;
+- OOS train expectancy(high) = 0.1297 > 0 (stasionaritas membaik vs EXP-002
+  yang train-nya negatif −0.1605): TERPENUHI.
+```
+
+Seluruh kriteria pre-registered terpenuhi → **SUPPORTED**.
+
+## 18.2 Implikasi
+
+- **Edge terkonsentrasi pada regime high**: expectancy(high) 0.8887 >>
+  low 0.1540 > (unfiltered 0.5111); filter regime membuang ~50% sinyal
+  namun menaikkan expectancy per trade +74%;
+- **stasionaritas membaik**: train kini positif (+0.1297 vs −0.1605
+  unfiltered) — poin yang sebelumnya membuat EXP-002 belum tradable
+  (§18.3) kini teratasi pada kriteria pre-registered;
+- **cost tolerance naik**: breakeven 3.44 bps/side (vs 2.43 unfiltered)
+  → margin ke nol pada biaya venue nyata 2.44 bps — ~70% lebih lebar dari
+  margin unfiltered (1.43 bps); kejutan biaya lebih kecil risikonya;
+- robustness temporal masih tidak sempurna (2/4 slice positif, paruh
+  terakhir mendominasi) — filter regime memperbaiki namun tidak
+  menghilangkan dependensi volatilitas akhir;
+- XAGUSD dan kombinasi parameter: 4/5 positif (vs 3/5 unfiltered) —
+  robustness lintas-market/parameter membaik.
+
+## 18.3 Keputusan Lanjutan (peneliti)
+
+Hipotesis EXP-003 **didukung secara pre-registered**: menyaring edge
+RSI trendline breakout ke regime volatilitas high menghasilkan expectancy
+positif dan stasioner (train+test positif) pada biaya venue nyata.
+Rekomendasi EXP-002 §18.3 ter-realisasi.
+
+Catatan kehati-hatian:
+
+- robustness temporal masih bergantung pada paruh terakhir data
+  (period-4-of-4 menyumbang sebagian besar P&L) — sebelum deklarasi
+  tradable, disarankan:
+  - validasi pada data terbaru (di luar 100.000 candle) dan slice lebih
+    halus;
+  - pertimbangan combined filter (mis. regime high + parameter
+    non-ekstrem) sebagai konfirmasi tambahan;
+  - validasi slippage terhadap data tick jika tersedia;
+- verdict tetap berdasarkan kriteria pre-registered §13; hasil
+  OOS/robustness adalah konteks tambahan (RSH-003, deskriptif).
+
+---
+
+# 19. Record Lifecycle
+
+```text
+Defined (spesifikasi + konfigurasi frozen)    ← 2026-08-10 (pre-registration, TODO-038)
+    ↓ (TODO-039 Run EXP-003)
+Run          ← 2026-08-10 (§15)
     ↓
-Result (metrics dicatat)
+Result (metrics dicatat)    ← 2026-08-10 (§15)
     ↓
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)
+OOS / robustness            ← 2026-08-10 (§16/§17)
+    ↓
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18)
     ↓
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 16. Traceability
+# 20. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -397,7 +631,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 17. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -411,7 +645,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 18. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -436,18 +670,19 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 19. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.1   | 2026-08-10 | EXP-003 run (TODO-039) dicatat (§15–§17): regime high → expectancy 0.8887 @ 1.0 bps/side (n=698), breakeven ≈ 3.44 bps/side, OOS train +0.1297 & test +2.4853, 2/4 slice temporal positif, 4/5 combos positif; verdict SUPPORTED (§18) — edge terkonsentrasi pada regime high & stasioner train+test |
 | 1.0.0   | 2026-08-10 | Initial EXP-003 pre-registration (TODO-038): volatility regime segmentation re-test |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-003
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.35
+version: 1.3.36
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -183,7 +183,8 @@ M1 Product Definition
 | TODO-035 | Create EXP-002 (real venue cost)      |       P1 | DONE        |
 | TODO-036 | Run EXP-002 (real venue cost)         |       P1 | DONE        |
 | TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | DONE        |
-| TODO-038 | Create EXP-003 (volatility regime)   |       P1 | IN PROGRESS  |
+| TODO-038 | Create EXP-003 (volatility regime)   |       P1 | DONE        |
+| TODO-039 | Run EXP-003 (volatility regime)      |       P1 | DONE        |
 
 ---
 
@@ -1523,11 +1524,12 @@ Kemudian:
 
 ```text
 NEXT TASK
-EXP-002 OOS/robustness selesai (TODO-037): edge positif OOS (test exp
-1.9810) namun tidak stasioner — train negatif, 1/4 slice temporal positif.
-Berikutnya: EXP-003 (TODO-038) — volatility regime segmentation: uji
-apakah edge terkonsentrasi pada regime high (filter ATR, M7 machinery)
-dan menjadi stasioner pada biaya venue nyata.
+EXP-003 selesai (TODO-038/039): volatility regime segmentation SUPPORTED
+per kriteria pre-registered — regime high (ATR 14>=100) → expectancy 0.8887
+@ 1.0 bps/side (n=698), breakeven ≈ 3.44 bps, OOS train +0.1297 & test
++2.4853 (stasioner), 2/4 slice temporal positif, 4/5 combos positif
+(EXP-003 §18). Berikutnya: evaluasi tradable (data terbaru, slice halus,
+combined filter) atau definisikan experiment berikutnya.
 ```
 
 ---
@@ -1950,7 +1952,7 @@ data baru) atau definisikan experiment berikutnya.
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -1967,8 +1969,43 @@ EXP-003 — RSI Trendline Breakout Volatility Regime Segmentation
 ## Next
 
 ```text
-TODO-039 Run EXP-003 (volatility regime) — baseline + OOS + robustness
-pada biaya venue nyata; bandingkan high vs low vs unfiltered.
+TODO-039 Run EXP-003 (volatility regime) — DONE (EXP-003 §15/§18)
+```
+
+---
+
+# 82. TODO-039 — Run EXP-003 (Volatility Regime Segmentation)
+
+**Priority:** P1
+
+**Status:** DONE
+
+## Experiment
+
+EXP-003 — Run (volatility regime high, venue cost 1.0 bps/side).
+
+## Deliverable
+
+- baseline + OOS + robustness pada `configs/EXP-003.yaml`;
+- catatan hasil pada EXP-003 (§15–§17) dan Conclusion (§18).
+
+## Result
+
+- regime high: expectancy 0.8887 @ 1.0 bps/side (n=698 ≥ 30), breakeven
+  ≈ 3.44 bps/side — lebih tinggi dari unfiltered (0.5111, 2.43 bps);
+- OOS: train +0.1297 (positif, vs −0.1605 unfiltered), test +2.4853 —
+  stasionaritas membaik;
+- robustness: 2/4 slice temporal positif (vs 1/4 unfiltered), 4/5 combos
+  positif (vs 3/5), XAGUSD positif tipis (0.0409);
+- kesimpulan (EXP-003 §18): SUPPORTED per kriteria pre-registered — edge
+  terkonsentrasi pada regime high & stasioner train+test pada biaya venue
+  nyata.
+
+## Next
+
+```text
+Evaluasi tradable (data terbaru, slice lebih halus, combined filter) atau
+definisikan experiment berikutnya.
 ```
 
 ---
@@ -2075,6 +2112,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.35
+**Version:** 1.3.36
 
 **End of Document**
