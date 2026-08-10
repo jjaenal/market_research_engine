@@ -1,12 +1,12 @@
 ---
 title: Price Breakout (Donchian-style) — Baseline
 document_id: EXP-005
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-10
-last_updated: 2026-08-10
+last_updated: 2026-08-11
 
 depends_on:
   - RSH-001
@@ -25,7 +25,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Pre-register EXP-005 (TODO-042) — first experiment of a NEW strategy line (Price Breakout, Donchian-style) after the RSI Trendline Breakout research line (EXP-001..EXP-004) was formally closed as not demonstrating sufficient tradable edge under realistic venue execution costs
+purpose: Record EXP-005 run (TODO-043) — Price Breakout (Donchian-style) baseline, first experiment of a NEW strategy line after the RSI Trendline Breakout research line (EXP-001..EXP-004) was formally closed; verdict REJECTED per pre-registered criteria — expectancy -3.4848 @ 1.0 bps/side (n=3882) and even negative at ZERO cost (-3.1186), breakeven < 0 bps, OOS train -2.6301 & test -5.2396 (EXP-005 §15–§18)
 ---
 
 # Price Breakout (Donchian-style) — Baseline
@@ -37,7 +37,7 @@ purpose: Pre-register EXP-005 (TODO-042) — first experiment of a NEW strategy 
 # 1. Purpose
 
 EXP-005 adalah **experiment kelima** MRE (RSH-002 §10 lifecycle — state
-sekarang `Defined`, pre-registration). Line research RSI Trendline Breakout
+sekarang `Result`, run selesai TODO-043). Line research RSI Trendline Breakout
 (EXP-001..EXP-004) telah **ditutup secara formal** sebagai research outcome
 sukses namun negatif: edge tidak menunjukkan profil tradable yang cukup pada
 biaya eksekusi venue realistis (EXP-001 §19.8, ARC-008 §14.4, EXP-004 §18.3 —
@@ -394,25 +394,232 @@ Serta (RSH-003):
 
 ---
 
-# 15. Record Lifecycle
+# 15. Run (TODO-043)
+
+Report: `experiments/EXP-005/EXP-005_report.md` (Code Version `60e7660`).
+Strategi frozen (konfigurasi EXP-005, Price Breakout Donchian-style, biaya
+venue 1.0 bps/side, tanpa regime filter, tanpa SL/TP) dijalankan tanpa
+modifikasi.
+
+## 15.1 Representative Scenario (1.0 bps/side)
+
+| Metric        | Value |
+| ------------- | ----- |
+| Trade Count   | 3882  |
+| Win Rate      | 0.33694 |
+| Loss Rate     | 0.66306 |
+| Average Win   | 7.7394 |
+| Average Loss  | 9.18848 |
+| Risk/Reward   | 0.842294 |
+| Expectancy    | −3.4848 |
+| Profit Factor | 0.428019 |
+| Gross Profit  | 10123.1 |
+| Gross Loss    | 23651.1 |
+| Net P&L       | −13528 |
+| Max Drawdown  | 13571.8 |
+| Winning Streak| 15    |
+| Losing Streak | 28    |
+
+Perbandingan vs kontrol EXP-002 (RSI Trendline Breakout unfiltered, 1.0
+bps/side, EXP-002 §15.1):
+
+| Metric        | EXP-002 kontrol | EXP-005 | Δ      |
+| ------------- | --------------- | ------- | ------ |
+| Expectancy    | 0.5111          | −3.4848 | < 0    |
+| Profit Factor | 1.1177          | 0.4280  | < 1    |
+| Net P&L       | 717.09          | −13528  | < 0    |
+| Win Rate      | 0.4783          | 0.33694 | −29.6% |
+| Trade Count   | 1403            | 3882    | +176.7%|
+
+Interpretasi: strategi momentum murni Price Breakout (Donchian-style)
+**rugi** pada biaya venue nyata — expectancy negatif dan PF < 1. Win rate
+rendah (33.7%) dengan risk/reward 0.84 — kombinasi yang merugikan secara
+gross maupun net.
+
+## 15.2 Zero-Cost Context (grid biaya, variabel bebas §14)
+
+| Scenario     | comm      | slip      | Total bps/side | Expectancy | PF     | Net P&L    |
+| ------------ | --------- | --------- | -------------- | ---------- | ------ | ---------- |
+| Zero cost    | 0         | 0         | 0              | −3.1186    | 0.4674 | −12106.22  |
+| ECN rep.     | 0.00003   | 0.00007   | 1.0            | −3.4848    | 0.4280 | −13528.01  |
+| Sintetis 5+5 | 0.0005    | 0.0005    | 10             | −6.7811    | 0.1990 | −26324.09  |
+
+Temuan kunci: **bahkan pada biaya nol (comm=0/slip=0) expectancy tetap
+negatif (−3.1186)** — strategi tidak menghasilkan edge sama sekali
+(gross expectancy sudah negatif). Breakeven cost berada **di bawah 0
+bps/side**, jauh di bawah ambang kriteria 1.0 bps (§13).
+
+## 15.3 Breakeven Cost
+
+Karena gross expectancy sudah negatif (avg win 7.7394 × 0.33694 vs avg loss
+9.18848 × 0.66306), **tidak ada biaya positif yang menghasilkan breakeven**:
+expectancy negatif pada 0 bps/side (−3.1186) dan semakin negatif seiring
+biaya naik. Breakeven < 0 bps/side → kriteria "breakeven >= 1.0 bps"
+(§13) **TIDAK TERPENUHI** tanpa perlu interpolasi grid.
+
+---
+
+# 16. Out-of-Sample Testing (TODO-043)
+
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage, no
+retroactive allocation); strategi frozen (konfigurasi EXP-005, 1.0 bps/side)
+dijalankan tanpa perubahan pada kedua segmen. Reuse `run_on_slice`
+(ARC-ACT-013).
+
+Report: `experiments/EXP-005/EXP-005_oos.md` (Code Version `60e7660`).
+
+Split point: index 70.000 (2021-04-29 18:00 UTC) — 70% train, 30% test
+(identik EXP-002 §16 / EXP-003 §16 / EXP-004 §16).
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 3882     | 2560   | 1305   | -            |
+| Win Rate      | 0.3369   | 0.3328 | 0.3425 | -            |
+| Expectancy    | −3.4848  | −2.6301 | −5.2396 | −99.2%     |
+| Profit Factor | 0.4280   | 0.3917 | 0.4559 | +16.4%      |
+| Net P&L       | −13528.01| −6732.93 | −6837.65 | +1.6%    |
+| Max DD        | 13571.75 | 6778.83 | 6940.14 | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **train negatif** (−2.6301) dan **test negatif** (−5.2396) — edge TIDAK
+  ter-reproduksi out-of-sample; kedua segmen merugi;
+- dibanding EXP-002 (train −0.1605 / test +1.9810): jauh lebih buruk —
+  momentum breakout tidak memiliki edge di paruh awal maupun akhir dataset;
+- kriteria §13 (OOS test & train > 0) **TIDAK terpenuhi** (keduanya negatif).
+
+---
+
+# 17. Robustness (TODO-043)
+
+Metodologi per **RSH-003 §10**: strategi frozen (konfigurasi EXP-005, 1.0
+bps/side) dijalankan tanpa perubahan. Descriptive only; thresholds per
+RSH-004.
+
+Report: `experiments/EXP-005/EXP-005_robustness.md` (Code Version `60e7660`).
+
+## 17.1 Time Period Stability (4 slices)
+
+| Slice          | Trades | Win Rate | Expectancy | PF     | Net P&L   | Max DD   |
+| -------------- | ------ | -------- | ---------- | ------ | --------- | -------- |
+| period-1-of-4  | 1012   | 0.3370   | −2.8809    | 0.3828 | −2915.43  | 2961.42  |
+| period-2-of-4  | 757    | 0.3118   | −2.4350    | 0.3582 | −1843.33  | 1843.33  |
+| period-3-of-4  | 999    | 0.3303   | −2.8422    | 0.3936 | −2839.40  | 2883.04  |
+| period-4-of-4  | 1093   | 0.3577   | −5.4558    | 0.4740 | −5963.16  | 5963.16  |
+
+Interpretasi: **0/4 slice positif** — semua periode temporal merugi;
+konsisten dengan baseline negatif.
+
+## 17.2 Cross-Market (XAGUSD, same timeframe)
+
+| Market | Trades | Win Rate | Expectancy | PF     | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ------ | ------- | ------ |
+| XAGUSD | 3049   | 0.3214   | −0.1232    | 0.4045 | −375.50 | 377.51 |
+
+Interpretasi: XAGUSD juga negatif (−0.1232) — edge momentum TIDAK
+ter-reproduksi cross-market.
+
+## 17.3 Execution Cost (synthetic grid)
+
+| comm/slip     | Expectancy | PF    |
+| ------------- | ---------- | ----- |
+| 0 / 0         | −3.1186    | 0.4674|
+| 0.0002 / 0    | −3.8511    | 0.3922|
+| 0.0005 / 0    | −4.9498    | 0.3028|
+| 0 / 0.0002    | −3.8511    | 0.3922|
+| 0 / 0.0005    | −4.9498    | 0.3028|
+| 0.0002/0.0002 | −4.5836    | 0.3299|
+| 0.0005/0.0005 | −6.7811    | 0.1990|
+
+Interpretasi: **seluruh grid negatif, termasuk 0/0** — bukan masalah biaya;
+edge tidak ada bahkan sebelum biaya (gross expectancy negatif).
+
+## 17.4 Parameter Combinations (price_lookback / rsi_period)
+
+| Combo             | Trades | Expectancy | PF    | Net P&L   |
+| ----------------- | ------ | ---------- | ----- | --------- |
+| 20 / 14 (baseline)| 3882   | −3.4848    | 0.4280| −13528.01 |
+| 10 / 7            | 5606   | −3.4782    | 0.4235| −19498.76 |
+| 10 / 21           | 5606   | −3.4782    | 0.4235| −19498.76 |
+| 30 / 7            | 3203   | −3.5916    | 0.4267| −11503.88 |
+| 30 / 21           | 3203   | −3.5916    | 0.4267| −11503.88 |
+
+Interpretasi: **0/5 kombinasi positif** — semua varian parameter merugi
+dengan besaran serupa; kegagalan bukan artefak pemilihan parameter tunggal.
+
+---
+
+# 18. Conclusion
+
+## 18.1 Verdict (pre-registered criteria, §13)
 
 ```text
-Defined (spesifikasi + konfigurasi frozen)    <- saat ini (2026-08-10, TODO-042)
-    |
-Run (TODO-043, belum dijalankan)
-    |
-Result (metrics dicatat)
-    |
-OOS / robustness
-    |
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)
-    |
+REJECTED
+- expectancy pada skenario representative (1.0 bps/side) = −3.4848 < 0
+  dengan n = 3882 >= min_sample (30): TIDAK TERPENUHI;
+- biaya breakeven/side < 0 bps (expectancy negatif bahkan pada biaya nol,
+  −3.1186) >= 1.0 bps: TIDAK TERPENUHI;
+- OOS test expectancy = −5.2396 > 0: TIDAK TERPENUHI;
+- OOS train expectancy = −2.6301 > 0 (stasioner): TIDAK TERPENUHI.
+```
+
+**0/4 kriteria pre-registered terpenuhi → verdict pre-registered REJECTED.**
+
+## 18.2 Implikasi
+
+- **Price Breakout (Donchian-style) baseline merugi di semua dimensi**:
+  baseline −3.4848, OOS train −2.6301 & test −5.2396, 0/4 slice temporal,
+  0/5 parameter combos, XAGUSD negatif, dan seluruh grid biaya negatif
+  termasuk nol biaya;
+- **edge tidak ada secara gross**: strategi rugi bahkan tanpa biaya
+  (expectancy −3.1186 @ 0 bps/side) — kegagalan struktural, bukan biaya
+  venue;
+- **memperkuat kesimpulan lintas line**: dua kelas strategi berbeda pada
+  XAUUSD H1 (RSI Trendline Breakout EXP-001..004 dan Price Breakout EXP-005)
+  keduanya gagal menunjukkan edge tradable pada biaya venue realistis
+  (EXP-001 §19.8, ARC-008 §14.4);
+- per interpretasi §13: bukti menolak kelas momentum breakout ini juga pada
+  biaya venue — konsisten dengan kesimpulan bahwa edge XAUUSD H1 tidak
+  tradable pada biaya realistis.
+
+## 18.3 Keputusan Lanjutan (peneliti)
+
+Hasil EXP-005 konsisten negatif di semua dimensi (baseline, OOS, temporal,
+cross-market, cost grid, parameter). Catatan kehati-hatian:
+
+- verdict berdasarkan kriteria pre-registered §13; hasil OOS/robustness
+  adalah konteks tambahan (RSH-003, deskriptif);
+- strategi hanya LONG (SignalRule LONG, trigger PRICE_CONFIRMATION + SWING_HIGH
+  window 5) — tidak menguji arah short; pertimbangan lanjutan opsional;
+- kandidat langkah berikutnya (bukan parameter mining otomatis):
+  1) menutup line Price Breakout juga (konsisten dgn bukti dua kelas strategi
+     gagal), atau
+  2) pre-register eksplorasi berbeda (timeframe/intrument/entry-filter lain)
+     dengan keputusan terpisah, atau
+  3) menghentikan riset edge XAUUSD H1 dan beralih konteks pasar lain.
+
+---
+
+# 19. Record Lifecycle
+
+```text
+Defined (spesifikasi + konfigurasi frozen)    ← 2026-08-10 (pre-registration, TODO-042)
+    ↓ (TODO-043 Run EXP-005)
+Run          ← 2026-08-11 (§15)
+    ↓
+Result (metrics dicatat)    ← 2026-08-11 (§15)
+    ↓
+OOS / robustness            ← 2026-08-11 (§16/§17)
+    ↓
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18)
+    ↓
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 16. Traceability
+# 20. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -429,7 +636,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 17. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -443,7 +650,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 18. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -470,18 +677,19 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 19. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.1   | 2026-08-11 | EXP-005 run (TODO-043) dicatat (§15–§17): Price Breakout baseline @ 1.0 bps/side → expectancy −3.4848 (n=3882), breakeven < 0 bps (negatif bahkan di biaya nol −3.1186), OOS train −2.6301 & test −5.2396, 0/4 slice positif, 0/5 combos, XAGUSD negatif; verdict REJECTED (§18) — 0/4 kriteria pre-registered |
 | 1.0.0   | 2026-08-10 | Initial EXP-005 pre-registration (TODO-042): Price Breakout (Donchian-style) baseline; line RSI Trendline Breakout ditutup (EXP-001..EXP-004), strategi momentum murni terdaftar sebagai plugin `price_breakout`; config frozen identik EXP-002 (venue cost 1.0 bps/side) |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-005
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

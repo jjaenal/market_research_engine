@@ -578,6 +578,12 @@ EXP-005 PRE-REGISTERED (strategi BARU: Price Breakout Donchian-style —
 momentum murni, tanpa RSI, plugin `price_breakout`; config frozen identik
 EXP-002: venue cost 1.0 bps/side, tanpa regime filter, tanpa SL/TP; tidak
 ada perubahan arsitektur — EXP-005 §6/§9/§13)
+    ↓ (TODO-043 Run EXP-005 — Price Breakout baseline)
+EXP-005 REJECTED per kriteria pre-registered (Price Breakout baseline @ 1.0
+bps/side → expectancy −3.4848, n=3882 ≥ 30; breakeven < 0 bps — negatif
+bahkan di biaya nol −3.1186; OOS train −2.6301 & test −5.2396, keduanya
+negatif; 0/4 slice temporal, 0/5 combos, XAGUSD negatif; 0/4 kriteria §13
+terpenuhi — EXP-005 §15–§18)
 ```
 
 Expected research questions:
@@ -988,16 +994,27 @@ FND-005 §37 this is a successful-but-negative research outcome, not a
 failure. Rather than further parameter mining on the same strategy, the
 researcher pre-registers a NEW strategy line.
 
-EXP-005 (pre-registered, TODO-042): FIRST experiment of a NEW strategy —
-Price Breakout (Donchian-style). Pure price momentum: PRICE_CONFIRMATION
+EXP-005 (ran, TODO-043): FIRST experiment of a NEW strategy — Price
+Breakout (Donchian-style). Pure price momentum: PRICE_CONFIRMATION
 (close > N-bar highest high — Donchian upper channel) confirmed by a
 SWING_HIGH fractal; NO RSI input. Registered as plugin `price_breakout`
 (`src/mre/strategies/exp005.py`, ARC-ACT-010) — consumes only existing
 Event types, so NO architecture change. Config frozen identical to
 EXP-002 (venue cost 1.0 bps/side, no regime filter, no SL/TP) as a clean
 baseline. Decision criteria (EXP-005 §13): expectancy > 0 with n >= 30,
-breakeven >= 1.0 bps/side, OOS test AND train both positive. Run =
-TODO-043 (pending).
+breakeven >= 1.0 bps/side, OOS test AND train both positive.
+
+RESULT (EXP-005 §15–§18): REJECTED — 0/4 criteria met. Baseline @ 1.0
+bps/side: expectancy **−3.4848** (n=3882 ≥ 30), PF 0.428, win rate 0.337.
+Critically, expectancy is **negative even at ZERO cost** (−3.1186 @
+comm=0/slip=0), so the gross edge is absent and breakeven is below 0
+bps/side — far under the 1.0 bps threshold. OOS train −2.6301 and test
+−5.2396 (both negative); 0/4 temporal slices positive; 0/5 parameter
+combos positive; XAGUSD negative (−0.1232). The failure is structural
+(loss-making before costs), not a venue-cost artifact. This strengthens
+the cross-line conclusion: two distinct strategy classes on XAUUSD H1
+(RSI Trendline Breakout EXP-001..004 and Price Breakout EXP-005) both
+fail to show a tradable edge at realistic venue costs (EXP-005 §18.2).
 ```
 
 ---

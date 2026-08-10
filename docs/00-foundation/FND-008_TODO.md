@@ -187,7 +187,8 @@ M1 Product Definition
 | TODO-039 | Run EXP-003 (volatility regime)      |       P1 | DONE        |
 | TODO-040 | Create EXP-004 (SL/TP venue cost)    |       P1 | DONE        |
 | TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | DONE        |
-| TODO-042 | Create EXP-005 (Price Breakout)      |       P1 | IN PROGRESS |
+| TODO-042 | Create EXP-005 (Price Breakout)      |       P1 | DONE        |
+| TODO-043 | Run EXP-005 (Price Breakout)         |       P1 | DONE        |
 
 ---
 
@@ -1538,13 +1539,17 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-042 Create EXP-005 (Price Breakout baseline) — IN PROGRESS.
-Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP secara formal setelah
-EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge tidak menunjukkan profil
-tradable yang cukup pada biaya venue realistis (EXP-004 §18.3). EXP-005
-menguji strategi momentum murni Price Breakout (Donchian-style, tanpa RSI,
-plugin `price_breakout`, ARC-ACT-010) pada config identik EXP-002 (venue cost
-1.0 bps/side); pre-registration EXP-005 §6/§9/§13; run = TODO-043 (pending).
+Sekarang: TODO-042 Create EXP-005 + TODO-043 Run EXP-005 (Price Breakout
+baseline) — DONE. Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
+secara formal setelah EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge
+tidak menunjukkan profil tradable yang cukup pada biaya venue realistis
+(EXP-004 §18.3). EXP-005 menguji strategi momentum murni Price Breakout
+(Donchian-style, tanpa RSI, plugin `price_breakout`, ARC-ACT-010) pada
+config identik EXP-002 (venue cost 1.0 bps/side). Hasil (EXP-005 §15–§18):
+expectancy −3.4848 @ 1.0 bps/side (n=3882), breakeven < 0 bps (negatif
+bahkan di biaya nol −3.1186), OOS train −2.6301 & test −5.2396, 0/4 slice
+positif, 0/5 combos, XAGUSD negatif; verdict REJECTED — 0/4 kriteria
+pre-registered terpenuhi.
 ```
 
 ---
@@ -2096,7 +2101,7 @@ EXP-004 — Run (ATR-multiple SL/TP, regime high, venue cost 1.0 bps/side).
 Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP formal (EXP-004 §18.3):
 edge tidak menunjukkan profil tradable yang cukup pada biaya venue realistis.
 Keputusan peneliti: pre-register strategi BARU (bukan lanjut parameter mining).
-→ TODO-042 Create EXP-005 (Price Breakout baseline) — IN PROGRESS
+→ TODO-042 Create EXP-005 (Price Breakout baseline) — DONE
 ```
 
 ---
@@ -2105,7 +2110,7 @@ Keputusan peneliti: pre-register strategi BARU (bukan lanjut parameter mining).
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -2127,7 +2132,44 @@ tidak ada perubahan arsitektur.
 ## Next
 
 ```text
-TODO-043 Run EXP-005 (Price Breakout baseline) — PENDING
+TODO-043 Run EXP-005 (Price Breakout baseline) — DONE
+```
+
+---
+
+# 86. TODO-043 — Run EXP-005 (Price Breakout Baseline)
+
+**Priority:** P1
+
+**Status:** DONE
+
+## Experiment
+
+Run EXP-005 — Price Breakout (Donchian-style) baseline pada konfigurasi
+frozen (`configs/EXP-005.yaml`, identik EXP-002 — venue cost 1.0 bps/side,
+tanpa regime filter, tanpa SL/TP). Report + OOS + robustness
+(`experiments/EXP-005/`, Code Version `60e7660`).
+
+## Result
+
+- baseline @ 1.0 bps/side: expectancy **−3.4848** (n=3882 >= 30), PF 0.4280,
+  win rate 0.3369, net P&L −13528, Max DD 13571.8 (EXP-005 §15.1);
+- breakeven **< 0 bps/side**: expectancy negatif bahkan pada biaya nol
+  (−3.1186 @ comm=0/slip=0) — edge tidak ada secara gross (EXP-005 §15.2/§15.3);
+- OOS: train −2.6301 & test −5.2396, keduanya negatif (EXP-005 §16);
+- robustness: 0/4 slice temporal positif, 0/5 parameter combos, XAGUSD
+  negatif (−0.1232), seluruh cost grid negatif (EXP-005 §17);
+- verdict: **REJECTED** — 0/4 kriteria pre-registered §13 terpenuhi
+  (EXP-005 §18).
+
+## Next
+
+```text
+Dua kelas strategi (RSI Trendline Breakout EXP-001..004 dan Price Breakout
+EXP-005) sama-sama gagal menunjukkan edge tradable pada XAUUSD H1 di biaya
+venue realistis. Kandidat lanjutan (EXP-005 §18.3): tutup line Price Breakout
+juga, pre-register eksplorasi berbeda (timeframe/instrument/entry-filter),
+atau hentikan riset edge XAUUSD H1.
 ```
 
 ---
