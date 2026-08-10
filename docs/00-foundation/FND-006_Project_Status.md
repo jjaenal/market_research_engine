@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.37
+version: 1.3.38
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -548,6 +548,11 @@ EXP-003 SUPPORTED (verdict pre-registered: regime high → expectancy 0.8887
 @ 1.0 bps/side, n=698 ≥ 30; breakeven ≈ 3.44 bps/side; OOS train +0.1297 &
 test +2.4853 — stasioner; 2/4 slice temporal positif; 4/5 combos positif —
 EXP-003 §18)
+    ↓ (validasi tradable — EXP-003 §17.5/§17.6/§18.4)
+EXP-003 TRADABLE VALIDATION (8-slice robustness 4/8 positif; split-point
+OOS 3/4 stasioner; combined filter 4/5 kombinasi non-ekstrem positif;
+validasi data terbaru ditunda — spot XAUUSD H1 pasca 2026-05-26 tidak
+tersedia dari sumber gratis reliabel — EXP-003 §18.4)
 ```
 
 Expected research questions:
@@ -912,6 +917,17 @@ unfiltered) & test +2.4853; robustness 2/4 temporal slices positive (vs
 1/4), 4/5 combos positive (vs 3/5), XAGUSD positive thin (0.0409).
 Conclusion (EXP-003 §18): edge concentrated in HIGH regime and stationary
 train+test at venue costs — EXP-002 §18.3 recommendation realized.
+
+EXP-003 tradable validation (EXP-003 §17.5/§17.6/§18.4): finer 8-slice
+robustness 4/8 positive (consistent with 2/4 coarse); split-point OOS
+sensitivity stationary at 3/4 splits (0.5/0.6/0.7 train+test positive, 0.8
+train negative but test +4.9272); combined filter (regime high +
+non-extreme params) 4/5 combos positive. Newer-data evaluation deferred:
+spot XAUUSD H1 past 2026-05-26 not available from reliable free sources
+(Yahoo XAUUSD=X delisted, Dukascopy 503/404/timeout, Stooq/Investing JS
+challenge); GC=F futures is a different instrument with a different venue
+cost model — cannot substitute spot without re-pre-registration. Evidence
+supports but does not yet conclude tradable.
 ```
 
 ---
@@ -1516,6 +1532,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.37
+**Version:** 1.3.38
 
 **End of Document**

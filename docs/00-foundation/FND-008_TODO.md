@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.36
+version: 1.3.37
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -1528,8 +1528,14 @@ EXP-003 selesai (TODO-038/039): volatility regime segmentation SUPPORTED
 per kriteria pre-registered — regime high (ATR 14>=100) → expectancy 0.8887
 @ 1.0 bps/side (n=698), breakeven ≈ 3.44 bps, OOS train +0.1297 & test
 +2.4853 (stasioner), 2/4 slice temporal positif, 4/5 combos positif
-(EXP-003 §18). Berikutnya: evaluasi tradable (data terbaru, slice halus,
-combined filter) atau definisikan experiment berikutnya.
+(EXP-003 §18). Validasi tradable (EXP-003 §17.5/§17.6/§18.4): 8-slice
+robustness 4/8 positif, split-point OOS 3/4 stasioner, combined filter 4/5
+kombinasi non-ekstrem positif. Evaluasi data terbaru (di luar 100.000
+candle) DITUNDA — spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari
+sumber gratis reliabel (Yahoo delisted, Dukascopy 503/404, Stooq/Investing
+JS-challenge); GC=F futures beda instrumen/model biaya venue. Berikutnya:
+simpulkan status tradable (tergantung ketersediaan data spot terbaru) atau
+definisikan experiment berikutnya.
 ```
 
 ---
@@ -2112,6 +2118,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.36
+**Version:** 1.3.37
 
 **End of Document**

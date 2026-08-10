@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.51
+version: 1.1.52
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -230,7 +230,7 @@ docs/07-experiments/
 | ------- | ------------------------------- | ---------------------------------- | ------- | ------- |
 | EXP-001 | RSI Trendline Breakout Baseline | `docs/07-experiments/EXP-001_RSI_Trendline_Breakout_Baseline.md` | 1.0.7 | Result |
 | EXP-002 | RSI Trendline Breakout Real Venue Cost | `docs/07-experiments/EXP-002_RSI_Trendline_Breakout_Real_Venue_Cost.md` | 1.0.2 | Result |
-| EXP-003 | RSI Trendline Breakout Volatility Regime | `docs/07-experiments/EXP-003_RSI_Trendline_Breakout_Volatility_Regime.md` | 1.0.1 | Result |
+| EXP-003 | RSI Trendline Breakout Volatility Regime | `docs/07-experiments/EXP-003_RSI_Trendline_Breakout_Volatility_Regime.md` | 1.0.2 | Result |
 
 Experiment documents will be added as research
 experiments are conducted.
@@ -803,6 +803,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.51
+**Version:** 1.1.52
 
 **End of Document**

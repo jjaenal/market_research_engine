@@ -1,7 +1,7 @@
 ---
 title: RSI Trendline Breakout — Volatility Regime Segmentation
 document_id: EXP-003
-version: 1.0.1
+version: 1.0.2
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -25,7 +25,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Record EXP-003 run (TODO-039) — volatility regime segmentation re-test; verdict SUPPORTED per pre-registered criteria (edge concentrated in HIGH regime, stationary train+test at venue cost)
+purpose: Record EXP-003 run (TODO-039) — volatility regime segmentation re-test; verdict SUPPORTED per pre-registered criteria (edge concentrated in HIGH regime, stationary train+test at venue cost); tradable-validation addendum (finer slices, split sensitivity, combined filter; newer-data evaluation deferred)
 ---
 
 # RSI Trendline Breakout — Volatility Regime Segmentation
@@ -540,6 +540,46 @@ Interpretasi: **4/5 kombinasi positif** (vs 3/5 unfiltered EXP-002 §17.4);
 kombinasi rsi 21 ekstrem (10/21) tetap negatif, konsisten dengan EXP-002.
 Baseline 20/14 tetap yang terbaik.
 
+## 17.5 Finer Temporal Slices (8, validasi lanjutan)
+
+Untuk menguji stabilitas temporal lebih halus (RSH-003 §10, rekomendasi
+EXP-003 §18.3 — "slice lebih halus"), strategi frozen (regime high, 1.0
+bps/side) dijalankan pada 8 slice kronologis:
+
+| Slice | Trades | Win Rate | Expectancy | PF    | Net P&L  |
+| ----- | ------ | -------- | ---------- | ----- | -------- |
+| period-1-of-8 | 103 | 0.4757 | 0.3377  | 1.1075 | 34.78  |
+| period-2-of-8 |  68 | 0.5147 | 1.8492  | 1.6897 | 125.75 |
+| period-3-of-8 |  91 | 0.4396 | −0.4650 | 0.8400 | −42.32 |
+| period-4-of-8 |  82 | 0.4634 | 0.1911  | 1.0734 | 15.67  |
+| period-5-of-8 |  70 | 0.4429 | −0.0406 | 0.9812 | −2.84  |
+| period-6-of-8 |  69 | 0.3623 | −2.5139 | 0.5513 | −173.46|
+| period-7-of-8 | 107 | 0.4393 | −0.1474 | 0.9652 | −15.77 |
+| period-8-of-8 | 110 | 0.5455 | 6.4784  | 1.6708 | 712.62 |
+
+Interpretasi: **4/8 slice positif** pada biaya venue — konsisten dengan
+pola 2/4 pada granularitas kasar (§17.1): proporsi slice positif stabil
+(~50%), namun P&L tetap terkonsentrasi di slice akhir (period-8-of-8).
+Granularitas lebih halus tidak mengubah kesimpulan.
+
+## 17.6 Split-Point Sensitivity (OOS, validasi lanjutan)
+
+Untuk menguji sensitivitas hasil OOS terhadap posisi split point
+(RSH-003 §7, rekomendasi EXP-003 §18.3), split diuji pada 4 fraksi:
+
+| Split | Train n | Train Exp | Train PF | Test n | Test Exp | Test PF | Stasioner |
+| ----- | ------- | --------- | -------- | ------ | -------- | ------- | --------- |
+| 0.5   | 343     | 0.4841    | 1.1729   | 356    | 1.4622   | 1.2535  | Ya        |
+| 0.6   | 405     | 0.3946    | 1.1462   | 294    | 1.7918   | 1.2743  | Ya        |
+| 0.7   | 446     | 0.1297    | 1.0443   | 253    | 2.4853   | 1.3680  | Ya        |
+| 0.8   | 522     | −0.3738   | 0.8877   | 176    | 4.9272   | 1.6789  | Tidak     |
+
+Interpretasi: **3/4 split stasioner** (train + test positif); pada split
+0.8, train negatif namun test sangat kuat (+4.9272) — edge menurun di
+paruh tengah data namun kuat di paruh akhir (volatilitas tinggi).
+Kesimpulan OOS utama (§16) robust terhadap pilihan split point pada
+rentang 0.5–0.7 (train positif), dan hanya melemah di batas ekstrem 0.8.
+
 ---
 
 # 18. Conclusion
@@ -594,6 +634,39 @@ Catatan kehati-hatian:
   - validasi slippage terhadap data tick jika tersedia;
 - verdict tetap berdasarkan kriteria pre-registered §13; hasil
   OOS/robustness adalah konteks tambahan (RSH-003, deskriptif).
+
+## 18.4 Validasi Tradable (validasi lanjutan, §17.5/§17.6)
+
+Dari tiga rekomendasi pra-tradable §18.3, dua telah dieksekusi:
+
+1. **slice lebih halus** (§17.5): 8 slice kronologis → **4/8 positif**,
+   konsisten dengan proporsi 2/4 pada granularitas kasar; granularitas
+   lebih halus tidak mengubah kesimpulan (P&L tetap terkonsentrasi di
+   slice akhir);
+2. **combined filter** (regime high + parameter non-ekstrem, §17.4):
+   kombinasi non-ekstrem (20/14, 10/7, 30/7, 30/21) semuanya positif
+   (**4/5** termasuk baseline; hanya 10/21 rsi-ekstrem yang negatif);
+3. **split-point sensitivity** (§17.6): OOS stasioner pada **3/4 split**
+   (0.5/0.6/0.7, train+test positif); hanya split 0.8 yang train-negatif
+   (−0.3738) namun test sangat kuat (+4.9272) — kesimpulan OOS §16 robust
+   pada rentang 0.5–0.7.
+
+**Item yang belum dieksekusi:** validasi pada data terbaru di luar 100.000
+candle. Data spot XAUUSD H1 pasca 2026-05-26 (akhir dataset) **tidak
+tersedia dari sumber gratis yang reliabel** pada saat penulisan (Yahoo
+Finance: `XAUUSD=X` delisted/NotFound; Dukascopy datafeed: 503/404/timeout;
+Stooq/Investing.com: JavaScript challenge). Alternatif `GC=F` (COMEX gold
+futures) tersedia namun merupakan **instrumen berbeda dengan model biaya
+venue berbeda** (futures ≠ spot ECN 1.0 bps/side), sehingga tidak dapat
+diperlakukan sebagai "data terbaru" spot tanpa pre-registrasi ulang.
+Evaluasi data terbaru **ditunda** hingga sumber spot XAUUSD H1 yang
+reliabel tersedia.
+
+**Status tradable (adendum hasil validasi):** bukti robustness temporal
+finer-slice (4/8 positif), combined filter (4/5 kombinasi non-ekstrem
+positif), dan stasionaritas split-point (3/4 split) **mendukung** tetapi
+belum **menyimpulkan** tradable — deklarasi tradable penuh menunggu
+validasi data terbaru di luar 100.000 candle.
 
 ---
 
@@ -674,6 +747,7 @@ Reviewed (validasi, RSH-003)
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.2   | 2026-08-10 | Tradable-validation addendum (§17.5–§17.6, §18.4): 8-slice robustness (4/8 positif), split-point sensitivity OOS (3/4 split stasioner), combined filter (4/5 kombinasi non-ekstrem positif); validasi data terbaru ditunda (spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel — Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F futures beda instrumen & beda model biaya venue |
 | 1.0.1   | 2026-08-10 | EXP-003 run (TODO-039) dicatat (§15–§17): regime high → expectancy 0.8887 @ 1.0 bps/side (n=698), breakeven ≈ 3.44 bps/side, OOS train +0.1297 & test +2.4853, 2/4 slice temporal positif, 4/5 combos positif; verdict SUPPORTED (§18) — edge terkonsentrasi pada regime high & stasioner train+test |
 | 1.0.0   | 2026-08-10 | Initial EXP-003 pre-registration (TODO-038): volatility regime segmentation re-test |
 
@@ -683,6 +757,6 @@ Reviewed (validasi, RSH-003)
 
 **Document ID:** EXP-003
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 **End of Document**
