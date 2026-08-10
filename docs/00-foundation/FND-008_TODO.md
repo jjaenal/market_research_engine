@@ -1,7 +1,7 @@
 ---
 title: Project TODO
 document_id: FND-008
-version: 1.3.34
+version: 1.3.35
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -183,6 +183,7 @@ M1 Product Definition
 | TODO-035 | Create EXP-002 (real venue cost)      |       P1 | DONE        |
 | TODO-036 | Run EXP-002 (real venue cost)         |       P1 | DONE        |
 | TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | DONE        |
+| TODO-038 | Create EXP-003 (volatility regime)   |       P1 | IN PROGRESS  |
 
 ---
 
@@ -1524,8 +1525,9 @@ Kemudian:
 NEXT TASK
 EXP-002 OOS/robustness selesai (TODO-037): edge positif OOS (test exp
 1.9810) namun tidak stasioner — train negatif, 1/4 slice temporal positif.
-Berikutnya: evaluasi tradable vs research-only (regime segmentation,
-data baru) atau definisikan experiment berikutnya.
+Berikutnya: EXP-003 (TODO-038) — volatility regime segmentation: uji
+apakah edge terkonsentrasi pada regime high (filter ATR, M7 machinery)
+dan menjadi stasioner pada biaya venue nyata.
 ```
 
 ---
@@ -1944,6 +1946,33 @@ data baru) atau definisikan experiment berikutnya.
 
 ---
 
+# 81. TODO-038 — Create EXP-003 (Volatility Regime Segmentation)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-003 — RSI Trendline Breakout Volatility Regime Segmentation
+(pre-registration, EXP-003 §6/§9/§13).
+
+## Deliverable
+
+- `configs/EXP-003.yaml` (frozen: identik EXP-002 + `selected_regime:
+  "high"`);
+- pre-registration EXP-003 (hipotesis, variabel, kriteria keputusan
+  sebelum run).
+
+## Next
+
+```text
+TODO-039 Run EXP-003 (volatility regime) — baseline + OOS + robustness
+pada biaya venue nyata; bandingkan high vs low vs unfiltered.
+```
+
+---
+
 # Appendix A — Quick TODO
 
 ```text
@@ -2046,6 +2075,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.34
+**Version:** 1.3.35
 
 **End of Document**

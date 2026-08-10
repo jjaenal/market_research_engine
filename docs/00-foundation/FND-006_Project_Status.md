@@ -1,7 +1,7 @@
 ---
 title: Project Status
 document_id: FND-006
-version: 1.3.35
+version: 1.3.36
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -539,6 +539,10 @@ expectancy 0.5111, n=1403 ≥ 30; breakeven ≈ 2.43 bps/side — EXP-002 §18.1
 EXP-002 OOS/ROBUSTNESS DONE (test exp 1.9810 positif OOS, namun train
 negatif & 1/4 slice temporal positif → edge tidak stasioner; belum cukup
 bukti tradable — EXP-002 §16/§17/§18.3)
+    ↓ (TODO-038 EXP-003 pre-registered — volatility regime segmentation)
+EXP-003 PRE-REGISTERED (uji apakah edge terkonsentrasi pada regime high:
+filter ATR short 14 >= long 100, M7 machinery; biaya venue 1.0 bps/side
+identik EXP-002 — EXP-003 §6/§9/§13)
 ```
 
 Expected research questions:
@@ -889,6 +893,12 @@ temporal slices positive at venue cost; XAGUSD positive thin (0.0342).
 Conclusion (EXP-002 §18.3): SUPPORTED for representative venue price, but
 temporal non-stationarity means insufficient evidence as tradable strategy
 yet — recommend regime segmentation / newer data.
+
+EXP-003 (pre-registered, TODO-038): test whether the edge is concentrated
+in the HIGH volatility regime (ATR short 14 >= ATR long 100, M7 machinery);
+config frozen identical to EXP-002 (venue cost 1.0 bps/side) with
+selected_regime="high". Decision criteria (EXP-003 §13): expectancy > 0,
+breakeven >= 1.0 bps, OOS test AND train both positive (stationarity).
 ```
 
 ---
@@ -1493,6 +1503,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.35
+**Version:** 1.3.36
 
 **End of Document**
