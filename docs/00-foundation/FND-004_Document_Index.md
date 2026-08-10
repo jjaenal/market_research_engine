@@ -232,7 +232,7 @@ docs/07-experiments/
 | EXP-002 | RSI Trendline Breakout Real Venue Cost | `docs/07-experiments/EXP-002_RSI_Trendline_Breakout_Real_Venue_Cost.md` | 1.0.2 | Result |
 | EXP-003 | RSI Trendline Breakout Volatility Regime | `docs/07-experiments/EXP-003_RSI_Trendline_Breakout_Volatility_Regime.md` | 1.0.3 | Result |
 | EXP-004 | RSI Trendline Breakout SL/TP ATR-multiple | `docs/07-experiments/EXP-004_RSI_Trendline_Breakout_SL_TP_Venue_Cost.md` | 1.0.1 | Result |
-| EXP-005 | Price Breakout (Donchian-style) Baseline | `docs/07-experiments/EXP-005_Price_Breakout_Baseline.md` | 1.0.0 | Defined |
+| EXP-005 | Price Breakout (Donchian-style) Baseline | `docs/07-experiments/EXP-005_Price_Breakout_Baseline.md` | 1.0.1 | Result |
 
 Experiment documents will be added as research
 experiments are conducted.
