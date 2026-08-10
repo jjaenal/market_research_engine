@@ -1,0 +1,66 @@
+# EXP-005 frozen experiment configuration (RSH-002 §9, FR-012, ARC-011 pattern).
+#
+# EXP-005 pre-registers a NEW strategy line after the RSI Trendline Breakout
+# research line (EXP-001..EXP-004) was formally closed: the edge did not
+# demonstrate sufficient tradable profile under realistic venue execution
+# costs (EXP-001 §19.8, ARC-008 §14.4, EXP-004 §18.3).
+#
+# Strategy: Price Breakout (Donchian-style) — a pure price-momentum signal
+# (PRICE_CONFIRMATION close > N-bar highest high, confirmed by a swing-high
+# fractal) with NO RSI input. Registered as a plugin (ARC-ACT-010) under
+# `price_breakout`; consumes only existing Event types, so no engine change.
+#
+# Config is frozen IDENTICAL to EXP-002 (real venue cost 1.0 bps/side:
+# commission_rate 0.00003 + slippage_rate 0.00007; no regime filter, no
+# SL/TP) so any difference in results is attributable to the strategy alone.
+# XAUUSD H1 immutable dataset (Article 13) identical to EXP-001..004.
+experiment:
+  id: EXP-005
+  title: Price Breakout (Donchian-style) — Baseline
+  hypothesis: >-
+    Breakout harga Donchian-style (close menembus highest high N-bar,
+    dikonfirmasi swing-high fractal) pada XAUUSD H1 menghasilkan expectancy
+    positif setelah biaya eksekusi venue nyata (1.0 bps/side) — strategi
+    momentum murni berbeda dari line RSI Trendline Breakout yang ditutup.
+  strategy_id: price_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H1
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: ""
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  stop_loss_atr: null
+  take_profit_atr: null
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H1.csv
+  normalized_dataset: experiments/EXP-005/dataset/XAUUSD_H1_normalized.csv
+  report_path: experiments/EXP-005/EXP-005_report.md

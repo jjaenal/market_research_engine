@@ -187,6 +187,7 @@ M1 Product Definition
 | TODO-039 | Run EXP-003 (volatility regime)      |       P1 | DONE        |
 | TODO-040 | Create EXP-004 (SL/TP venue cost)    |       P1 | DONE        |
 | TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | DONE        |
+| TODO-042 | Create EXP-005 (Price Breakout)      |       P1 | IN PROGRESS |
 
 ---
 
@@ -1537,13 +1538,13 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-040 Create EXP-004 + TODO-041 Run EXP-004 (ATR-multiple SL/TP
-at venue cost) — DONE. SL 1.0/TP 4.0 @ 1.0 bps/side → expectancy 1.1654
-(n=698), breakeven ≈ 3.31 bps/side (vs 3.44 kontrol), OOS train +0.2026 &
-test +2.9515 (stasioner), 3/4 slice, 6/8 fine slice, 5/5 combos, 4/4
-split-point stasioner; verdict REJECTED per kriteria pre-registered
-(breakeven < 3.44 bps — hipotesis "SL/TP menaikkan tolerance biaya" tidak
-didukung), meski expectancy/drawdown/robustness membaik (EXP-004 §18).
+Sekarang: TODO-042 Create EXP-005 (Price Breakout baseline) — IN PROGRESS.
+Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP secara formal setelah
+EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge tidak menunjukkan profil
+tradable yang cukup pada biaya venue realistis (EXP-004 §18.3). EXP-005
+menguji strategi momentum murni Price Breakout (Donchian-style, tanpa RSI,
+plugin `price_breakout`, ARC-ACT-010) pada config identik EXP-002 (venue cost
+1.0 bps/side); pre-registration EXP-005 §6/§9/§13; run = TODO-043 (pending).
 ```
 
 ---
@@ -2092,8 +2093,41 @@ EXP-004 — Run (ATR-multiple SL/TP, regime high, venue cost 1.0 bps/side).
 ## Next
 
 ```text
-Evaluasi tradable (data terbaru tetap deferred path, EXP-003 §18.5) atau
-definisikan experiment berikutnya.
+Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP formal (EXP-004 §18.3):
+edge tidak menunjukkan profil tradable yang cukup pada biaya venue realistis.
+Keputusan peneliti: pre-register strategi BARU (bukan lanjut parameter mining).
+→ TODO-042 Create EXP-005 (Price Breakout baseline) — IN PROGRESS
+```
+
+---
+
+# 85. TODO-042 — Create EXP-005 (Price Breakout Baseline)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-005 — Price Breakout (Donchian-style) baseline, strategi BARU setelah
+line RSI Trendline Breakout ditutup (EXP-004 §18.3). Momentum murni:
+PRICE_CONFIRMATION (close > highest high N-bar, Donchian upper channel)
+dikonfirmasi SWING_HIGH fractal; tanpa RSI. Plugin `price_breakout`
+(`src/mre/strategies/exp005.py`, ARC-ACT-010) — konsumsi Event existing,
+tidak ada perubahan arsitektur.
+
+## Deliverable
+
+- `configs/EXP-005.yaml` (frozen: identik EXP-002 — venue cost 1.0 bps/side,
+  tanpa regime filter, tanpa SL/TP);
+- plugin strategi `price_breakout` + test;
+- pre-registration EXP-005 (hipotesis, variabel, kriteria keputusan
+  sebelum run) — `docs/07-experiments/EXP-005_Price_Breakout_Baseline.md`.
+
+## Next
+
+```text
+TODO-043 Run EXP-005 (Price Breakout baseline) — PENDING
 ```
 
 ---
