@@ -1,0 +1,74 @@
+# EXP-007 frozen experiment configuration (RSH-002 §9, FR-012, ARC-011 pattern).
+#
+# EXP-007 pre-registers a NEW strategy line after the Price Breakout line was
+# formally closed: the price-momentum breakout failed on BOTH timeframes
+# (H1 EXP-005 and H4 EXP-006 — structural, negative even at zero cost;
+# EXP-005 §15–§18, EXP-006 §15–§18, EXP-006 §18.3).
+#
+# Strategy: Swing Breakout (Fractal Structure) — a LONG signal fires when a
+# swing-high fractal (structural resistance level, swing detector left/right
+# = 2) is broken by a price confirmation (close > N-bar highest high) within
+# the confirmation window; entry at the breakout (price confirmation) candle.
+# Structural complement of EXP-005's Price Breakout: there the Donchian
+# breakout fires first and a swing-high fractal confirms after; here the
+# swing-high fractal sets the level first and the price confirmation breaks
+# it. Consumes only existing Event types (SWING_HIGH + PRICE_CONFIRMATION),
+# so it registers as a plugin (ARC-ACT-010) with no engine change.
+#
+# Config is frozen IDENTICAL to EXP-006 except the strategy_id:
+# venue cost 1.0 bps/side (commission_rate 0.00003 + slippage_rate 0.00007);
+# no regime filter, no SL/TP; same indicator/event/execution/statistics
+# sections; XAUUSD H4 immutable dataset (Article 13, `datasets/XAUUSD_H4.csv`,
+# 26.816 candle, 2009-07-13..2026-04-14 — separate H4 export, NOT aggregated
+# from H1) so any difference in results is attributable to the strategy alone.
+experiment:
+  id: EXP-007
+  title: Swing Breakout (Fractal Structure) — H4 Timeframe
+  hypothesis: >-
+    Breakout struktur fractal (swing-high fractal menetapkan level resistensi,
+    kemudian close menembus level tersebut — dikonfirmasi price confirmation
+    dalam window) pada XAUUSD H4 menghasilkan expectancy positif setelah biaya
+    eksekusi venue nyata (1.0 bps/side) — strategi struktur-fractal berbeda
+    dari line momentum murni (Price Breakout) yang ditutup.
+  strategy_id: swing_breakout
+
+dataset:
+  symbol: XAUUSD
+  timeframe: H4
+  timezone: UTC
+  source: csv
+
+indicator:
+  rsi_period: 14
+
+regime:
+  atr_short_period: 14
+  atr_long_period: 100
+  selected_regime: ""
+
+signal:
+  cooldown: 0
+
+event:
+  swing_left: 2
+  swing_right: 2
+  price_lookback: 20
+
+execution:
+  position_size: 1.0
+  commission_rate: 0.00003
+  slippage_rate: 0.00007
+  hold_bars: 10
+  stop_loss: null
+  take_profit: null
+  stop_loss_atr: null
+  take_profit_atr: null
+  atr_period: 14
+
+statistics:
+  min_sample: 30
+
+paths:
+  raw_dataset: datasets/XAUUSD_H4.csv
+  normalized_dataset: experiments/EXP-007/dataset/XAUUSD_H4_normalized.csv
+  report_path: experiments/EXP-007/EXP-007_report.md

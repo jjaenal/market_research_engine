@@ -595,6 +595,14 @@ Line Price Breakout CLOSED — kegagalan lintas timeframe (H1 + H4)
 memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk
 strategi berbasis harga (EXP-005 §18.2, EXP-006 §18.2). Kandidat lanjutan:
 eksplorasi instrumen/konteks pasar lain dengan pre-registration terpisah.
+    ↓ (keputusan peneliti, EXP-006 §18.3; TODO-046 Create EXP-007)
+EXP-007 PRE-REGISTERED (kelas strategi baru — Swing Breakout (Fractal
+Structure): swing-high fractal menetapkan level resistensi struktural,
+kemudian price confirmation menembus level tersebut dalam window — trigger
+SWING_HIGH → confirmation PRICE_CONFIRMATION, kebalikan urutan Price
+Breakout; plugin `swing_breakout` (ARC-ACT-010); config frozen identik
+EXP-006 §9 kecuali strategy_id; dataset XAUUSD H4 sama; venue cost 1.0
+bps/side — EXP-007 §6/§8/§9/§13)
 ```
 
 Expected research questions:
@@ -1041,8 +1049,24 @@ expectancy) on both H1 and H4. This strengthens the cross-line conclusion:
 three testing lines on XAUUSD (RSI Trendline Breakout H1 EXP-001..004,
 Price Breakout H1 EXP-005, Price Breakout H4 EXP-006) all fail to show a
 tradable edge at realistic venue costs (EXP-006 §18.2). Line Price Breakout
-is now CLOSED (EXP-006 §18.3); candidates: explore other instruments/market
-contexts with a separate pre-registration.
+is now CLOSED (EXP-006 §18.3).
+
+EXP-007 (pre-registered, TODO-046): tests a NEW strategy class — **Swing
+Breakout (Fractal Structure)** — on XAUUSD H4, per the researcher decision
+(EXP-006 §18.3) to explore a structurally different strategy rather than
+mine parameters of a failed line. A LONG signal fires when a swing-high
+fractal (structural resistance level, swing detector left/right = 2) is
+broken by a price confirmation (close > N-bar highest high) within the
+confirmation window; entry at the breakout (price confirmation) candle.
+Trigger `SWING_HIGH` → confirmation `PRICE_CONFIRMATION` — the structural
+complement of Price Breakout (EXP-005/006) where the Donchian breakout
+fires first and the swing-high fractal confirms after. New plugin
+`swing_breakout` (`src/mre/strategies/exp007.py`, ARC-ACT-010 — consumes
+only existing Event types, no engine change). Config frozen identical to
+EXP-006 §9 except strategy_id (venue cost 1.0 bps/side, no regime filter,
+no SL/TP, same XAUUSD H4 dataset `datasets/XAUUSD_H4.csv`). Decision
+criteria (EXP-007 §13): expectancy > 0 with n >= 30, breakeven >= 1.0
+bps/side, OOS test AND train both positive. Run = TODO-047 (pending).
 ```
 
 ---

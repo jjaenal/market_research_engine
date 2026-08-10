@@ -191,6 +191,7 @@ M1 Product Definition
 | TODO-043 | Run EXP-005 (Price Breakout)         |       P1 | DONE        |
 | TODO-044 | Create EXP-006 (Price Breakout H4)   |       P1 | DONE        |
 | TODO-045 | Run EXP-006 (Price Breakout H4)      |       P1 | DONE        |
+| TODO-046 | Create EXP-007 (Swing Breakout H4)   |       P1 | IN PROGRESS |
 
 ---
 
@@ -1541,8 +1542,8 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-042 Create EXP-005 + TODO-043 Run EXP-005 (Price Breakout
-baseline) — DONE. Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
+Sekarang: TODO-046 Create EXP-007 (Swing Breakout H4) — IN PROGRESS.
+Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
 secara formal setelah EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge
 tidak menunjukkan profil tradable yang cukup pada biaya venue realistis
 (EXP-004 §18.3). EXP-005 menguji strategi momentum murni Price Breakout
@@ -1559,12 +1560,16 @@ EXP-006 1.0.0; TODO-045 DONE, doc 1.0.1): REJECTED per kriteria §13 —
 expectancy −8.3297 @ 1.0 bps/side (n=1188 >= 30), negatif bahkan di biaya
 nol (−7.9576), breakeven < 0 bps; OOS train −5.0451 & test −14.2008
 (keduanya negatif); 0/4 slice, 0/5 combos, XAGUSD −0.1232 (EXP-006 §15–§18).
-Sekarang: line Price Breakout DITUTUP (EXP-006 §18.3) — hipotesis "edge
-spesifik H4" TIDAK terdukung; kegagalan lintas timeframe (H1 + H4)
-memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk
-strategi berbasis harga (EXP-005 §18.2, EXP-006 §18.2). Kandidat lanjutan:
-eksplorasi instrumen/konteks pasar lain dengan pre-registration terpisah
-(EXP-006 §18.3).
+Line Price Breakout DITUTUP (EXP-006 §18.3) — hipotesis "edge spesifik H4"
+TIDAK terdukung; kegagalan lintas timeframe (H1 + H4) memperkuat kesimpulan
+bahwa XAUUSD tidak tradable pada biaya realistis untuk strategi berbasis
+harga (EXP-005 §18.2, EXP-006 §18.2). EXP-007 (pre-registered, TODO-046):
+**kelas strategi baru** Swing Breakout (Fractal Structure) — plugin
+`swing_breakout` (`src/mre/strategies/exp007.py`, ARC-ACT-010), trigger
+`SWING_HIGH` (fractal menetapkan level resistensi) → confirmation
+`PRICE_CONFIRMATION` (penembusan level dalam window); config frozen identik
+EXP-006 §9 kecuali strategy_id; dataset XAUUSD H4 sama; venue cost 1.0
+bps/side; pre-registration EXP-007 §6/§9/§13; run = TODO-047 (pending).
 ```
 
 ---
@@ -2224,6 +2229,42 @@ negatif bahkan di biaya nol (−7.9576), breakeven < 0 bps; OOS train −5.0451
 H4" TIDAK terdukung — kegagalan lintas timeframe (H1 + H4). Line Price
 Breakout DITUTUP (EXP-006 §18.3). Kandidat lanjutan: eksplorasi
 instrumen/konteks pasar lain dengan pre-registration terpisah.
+```
+
+---
+
+# 88. TODO-046 — Create EXP-007 (Swing Breakout H4)
+
+**Priority:** P1
+
+**Status:** IN PROGRESS
+
+## Experiment
+
+EXP-007 — **Swing Breakout (Fractal Structure)** diuji pada **XAUUSD H4**
+setelah line Price Breakout DITUTUP (EXP-005 H1 + EXP-006 H4, keduanya
+REJECTED — kegagalan struktural, negatif bahkan di biaya nol; EXP-006
+§18.3). Keputusan peneliti: **kelas strategi baru** yang berbeda secara
+struktural dari momentum murni — swing-high fractal menetapkan level
+resistensi, kemudian price confirmation menembus level tersebut dalam
+window. Plugin `swing_breakout` (`src/mre/strategies/exp007.py`,
+ARC-ACT-010) — trigger `SWING_HIGH`, confirmation `PRICE_CONFIRMATION`,
+kebalikan urutan Price Breakout (EXP-005/006). Config frozen identik
+EXP-006 §9 kecuali strategy_id → swing_breakout (dataset `XAUUSD_H4.csv`
+yang sama, venue cost 1.0 bps/side).
+
+## Deliverable
+
+- `configs/EXP-007.yaml` (frozen: identik EXP-006 — venue cost 1.0 bps/side,
+  tanpa regime filter, tanpa SL/TP; strategy → swing_breakout);
+- plugin `swing_breakout` + registration test;
+- pre-registration EXP-007 (hipotesis, variabel, kriteria keputusan
+  sebelum run) — `docs/07-experiments/EXP-007_Swing_Breakout_H4_Fractal_Structure.md`.
+
+## Next
+
+```text
+TODO-047 Run EXP-007 (Swing Breakout H4) — PENDING
 ```
 
 ---
