@@ -185,8 +185,8 @@ M1 Product Definition
 | TODO-037 | EXP-002 OOS/robustness (venue cost)   |       P1 | DONE        |
 | TODO-038 | Create EXP-003 (volatility regime)   |       P1 | DONE        |
 | TODO-039 | Run EXP-003 (volatility regime)      |       P1 | DONE        |
-| TODO-040 | Create EXP-004 (SL/TP venue cost)    |       P1 | IN PROGRESS |
-| TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | PENDING     |
+| TODO-040 | Create EXP-004 (SL/TP venue cost)    |       P1 | DONE        |
+| TODO-041 | Run EXP-004 (SL/TP venue cost)       |       P1 | DONE        |
 
 ---
 
@@ -1537,9 +1537,13 @@ kombinasi non-ekstrem positif; kesimpulan formal BELUM TRADABLE
 spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
-Sekarang: TODO-040 Create EXP-004 (ATR-multiple SL/TP at venue cost) —
-re-test edge regime high dengan SL/TP ATR-multiple pada biaya venue nyata
-(1.0 bps/side) yang belum pernah diuji M7 (grid sintetis 2–5 bps/side).
+Sekarang: TODO-040 Create EXP-004 + TODO-041 Run EXP-004 (ATR-multiple SL/TP
+at venue cost) — DONE. SL 1.0/TP 4.0 @ 1.0 bps/side → expectancy 1.1654
+(n=698), breakeven ≈ 3.31 bps/side (vs 3.44 kontrol), OOS train +0.2026 &
+test +2.9515 (stasioner), 3/4 slice, 6/8 fine slice, 5/5 combos, 4/4
+split-point stasioner; verdict REJECTED per kriteria pre-registered
+(breakeven < 3.44 bps — hipotesis "SL/TP menaikkan tolerance biaya" tidak
+didukung), meski expectancy/drawdown/robustness membaik (EXP-004 §18).
 ```
 
 ---
@@ -2024,7 +2028,7 @@ definisikan experiment berikutnya.
 
 **Priority:** P1
 
-**Status:** IN PROGRESS
+**Status:** DONE
 
 ## Experiment
 
@@ -2043,10 +2047,15 @@ bps/side grid and answered RQ-007 TIDAK at 0.05%/side.
 - pre-registration EXP-004 (hipotesis, variabel, kriteria keputusan
   sebelum run).
 
+## Result
+
+- pre-registration EXP-004 disetujui (EXP-004 v1.0.0, §13): SL 1.0/TP 4.0
+  ATR-multiple pada edge regime high @ biaya venue nyata 1.0 bps/side.
+
 ## Next
 
 ```text
-TODO-041 Run EXP-004 (SL/TP venue cost) — PENDING
+TODO-041 Run EXP-004 (SL/TP venue cost) — DONE (EXP-004 §15/§18)
 ```
 
 ---
@@ -2055,7 +2064,7 @@ TODO-041 Run EXP-004 (SL/TP venue cost) — PENDING
 
 **Priority:** P1
 
-**Status:** PENDING
+**Status:** DONE
 
 ## Experiment
 
@@ -2065,6 +2074,20 @@ EXP-004 — Run (ATR-multiple SL/TP, regime high, venue cost 1.0 bps/side).
 
 - baseline + OOS + robustness pada `configs/EXP-004.yaml`;
 - catatan hasil pada EXP-004 (§15–§17) dan Conclusion (§18).
+
+## Result
+
+- SL 1.0/TP 4.0 @ 1.0 bps/side: expectancy 1.1654 (n=698 ≥ 30), PF 1.3456,
+  Max DD 201.82 — vs kontrol EXP-003 (0.8887, 1.2044, 516.25);
+- breakeven ≈ 3.31 bps/side (vs 3.44 kontrol) — SL/TP tidak menaikkan
+  tolerance biaya pada margin;
+- OOS: train +0.2026 (positif), test +2.9515 — stasioner;
+- robustness: 3/4 slice positif (vs 2/4), 6/8 fine slice (vs 4/8), 5/5
+  combos (vs 4/5), 4/4 split-point stasioner (vs 3/4), XAGUSD positif tipis
+  (0.0417);
+- kesimpulan (EXP-004 §18): REJECTED per kriteria pre-registered — hipotesis
+  "SL/TP menaikkan tolerance biaya" tidak didukung (breakeven 3.31 < 3.44
+  bps), meski expectancy/drawdown/robustness membaik.
 
 ## Next
 

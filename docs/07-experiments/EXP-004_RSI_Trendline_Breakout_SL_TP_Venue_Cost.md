@@ -1,8 +1,8 @@
 ---
 title: RSI Trendline Breakout - ATR-multiple SL/TP at Venue Cost
 document_id: EXP-004
-version: 1.0.0
-status: Defined
+version: 1.0.1
+status: Result
 category: Experiment
 owner: Market Research Engine Core Team
 created: 2026-08-10
@@ -25,7 +25,7 @@ referenced_by:
   - FND-006
   - FND-008
 
-purpose: Pre-register EXP-004 (TODO-040) - re-test the high-regime edge with ATR-multiple SL/TP (RQ-007 machinery) at real venue execution costs (1.0 bps/side), which M7 tested only on the synthetic 2-5 bps/side grid
+purpose: Record EXP-004 run (TODO-041) — re-test the high-regime edge with ATR-multiple SL/TP (SL 1.0/TP 4.0) at real venue execution costs (1.0 bps/side), which M7 tested only on the synthetic 2–5 bps/side grid; verdict REJECTED per pre-registered criteria (breakeven 3.31 < 3.44 bps control) but expectancy/drawdown/robustness all improved (EXP-004 §15–§18)
 ---
 
 # RSI Trendline Breakout - ATR-multiple SL/TP at Venue Cost
@@ -37,7 +37,7 @@ purpose: Pre-register EXP-004 (TODO-040) - re-test the high-regime edge with ATR
 # 1. Purpose
 
 EXP-004 adalah **experiment keempat** MRE (RSH-002 §10 lifecycle - state
-sekarang `Defined`, pre-registration). EXP-003 (SUPPORTED) menunjukkan
+sekarang `Result`, run selesai TODO-041). EXP-003 (SUPPORTED) menunjukkan
 edge RSI trendline breakout terkonsentrasi pada regime volatilitas high
 dan stasioner train+test pada biaya venue nyata (1.0 bps/side), namun
 belum cukup bukti untuk deklarasi tradable (EXP-003 §18.4/§18.5).
@@ -369,25 +369,286 @@ Dihitung per skenario SL/TP (§11.2) plus OOS dan robustness (RSH-003).
 
 ---
 
-# 15. Record Lifecycle
+# 15. Run (TODO-041)
+
+Report: `experiments/EXP-004/EXP-004_report.md` (Code Version `0afabbc`).
+Strategi frozen (konfigurasi EXP-004, regime high, biaya venue 1.0 bps/side,
+SL 1.0 / TP 4.0 ATR-multiple) dijalankan tanpa modifikasi.
+
+## 15.1 Representative Scenario (1.0 bps/side, regime high, SL 1.0/TP 4.0)
+
+| Metric        | Value |
+| ------------- | ----- |
+| Trade Count   | 698   |
+| Win Rate      | 0.3696 |
+| Loss Rate     | 0.6304 |
+| Average Win   | 12.2766 |
+| Average Loss  | 5.3498 |
+| Risk/Reward   | 2.2948 |
+| Expectancy    | 1.1654 |
+| Profit Factor | 1.3456 |
+| Gross Profit  | 3167.36 |
+| Gross Loss    | 2353.93 |
+| Net P&L       | 813.43 |
+| Max Drawdown  | 201.82 |
+| Winning Streak| 10    |
+| Losing Streak | 13    |
+
+Perbandingan vs kontrol EXP-003 (regime high, tanpa SL/TP, EXP-003 §15.1):
+
+| Metric      | EXP-003 kontrol | EXP-004 (SL 1.0/TP 4.0) | Δ       |
+| ----------- | --------------- | ----------------------- | ------- |
+| Expectancy  | 0.8887          | 1.1654                  | +31.1%  |
+| Profit Factor | 1.2044        | 1.3456                  | +11.7%  |
+| Net P&L     | 620.34          | 813.43                  | +31.1%  |
+| Max Drawdown| 516.25          | 201.82                  | −60.9%  |
+| Win Rate    | 0.4613          | 0.3696                  | −19.9%  |
+
+Interpretasi: SL/TP ATR-multiple **memperbaiki expectancy, PF, net P&L, dan
+menurunkan Max Drawdown secara drastis** (−61%), namun menurunkan win rate
+(TP membatasi winner). Expectancy tetap positif dengan n = 698 ≥ 30.
+
+## 15.2 SL/TP Grid (1.0 bps/side, regime high, variabel bebas §11.2)
+
+| Skenario        | Trades | Win Rate | Expectancy | PF     | Net P&L  | Max DD  |
+| --------------- | ------ | -------- | ---------- | ------ | -------- | ------- |
+| None (kontrol)  | 698    | 0.4613   | 0.8887     | 1.2044 | 620.34   | 516.25  |
+| SL 1.0          | 698    | 0.3639   | 1.0186     | 1.2994 | 711.01   | 306.38  |
+| SL 1.0 / TP 4.0 | 698    | 0.3696   | 1.1654     | 1.3456 | 813.43   | 201.82  |
+| SL 2.0 / TP 4.0 | 698    | 0.4484   | 1.1653     | 1.2867 | 813.36   | 388.10  |
+
+Interpretasi: **4/4 skenario positif** pada biaya venue; SL 1.0/TP 4.0
+terbaik (expectancy tertinggi + Max DD terendah). SL/TP memperbaiki
+expectancy pada semua varian vs kontrol (0.8887 → ≥ 1.0186).
+
+## 15.3 Venue-Derived Cost Grid (regime high, SL 1.0/TP 4.0)
+
+| Scenario     | comm      | slip       | Total bps/side | Expectancy | PF     | Net P&L   |
+| ------------ | --------- | ---------- | -------------- | ---------- | ------ | --------- |
+| Zero cost    | 0         | 0          | 0              | 1.4852     | 1.4655 | 1036.67   |
+| ECN tight    | 0.00002   | 0.00003    | 0.5            | 1.3080     | 1.3967 | 912.95    |
+| ECN rep.     | 0.00003   | 0.00007    | 1.0            | 1.1654     | 1.3456 | 813.43    |
+| ECN wide     | 0.00005   | 0.00010    | 1.5            | 0.9617     | 1.2768 | 671.25    |
+| Conservative | 0.00007   | 0.00013    | 2.0            | 0.5656     | 1.1526 | 394.75    |
+
+Grid seluruhnya positif 0–2.0 bps/side; pada setiap titik grid expectancy
+SL/TP **lebih tinggi** dari kontrol EXP-003 §15.3.
+
+## 15.4 Breakeven Cost (regime high, SL 1.0/TP 4.0)
+
+Breakeven (titik expectancy menyeberang nol), grid halus:
+
+- 3.28 bps/side → +0.0401 (PF 1.0100);
+- 3.30 bps/side → +0.0341 (PF 1.0085);
+- 3.31 bps/side → −0.0303 (PF 0.9925);
+- **breakeven ≈ 3.31 bps/side** (vs 3.44 bps/side kontrol EXP-003 §15.4).
+
+Margin ke nol pada biaya venue nyata: 1.0 bps/side → margin **2.31 bps**
+(breakeven − biaya) — sedikit **lebih tipis** dari kontrol (2.44 bps).
+
+Catatan penting: SL/TP memperbaiki expectancy pada biaya venue dan
+menurunkan Max DD secara drastis, namun breakeven sedikit **LEBIH RENDAH**
+dari kontrol (3.31 vs 3.44 bps) — SL/TP **tidak menaikkan** tolerance
+biaya pada margin. Ini berbeda dari klaim M7 (ARC-008 §14.3 "breakeven naik
+~4–6 bps") yang diukur pada grid sintetis.
+
+---
+
+# 16. Out-of-Sample Testing (TODO-041)
+
+Metodologi per **RSH-003 §6/§7**: split kronologis (no leakage, no
+retroactive allocation); strategi frozen (konfigurasi EXP-004, regime high,
+SL/TP) dijalankan tanpa perubahan pada kedua segmen — biaya tetap 1.0
+bps/side. Reuse `run_on_slice` (ARC-ACT-013).
+
+Report: `experiments/EXP-004/EXP-004_oos.md` (Code Version `0afabbc`).
+
+Split point: index 70.000 (2021-04-29 18:00 UTC) — 70% train, 30% test
+(identik EXP-002 §16 / EXP-003 §16).
+
+| Metric        | Baseline | Train  | Test   | Δ Test/Train |
+| ------------- | -------- | ------ | ------ | ------------ |
+| Trade Count   | 698      | 446    | 253    | -            |
+| Win Rate      | 0.3696   | 0.3700 | 0.3755 | -            |
+| Expectancy    | 1.1654   | 0.2026 | 2.9515 | +1356.6%     |
+| Profit Factor | 1.3456   | 1.0846 | 1.5901 | +46.6%       |
+| Net P&L       | 813.43   | 90.37  | 746.72 | +726.3%      |
+| Max DD        | 201.82   | 95.84  | 201.81 | -            |
+| Sufficient    | True     | True   | True   | -            |
+
+Interpretasi:
+
+- **train positif** (+0.2026) dan **test positif** (+2.9515) — stasioner,
+  memenuhi kriteria SUPPORTED §13 (OOS test & train > 0);
+- dibanding EXP-003: train membaik (+0.1297 → +0.2026) dan test membaik
+  (+2.4853 → +2.9515);
+- edge masih lebih kuat di paruh akhir (test >> train), konsisten dengan
+  EXP-002/EXP-003.
+
+---
+
+# 17. Robustness (TODO-041)
+
+Metodologi per **RSH-003 §10**: strategi frozen (konfigurasi EXP-004,
+regime high, SL 1.0/TP 4.0, 1.0 bps/side) dijalankan tanpa perubahan.
+Descriptive only; thresholds per RSH-004.
+
+Report: `experiments/EXP-004/EXP-004_robustness.md` (Code Version `0afabbc`).
+
+## 17.1 Time Period Stability (4 slices)
+
+| Slice          | Trades | Win Rate | Expectancy | PF     | Net P&L  | Max DD  |
+| -------------- | ------ | -------- | ---------- | ------ | -------- | ------- |
+| period-1-of-4  | 172    | 0.4128   | 0.7276     | 1.2943 | 125.14   | 48.25   |
+| period-2-of-4  | 173    | 0.3526   | 0.0773     | 1.0356 | 13.37    | 51.50   |
+| period-3-of-4  | 139    | 0.3381   | −0.3034    | 0.8896 | −42.17   | 107.81  |
+| period-4-of-4  | 217    | 0.3733   | 3.3717     | 1.6307 | 731.66   | 201.81  |
+
+Interpretasi: **3/4 slice positif** (vs 2/4 kontrol EXP-003 §17.1) —
+robustness temporal membaik; P&L tetap terkonsentrasi di slice akhir.
+
+## 17.2 Finer Temporal Slices (8, validasi lanjutan)
+
+| Slice          | Trades | Win Rate | Expectancy | PF     | Net P&L  | Max DD  |
+| -------------- | ------ | -------- | ---------- | ------ | -------- | ------- |
+| period-1-of-8  | 103    | 0.3883   | 0.3631     | 1.1523 | 37.40    | 48.25   |
+| period-2-of-8  |  68    | 0.4412   | 1.1600     | 1.4393 | 78.88    | 48.09   |
+| period-3-of-8  |  91    | 0.3846   | −0.2141    | 0.9013 | −19.48   | 48.25   |
+| period-4-of-8  |  82    | 0.3171   | 0.4006     | 1.1848 | 32.85    | 49.41   |
+| period-5-of-8  |  70    | 0.3714   | 0.2939     | 1.1630 | 20.57    | 62.12   |
+| period-6-of-8  |  69    | 0.3043   | −0.9093    | 0.7546 | −62.74   | 107.81  |
+| period-7-of-8  | 107    | 0.3271   | 0.0970     | 1.0282 | 10.38    | 117.72  |
+| period-8-of-8  | 110    | 0.4182   | 6.5571     | 1.9115 | 721.28   | 201.81  |
+
+Interpretasi: **6/8 slice positif** (vs 4/8 kontrol EXP-003 §17.5) —
+SL/TP memperbaiki proporsi slice temporal positif; P&L tetap terkonsentrasi
+di period-8-of-8.
+
+## 17.3 Cross-Market (XAGUSD, same timeframe)
+
+| Market | Trades | Win Rate | Expectancy | PF     | Net P&L | Max DD |
+| ------ | ------ | -------- | ---------- | ------ | ------- | ------ |
+| XAGUSD | 533    | 0.3659   | 0.0417     | 1.4300 | 22.25   | 8.02   |
+
+Interpretasi: edge positif tipis ter-reproduksi di XAGUSD (expectancy
+0.0417, PF 1.4300) — konsisten dengan EXP-002 (0.0342) / EXP-003 (0.0409).
+
+## 17.4 Execution Cost (synthetic grid, pembanding M7)
+
+| comm/slip     | Expectancy | PF    |
+| ------------- | ---------- | ----- |
+| 0 / 0         | 1.4852     | 1.4655|
+| 0.0002 / 0    | 0.7614     | 1.2095|
+| 0.0005 / 0    | −0.3242    | 0.9249|
+| 0 / 0.0002    | 0.5523     | 1.1497|
+| 0 / 0.0005    | −0.8352    | 0.8081|
+| 0.0002/0.0002 | −0.1715    | 0.9587|
+| 0.0005/0.0005 | −2.6444    | 0.5301|
+
+Interpretasi: konsisten dengan M7 — edge gagal pada 0.05%/sisi (5 bps)
+sintetis; namun pada biaya venue nyata (1.0 bps/side) expectancy tetap
+positif dengan margin 2.31 bps.
+
+## 17.5 Parameter Combinations (price_lookback / rsi_period)
+
+| Combo             | Trades | Expectancy | PF    | Net P&L  |
+| ----------------- | ------ | ---------- | ----- | -------- |
+| 20 / 14 (baseline)| 698    | 1.1654     | 1.3456| 813.43   |
+| 10 / 7            | 960    | 0.0752     | 1.0191| 72.15    |
+| 10 / 21           | 964    | 0.0213     | 1.0053| 20.55    |
+| 30 / 7            | 559    | 0.9079     | 1.2673| 507.53   |
+| 30 / 21           | 552    | 1.4564     | 1.4488| 803.92   |
+
+Interpretasi: **5/5 kombinasi positif** (vs 4/5 kontrol EXP-003 §17.4) —
+SL/TP memperbaiki robustness parameter; kombinasi 10/21 (yang negatif pada
+EXP-002/EXP-003) kini positif tipis.
+
+## 17.6 Split-Point Sensitivity (OOS, validasi lanjutan)
+
+| Split | Train n | Train Exp | Train PF | Test n | Test Exp | Test PF | Stasioner |
+| ----- | ------- | --------- | -------- | ------ | -------- | ------- | --------- |
+| 0.5   | 343     | 0.4303    | 1.1866   | 356    | 1.9368   | 1.4472  | Ya        |
+| 0.6   | 405     | 0.3648    | 1.1637   | 294    | 2.3447   | 1.4819  | Ya        |
+| 0.7   | 446     | 0.2026    | 1.0846   | 253    | 2.9515   | 1.5901  | Ya        |
+| 0.8   | 522     | 0.0415    | 1.0162   | 176    | 4.5506   | 1.8037  | Ya        |
+
+Interpretasi: **4/4 split stasioner** (train+test positif) — membaik vs
+kontrol EXP-003 §17.6 (3/4; split 0.8 train negatif). SL/TP memperbaiki
+stasionaritas split-point.
+
+---
+
+# 18. Conclusion
+
+## 18.1 Verdict (pre-registered criteria, §13)
 
 ```text
-Defined (spesifikasi + konfigurasi frozen)    <- 2026-08-10 (pre-registration, TODO-040)
-    |
-Run (TODO-041, belum dijalankan)
-    |
-Result (metrics dicatat)
-    |
-OOS / robustness
-    |
-Conclusion (interpretasi evidence - peneliti, PRD-006 §9)
-    |
+REJECTED
+- expectancy(SL/TP) pada skenario representative (1.0 bps/side) = 1.1654 > 0
+  dengan n = 698 >= min_sample (30): TERPENUHI;
+- biaya breakeven/side ≈ 3.31 bps >= 3.44 bps (kontrol EXP-003): TIDAK
+  TERPENUHI (SL/TP menurunkan breakeven sedikit, 3.44 -> 3.31 bps);
+- OOS test expectancy(SL/TP) = 2.9515 > 0: TERPENUHI;
+- OOS train expectancy(SL/TP) = 0.2026 > 0 (stasioner): TERPENUHI.
+```
+
+**3/4 kriteria pre-registered terpenuhi; kriteria breakeven (>= 3.44 bps)
+tidak terpenuhi → verdict pre-registered REJECTED** (hipotesis "SL/TP
+menaikkan tolerance biaya" tidak didukung pada margin).
+
+## 18.2 Implikasi
+
+- **SL/TP sangat memperbaiki profil risiko**: expectancy naik +31% (0.8887
+  → 1.1654), PF naik, net P&L naik, dan Max Drawdown turun −61% (516 → 202);
+- **namun tolerance biaya sedikit menurun**: breakeven 3.31 vs 3.44 bps
+  kontrol — SL/TP memperbaiki edge pada biaya venue namun tidak menaikkan
+  titik impas pada margin (berbeda dari klaim M7 yang diukur pada grid
+  sintetis);
+- **stasionaritas & robustness membaik**: OOS train+test positif (meningkat
+  vs EXP-003), 3/4 slice (vs 2/4), 6/8 fine slice (vs 4/8), 5/5 combos (vs
+  4/5), 4/4 split-point stasioner (vs 3/4);
+- **verdict**: hipotesis spesifik EXP-004 (SL/TP menaikkan tolerance biaya)
+  **REJECTED**, namun SL/TP terbukti memperbaiki expectancy, drawdown, dan
+  robustness pada biaya venue nyata — nilai sebagai exit rule, bukan sebagai
+  penambah cost tolerance.
+
+## 18.3 Keputusan Lanjutan (peneliti)
+
+SL/TP ATR-multiple **tidak** memenuhi kriteria breakeven pre-registered
+(3.31 < 3.44 bps) sehingga hipotesis EXP-004 ditolak pada kriteria tersebut,
+meskipun memperbaiki hampir semua metrik lain. Catatan kehati-hatian:
+
+- verdict berdasarkan kriteria pre-registered §13; hasil OOS/robustness
+  adalah konteks tambahan (RSH-003, deskriptif);
+- M7 mencatat breakeven SL/TP "naik 4–6 bps" (ARC-008 §14.3) — tidak
+  ter-reproduksi pada grid venue halus; perlu verifikasi basis perhitungan
+  M7 sebelum dipakai sebagai referensi lanjutan;
+- data terbaru di luar 100.000 candle tetap deferred path (EXP-003 §18.5);
+- arah selanjutnya (kandidat): validasi SL/TP lain (SL lebih sempit, TP
+  bervariasi), atau deklinasi strategi ini dan beralih ke strategi lain
+  (EXP-001 §19.8, ARC-008 §14.4).
+
+---
+
+# 19. Record Lifecycle
+
+```text
+Defined (spesifikasi + konfigurasi frozen)    ← 2026-08-10 (pre-registration, TODO-040)
+    ↓ (TODO-041 Run EXP-004)
+Run          ← 2026-08-10 (§15)
+    ↓
+Result (metrics dicatat)    ← 2026-08-10 (§15)
+    ↓
+OOS / robustness            ← 2026-08-10 (§16/§17)
+    ↓
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    ← saat ini (§18)
+    ↓
 Reviewed (validasi, RSH-003)
 ```
 
 ---
 
-# 16. Traceability
+# 20. Traceability
 
 | Item            | Requirement / TODO           |
 | --------------- | ---------------------------- |
@@ -404,7 +665,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 17. Compliance
+# 21. Compliance
 
 | Document / Rule          | Experiment requirement             |
 | ------------------------ | ---------------------------------- |
@@ -418,7 +679,7 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 18. References
+# 22. References
 
 - `docs/00-foundation/FND-003_Document_ID_Standard.md`
 - `docs/00-foundation/FND-005_Project_Context.md`
@@ -444,18 +705,19 @@ Reviewed (validasi, RSH-003)
 
 ---
 
-# 19. Revision History
+# 23. Revision History
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.0.1   | 2026-08-10 | EXP-004 run (TODO-041) dicatat (§15–§17): SL 1.0/TP 4.0 @ 1.0 bps/side → expectancy 1.1654 (n=698), breakeven ≈ 3.31 bps/side, OOS train +0.2026 & test +2.9515, 3/4 slice positif, 6/8 fine slice, 5/5 combos, 4/4 split-point stasioner; verdict REJECTED (§18) — breakeven < 3.44 bps kontrol, meski expectancy/drawdown/robustness membaik |
 | 1.0.0   | 2026-08-10 | Initial EXP-004 pre-registration (TODO-040): ATR-multiple SL/TP re-test at real venue costs (1.0 bps/side) on the EXP-003 high-regime edge; config frozen identik EXP-003 + SL 1.0 / TP 4.0 |
 
 ---
 
-**Document Status:** Defined
+**Document Status:** Result
 
 **Document ID:** EXP-004
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 **End of Document**

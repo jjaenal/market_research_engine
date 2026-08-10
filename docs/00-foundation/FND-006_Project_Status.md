@@ -561,6 +561,13 @@ memblokir experiment berikutnya — EXP-003 §18.5)
 EXP-004 PRE-REGISTERED (re-test edge regime high dengan ATR-multiple SL/TP
 pada biaya venue nyata 1.0 bps/side — M7 hanya menguji grid sintetis 2–5
 bps/side; config frozen identik EXP-003 + SL 1.0/TP 4.0 — EXP-004 §6/§9/§13)
+    ↓ (TODO-041 Run EXP-004 — SL/TP at venue cost)
+EXP-004 REJECTED per kriteria pre-registered (SL 1.0/TP 4.0 @ 1.0 bps/side
+→ expectancy 1.1654, n=698 ≥ 30; breakeven ≈ 3.31 bps < 3.44 bps kontrol —
+hipotesis "SL/TP menaikkan tolerance biaya" TIDAK didukung; namun
+expectancy +31%, Max DD −61%, OOS train +0.2026 & test +2.9515 (stasioner),
+3/4 slice, 6/8 fine slice, 5/5 combos, 4/4 split-point — semua membaik vs
+EXP-003 — EXP-004 §15–§18)
 ```
 
 Expected research questions:
@@ -949,7 +956,19 @@ SL/TP only on the synthetic 2-5 bps/side grid and answered RQ-007 TIDAK.
 Config frozen identical to EXP-003 (regime high, 1.0 bps/side) + SL 1.0 /
 TP 4.0 ATR-multiple. Decision criteria (EXP-004 §13): expectancy > 0,
 breakeven >= 3.44 bps/side (EXP-003 control), OOS test AND train both
-positive. Run = TODO-041 (pending).
+positive.
+
+EXP-004 run (TODO-041): REJECTED per pre-registered criteria — SL 1.0/TP
+4.0 @ 1.0 bps/side -> expectancy 1.1654 (n=698 >= 30), PF 1.3456, Max DD
+201.82 (vs EXP-003 control 0.8887 / 1.2044 / 516.25); breakeven ≈ 3.31
+bps/side — below the 3.44 bps control, so the hypothesis "SL/TP raises
+cost tolerance" is NOT supported (differs from M7's synthetic-grid claim
+of +4–6 bps). OOS stationary: train +0.2026 & test +2.9515. Robustness
+improved across the board: 3/4 slices (vs 2/4), 6/8 fine slices (vs 4/8),
+5/5 combos (vs 4/5), 4/4 split-point stationary (vs 3/4), XAGUSD positive
+thin (0.0417). Conclusion (EXP-004 §18): REJECTED on the breakeven
+criterion but SL/TP strongly improves expectancy/drawdown/robustness at
+venue costs — value as an exit rule, not as a cost-tolerance add.
 ```
 
 ---
