@@ -617,6 +617,12 @@ stasioner; 2/4 slice temporal positif, 5/5 combos positif, XAGUSD +0.0216
 tipis; 3/4 kriteria §13 terpenuhi, stasionaritas TIDAK — EXP-008 §15–§18;
 mitigasi gabungan = mekanisme risk/cost-tolerance efektif (22× expectancy,
 breakeven 1.32 → 8.8 bps, Max DD −78%) namun BUKAN mekanisme stasionaritas)
+    ↓ (keputusan peneliti, EXP-008 §18.4)
+LINE SWING BREAKOUT DITUTUP — dua kelas strategi (momentum Price Breakout
+EXP-005/006 + struktur Swing Breakout EXP-007/008) keduanya REJECTED di
+kriteria stasionaritas (H1 + H4); mitigasi tidak dapat menstabilkan edge
+temporal. Langkah berikutnya: audit forensik metodologi & spesifikasi
+eksperimen (EXP-001..EXP-008) sebelum eksperimen baru.
 ```
 
 Expected research questions:
@@ -1108,6 +1114,14 @@ remains temporally non-stationary (concentrated in the 2022–2026 bullish
 period). Candidates (EXP-008 §18.3): close the Swing Breakout line, retest on
 other timeframe/instrument, or different stationarity mitigation (separate
 pre-registration).
+
+LINE CLOSED (EXP-008 §18.4, post-EXP-008 researcher decision): **Swing
+Breakout line is CLOSED** — two strategy classes (momentum Price Breakout
+EXP-005/006 + structure Swing Breakout EXP-007/008) both REJECTED on the
+stationarity criterion (H1 + H4); mitigations cannot make the edge temporally
+stationary. Next step: **forensic methodology & specification audit of
+EXP-001..EXP-008** — verify the rejections are methodologically valid and
+strategy specifications are deterministic before any new experiment.
 ```
 
 ---
@@ -1712,6 +1726,6 @@ Core philosophy:
 
 **Document ID:** FND-006
 
-**Version:** 1.3.41
+**Version:** 1.3.42
 
 **End of Document**

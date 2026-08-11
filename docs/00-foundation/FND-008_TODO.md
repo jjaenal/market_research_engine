@@ -1546,7 +1546,8 @@ spot XAUUSD H1 pasca 2026-05-26 tidak tersedia dari sumber gratis reliabel
 (Yahoo delisted, Dukascopy 503/404, Stooq/Investing JS-challenge); GC=F
 futures beda instrumen/model biaya venue; path ini TIDAK memblokir EXP-004.
 Sekarang: TODO-046/047 Create + Run EXP-007 (Swing Breakout H4) — DONE;
-TODO-048/049 Create + Run EXP-008 (combined mitigations) — DONE.
+TODO-048/049 Create + Run EXP-008 (combined mitigations) — DONE. Line Swing
+Breakout DITUTUP (EXP-008 §18.4).
 Line RSI Trendline Breakout (EXP-001..EXP-004) DITUTUP
 secara formal setelah EXP-004 REJECTED (breakeven 3.31 < 3.44 bps): edge
 tidak menunjukkan profil tradable yang cukup pada biaya venue realistis
@@ -2336,6 +2337,13 @@ expectancy, breakeven 1.32 → 8.8 bps, Max DD −78%) namun BUKAN mekanisme
 stasionaritas. Kandidat lanjutan (EXP-008 §18.3): tutup line Swing Breakout,
 uji timeframe/instrument lain, atau mitigasi stasionaritas berbeda
 (pre-registration terpisah).
+
+KEPUTUSAN PENELITI (post-EXP-008, §18.4): Line Swing Breakout DITUTUP —
+dua kelas strategi (momentum EXP-005/006 + struktur EXP-007/008) keduanya
+REJECTED di kriteria stasionaritas (H1 + H4); mitigasi tidak dapat
+menstabilkan edge temporal. Langkah berikutnya: audit forensik metodologi
+& spesifikasi eksperimen (EXP-001..EXP-008) — verifikasi rejections valid
+secara metodologis dan spesifikasi deterministik sebelum eksperimen baru.
 ```
 
 ---
@@ -2442,6 +2450,6 @@ baseline evidence exists.
 
 **Document ID:** FND-008
 
-**Version:** 1.3.40
+**Version:** 1.3.41
 
 **End of Document**
