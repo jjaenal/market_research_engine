@@ -58,6 +58,7 @@ regime:
 
 signal:
   cooldown: 10
+  window: 5
 
 event:
   swing_left: 2

@@ -79,6 +79,7 @@ class ExperimentConfig:
     strategy_id: str = ""
     signal_definition: tuple[SignalRule, ...] = ()
     signal_cooldown: int = 0
+    signal_window: int = 0
     execution_config: ExecutionConfig = field(default_factory=ExecutionConfig)
     statistics_config: StatisticsConfig = field(default_factory=StatisticsConfig)
     conclusion: str = ""
@@ -88,6 +89,8 @@ class ExperimentConfig:
             raise ValueError("experiment_id must not be empty")
         if self.signal_cooldown < 0:
             raise ValueError("signal_cooldown must be >= 0")
+        if self.signal_window < 0:
+            raise ValueError("signal_window must be >= 0")
         if self.strategy_id and not self.signal_definition:
             object.__setattr__(self, "signal_definition", get_strategy(self.strategy_id))
         if not self.signal_definition:
@@ -97,6 +100,12 @@ class ExperimentConfig:
                 self,
                 "signal_definition",
                 tuple(replace(rule, cooldown=self.signal_cooldown) for rule in self.signal_definition),
+            )
+        if self.signal_window:
+            object.__setattr__(
+                self,
+                "signal_definition",
+                tuple(replace(rule, window=self.signal_window) for rule in self.signal_definition),
             )
 
 
@@ -287,6 +296,10 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
     statistics = _section(raw, "statistics")
     statistics_config = StatisticsConfig(min_sample=int(statistics.get("min_sample", 30)))
 
+    signal_section = raw.get("signal", {})
+    if not isinstance(signal_section, dict):
+        raise ValueError("'signal' section in experiment config must be a mapping")
+
     paths = _section(raw, "paths")
     config = ExperimentConfig(
         experiment_id=experiment_id,
@@ -302,7 +315,8 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
         regime_config=regime_config,
         event_config=event_config,
         strategy_id=strategy_id,
-        signal_cooldown=int(raw.get("signal", {}).get("cooldown", 0)),
+        signal_cooldown=int(signal_section.get("cooldown", 0)),
+        signal_window=int(signal_section.get("window", 0)),
         execution_config=execution_config,
         statistics_config=statistics_config,
     )

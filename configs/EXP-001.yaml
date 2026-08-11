@@ -33,6 +33,7 @@ regime:
 # (ENG-003 §8.1). 0 = baseline (no dedup).
 signal:
   cooldown: 0
+  window: 5
 
 event:
   swing_left: 2

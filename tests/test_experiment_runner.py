@@ -129,6 +129,20 @@ def test_config_applies_signal_cooldown(tmp_path) -> None:
     assert all(rule.cooldown == 5 for rule in cfg.signal_definition)
 
 
+def test_config_applies_signal_window(tmp_path) -> None:
+    cfg = _config(tmp_path)
+    assert all(rule.window == 5 for rule in cfg.signal_definition)
+    cfg = ExperimentConfig(**{**cfg.__dict__, "signal_window": 7})
+    assert all(rule.window == 7 for rule in cfg.signal_definition)
+
+
+def test_config_rejects_negative_signal_window(tmp_path) -> None:
+    import pytest
+
+    with pytest.raises(ValueError):
+        ExperimentConfig(**{**_config(tmp_path).__dict__, "signal_window": -1})
+
+
 def _candle(idx: int, high: float, low: float) -> Candle:
     return Candle(
         timestamp=datetime(2020, 1, 1, tzinfo=timezone.utc) + timedelta(minutes=idx),
