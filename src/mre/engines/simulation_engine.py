@@ -24,10 +24,14 @@ def simulate(
 ) -> tuple[Trade, ...]:
     """Simulate Trades from Signals using execution rules (ENG-005 §8).
 
-    Entry occurs at the open of the candle after the Signal; exit is
-    determined by SL (priority), TP, the scheduled ``hold_bars`` close,
-    or the last available close when data is exhausted. No future
-    information influences past execution (TODO-019).
+    Entry occurs at the open of the candle after the Signal is knowable:
+    the later of (bar after the Signal timestamp) and (bar after every
+    constituent Event's ``confirmable_ref``). This guarantees no same-bar
+    or backdated entry even if a Signal's timestamp was constructed
+    early (E-1, SPEC-003). Exit is determined by SL (priority), TP, the
+    scheduled ``hold_bars`` close, or the last available close when data
+    is exhausted. No future information influences past execution
+    (TODO-019).
     """
     cfg = config if config is not None else ExecutionConfig()
     if not candles:
@@ -46,7 +50,9 @@ def simulate(
         if idx is None or idx + 1 >= len(candles):
             continue
 
-        entry_bar = idx + 1
+        entry_bar = max(idx + 1, _latest_confirmable_ref(signal) + 1)
+        if entry_bar >= len(candles):
+            continue
         entry_candle = candles[entry_bar]
         entry_price = _apply_slippage(entry_candle.open, side, entry=True, rate=cfg.slippage_rate)
 
@@ -102,6 +108,18 @@ def _side(signal_type: str) -> str:
     if signal_type not in _SIDES:
         raise ValueError(f"unknown signal_type: {signal_type!r}")
     return _SIDES[signal_type]
+
+
+def _latest_confirmable_ref(signal: Signal) -> int:
+    """Latest bar by which every constituent Event is knowable (SPEC-001).
+
+    Returns -1 when no constituent Event carries a confirmable reference,
+    so entry falls back to the Signal timestamp bar.
+    """
+    confirmable = [e.confirmable_ref for e in signal.events if e.confirmable_ref is not None]
+    if not confirmable:
+        return -1
+    return max(confirmable)
 
 
 def _apply_slippage(price: float, side: str, entry: bool, rate: float) -> float:

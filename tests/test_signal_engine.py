@@ -33,6 +33,18 @@ def _ev_slope(event_type: str, ref: int, slope: float) -> Event:
     )
 
 
+def _ev_confirmable(event_type: str, ref: int, confirmable_ref: int) -> Event:
+    return Event(
+        event_type=event_type,
+        timestamp=_ts(ref),
+        source_detector="test",
+        reference=ref,
+        payload={"value": float(ref)},
+        confirmable_at=_ts(confirmable_ref),
+        confirmable_ref=confirmable_ref,
+    )
+
+
 def _long_rule(window: int = 5) -> SignalRule:
     return SignalRule(
         signal_type="LONG",
@@ -113,6 +125,27 @@ def test_combine_unsorted_events_still_works() -> None:
     events = [_ev(PRICE_CONFIRMATION, 12), _ev(RSI_TRENDLINE_BROKEN, 10)]
     (signal,) = combine(events, [_long_rule()])
     assert signal.timestamp == _ts(12)
+
+
+def test_combine_timestamp_is_latest_knowable_time() -> None:
+    trigger = _ev_confirmable(RSI_TRENDLINE_BROKEN, 10, confirmable_ref=10)
+    confirm = _ev_confirmable(PRICE_CONFIRMATION, 12, confirmable_ref=14)
+    (signal,) = combine([trigger, confirm], [_long_rule()])
+    assert signal.timestamp == _ts(14)
+
+
+def test_combine_knowable_time_without_confirmable_fallback() -> None:
+    trigger = _ev(RSI_TRENDLINE_BROKEN, 10)
+    confirm = _ev(PRICE_CONFIRMATION, 12)
+    (signal,) = combine([trigger, confirm], [_long_rule()])
+    assert signal.timestamp == _ts(12)
+
+
+def test_combine_knowable_time_mixed_fallback() -> None:
+    trigger = _ev_confirmable(RSI_TRENDLINE_BROKEN, 10, confirmable_ref=13)
+    confirm = _ev(PRICE_CONFIRMATION, 12)
+    (signal,) = combine([trigger, confirm], [_long_rule()])
+    assert signal.timestamp == _ts(13)
 
 
 def test_combine_deterministic() -> None:
@@ -236,6 +269,18 @@ def test_combine_cooldown_tracks_last_emitted_reference() -> None:
     ]
     signals = combine(events, [_long_rule_with_cooldown(cooldown=3)])
     assert [s.timestamp for s in signals] == [_ts(12), _ts(20)]
+
+
+def test_combine_cooldown_uses_knowable_ref() -> None:
+    events = [
+        _ev_confirmable(RSI_TRENDLINE_BROKEN, 10, confirmable_ref=13),
+        _ev_confirmable(PRICE_CONFIRMATION, 12, confirmable_ref=12),
+        _ev_confirmable(RSI_TRENDLINE_BROKEN, 14, confirmable_ref=17),
+        _ev_confirmable(PRICE_CONFIRMATION, 16, confirmable_ref=16),
+    ]
+    signals = combine(events, [_long_rule_with_cooldown(cooldown=5)])
+    assert len(signals) == 1
+    assert signals[0].timestamp == _ts(13)
 
 
 def test_combine_cooldown_is_per_rule() -> None:

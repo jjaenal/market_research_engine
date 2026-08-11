@@ -15,11 +15,17 @@ def detect_swings(
     right: int = 2,
     source_detector: str = "swing",
 ) -> tuple[Event, ...]:
-    """Detect swing highs/lows using a fractal window (ADR-003).
+    """Detect swing highs/lows using a fractal window (ADR-003, SPEC-001).
 
     A swing_high at index i requires values[i] > every value in
     [i-left, i+right] (excluding i); swing_low is symmetric. Windows at
     the series edges that are not full produce no swings.
+
+    No lookahead (SPEC-001, ADR-005): the event timestamp is the peak
+    bar ``i`` (the fact), but the swing is only *knowable* after the
+    right confirmation window closes, so ``confirmable_at`` is the
+    timestamp of bar ``i + right`` and ``confirmable_ref`` is ``i + right``.
+    Consumers must not act on the event before its confirmable time.
 
     Pure function: reads only `values` and `timestamps` (Article 2).
     """
@@ -52,6 +58,8 @@ def detect_swings(
                     source_detector=source_detector,
                     reference=i,
                     payload={"value": values[i]},
+                    confirmable_at=timestamps[i + right],
+                    confirmable_ref=i + right,
                 )
             )
         if low:
@@ -62,6 +70,8 @@ def detect_swings(
                     source_detector=source_detector,
                     reference=i,
                     payload={"value": values[i]},
+                    confirmable_at=timestamps[i + right],
+                    confirmable_ref=i + right,
                 )
             )
     return tuple(events)

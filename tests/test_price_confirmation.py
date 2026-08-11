@@ -46,6 +46,8 @@ def test_confirmation_metadata() -> None:
     assert event.timestamp == _ts(7)
     assert event.payload["close"] == 4.0
     assert event.payload["highest_high"] == 3.5
+    assert event.confirmable_ref == 7
+    assert event.confirmable_at == _ts(7)
 
 
 def test_warmup_has_no_confirmation() -> None:

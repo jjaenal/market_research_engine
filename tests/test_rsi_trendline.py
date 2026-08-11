@@ -37,6 +37,18 @@ def test_break_event_metadata() -> None:
     assert broken.payload["line_value"] > broken.payload["value"]
 
 
+def test_events_carry_confirmable_timing() -> None:
+    events = detect_rsi_trendline(RSI_VALUES, _timestamps(len(RSI_VALUES)), left=2, right=2)
+    created = {e.reference: e for e in events if e.event_type == RSI_TRENDLINE_CREATED}
+    assert created[16].confirmable_ref == 18
+    assert created[16].confirmable_at == _ts(18)
+    assert created[19].confirmable_ref == 21
+    assert created[19].confirmable_at == _ts(21)
+    broken = next(e for e in events if e.event_type == RSI_TRENDLINE_BROKEN)
+    assert broken.confirmable_ref == 21
+    assert broken.confirmable_at == _ts(21)
+
+
 def test_no_trendline_without_two_swings() -> None:
     short = RSI_VALUES[:10]
     assert detect_rsi_trendline(short, _timestamps(len(short)), left=2, right=2) == ()

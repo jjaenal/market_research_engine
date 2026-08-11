@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from datetime import datetime
 
 from mre.models.event import Event
 from mre.models.signal import Signal
@@ -14,13 +15,21 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
 
     Per rule: each trigger Event must be followed, within ``window``
     candle references, by the earliest confirmation Event of every
-    required type. The resulting Signal timestamp is the latest of its
-    constituent Events (FND-009 §13.5).
+    required type.
+
+    Knowability (SPEC-001, ADR-005): the Signal timestamp is the latest
+    time at which every constituent Event is knowable — the maximum of
+    their ``confirmable_at`` (falling back to ``timestamp`` when a
+    detector does not carry a confirmable time). Consumers must not act
+    on a Signal before its timestamp; ``simulate`` enters at the next
+    bar open after it. This is the E-1 fix for the fractal backdating
+    lookahead: swing-based signals can no longer fire before the swing
+    is confirmed (FND-009 §13.5 superseded for knowability).
 
     Deduplication (SignalRule.cooldown, ARC-008 ARC-ACT-012): when a rule
     has ``cooldown > 0``, consecutive Signals from that rule are suppressed
     unless separated by at least ``cooldown`` candle references (measured
-    at the Signal reference, i.e. the confirmation candle). This collapses
+    at the Signal reference, i.e. the latest knowable candle). This collapses
     overlapping triggers that reuse the same confirmation into one decision
     per episode (EXP-001 §15.3). ``cooldown = 0`` keeps legacy behavior.
 
@@ -62,14 +71,14 @@ def combine(events: Sequence[Event], signal_definition: Sequence[SignalRule]) ->
                 continue
 
             selected.sort(key=lambda e: (e.timestamp, e.event_type, _ref(e)))
-            signal_ref = _ref(selected[-1])
+            signal_ref = max(_knowable_ref(e) for e in selected)
             if rule.cooldown > 0 and last_signal_ref is not None and signal_ref < last_signal_ref + rule.cooldown:
                 continue
 
             signals.append(
                 Signal(
                     signal_type=rule.signal_type,
-                    timestamp=selected[-1].timestamp,
+                    timestamp=max(_knowable_time(e) for e in selected),
                     events=tuple(selected),
                     confirmation=True,
                     source_strategy=rule.source_strategy,
@@ -85,3 +94,25 @@ def _ref(event: Event) -> int:
     if not isinstance(event.reference, int):
         raise ValueError(f"event reference must be an int, got {event.reference!r}")
     return event.reference
+
+
+def _knowable_ref(event: Event) -> int:
+    """Earliest bar at which the Event's fact is knowable (SPEC-001).
+
+    Falls back to the fact reference when the detector does not carry a
+    confirmable reference.
+    """
+    if event.confirmable_ref is not None:
+        return event.confirmable_ref
+    return _ref(event)
+
+
+def _knowable_time(event: Event) -> datetime:
+    """Earliest time at which the Event's fact is knowable (SPEC-001).
+
+    Falls back to the fact timestamp when the detector does not carry a
+    confirmable time.
+    """
+    if event.confirmable_at is not None:
+        return event.confirmable_at
+    return event.timestamp

@@ -35,6 +35,16 @@ def test_swing_event_metadata() -> None:
     assert high.payload == {"value": 3.0}
 
 
+def test_swing_carries_confirmable_timing() -> None:
+    events = detect_swings(VALUES, _timestamps(len(VALUES)), left=2, right=2)
+    high = next(e for e in events if e.event_type == SWING_HIGH and e.reference == 2)
+    assert high.confirmable_ref == 4
+    assert high.confirmable_at == _ts(4)
+    low = next(e for e in events if e.event_type == SWING_LOW and e.reference == 4)
+    assert low.confirmable_ref == 6
+    assert low.confirmable_at == _ts(6)
+
+
 def test_no_swing_at_partial_edge_windows() -> None:
     events = detect_swings(VALUES, _timestamps(len(VALUES)), left=2, right=2)
     assert all(e.reference not in (0, 1, 13, 14) for e in events)

@@ -6,6 +6,7 @@ import pytest
 
 from mre.engines.simulation_engine import simulate
 from mre.models.candle import Candle
+from mre.models.event import Event
 from mre.models.execution import ExecutionConfig
 from mre.models.signal import Signal
 
@@ -33,6 +34,17 @@ def _candles(closes: list[float]) -> tuple[Candle, ...]:
 
 def _signal(signal_type: str, hour: int) -> Signal:
     return Signal(signal_type=signal_type, timestamp=_ts(hour), events=())
+
+
+def _event(confirmable_ref: int) -> Event:
+    return Event(
+        event_type="SWING_HIGH",
+        timestamp=_ts(0),
+        source_detector="test",
+        reference=0,
+        payload={},
+        confirmable_ref=confirmable_ref,
+    )
 
 
 def _cfg(**kwargs) -> ExecutionConfig:
@@ -234,3 +246,60 @@ def test_no_signal_timestamp_skipped() -> None:
     closes = [10.0, 10.0, 11.0, 12.0]
     missing = Signal(signal_type="LONG", timestamp=datetime(2026, 1, 2, 0, tzinfo=timezone.utc), events=())
     assert simulate([missing], _candles(closes), _cfg(hold_bars=2)) == ()
+
+
+def test_entry_after_confirmable_ref() -> None:
+    closes = [10.0, 10.0, 11.0, 12.0, 13.0, 14.0]
+    signal = Signal(
+        signal_type="LONG",
+        timestamp=_ts(0),
+        events=(_event(confirmable_ref=2),),
+    )
+    trades = simulate([signal], _candles(closes), _cfg(hold_bars=3))
+    assert len(trades) == 1
+    (trade,) = trades
+    assert trade.entry.trigger == 3
+    assert trade.entry.price == 11.0
+    assert trade.position.opened_at == _ts(3)
+
+
+def test_entry_after_confirmable_ref_mixed_with_plain_events() -> None:
+    closes = [10.0, 10.0, 11.0, 12.0, 13.0, 14.0]
+    signal = Signal(
+        signal_type="LONG",
+        timestamp=_ts(0),
+        events=(_event(confirmable_ref=2), Event(
+            event_type="PRICE_CONFIRMATION",
+            timestamp=_ts(0),
+            source_detector="test",
+            reference=0,
+            payload={},
+        )),
+    )
+    trades = simulate([signal], _candles(closes), _cfg(hold_bars=3))
+    assert len(trades) == 1
+    (trade,) = trades
+    assert trade.entry.trigger == 3
+
+
+def test_entry_uses_latest_of_timestamp_and_confirmable_ref() -> None:
+    closes = [10.0, 10.0, 11.0, 12.0, 13.0, 14.0]
+    signal = Signal(
+        signal_type="LONG",
+        timestamp=_ts(3),
+        events=(_event(confirmable_ref=1),),
+    )
+    trades = simulate([signal], _candles(closes), _cfg(hold_bars=3))
+    assert len(trades) == 1
+    (trade,) = trades
+    assert trade.entry.trigger == 4
+
+
+def test_signal_skipped_when_confirmable_ref_at_last_bar() -> None:
+    closes = [10.0, 10.0, 11.0, 12.0, 13.0]
+    signal = Signal(
+        signal_type="LONG",
+        timestamp=_ts(0),
+        events=(_event(confirmable_ref=4),),
+    )
+    assert simulate([signal], _candles(closes), _cfg(hold_bars=3)) == ()

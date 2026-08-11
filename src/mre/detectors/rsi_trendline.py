@@ -46,8 +46,12 @@ def detect_rsi_trendline(
     ]
 
     events: list[Event] = []
-    events.extend(_build(values, timestamps, lows, broken_below=True, source_detector=source_detector))
-    events.extend(_build(values, timestamps, highs, broken_below=False, source_detector=source_detector))
+    events.extend(
+        _build(values, timestamps, lows, broken_below=True, source_detector=source_detector, right=right)
+    )
+    events.extend(
+        _build(values, timestamps, highs, broken_below=False, source_detector=source_detector, right=right)
+    )
     return tuple(sorted(events, key=lambda e: (e.timestamp, e.event_type, e.reference)))
 
 
@@ -57,6 +61,7 @@ def _build(
     points: list[tuple[int, float]],
     broken_below: bool,
     source_detector: str,
+    right: int,
 ) -> list[Event]:
     events: list[Event] = []
     for k in range(1, len(points)):
@@ -69,6 +74,7 @@ def _build(
         if not broken_below and slope >= 0:
             continue
 
+        b_confirm = b_index + right
         events.append(
             Event(
                 event_type=RSI_TRENDLINE_CREATED,
@@ -81,12 +87,15 @@ def _build(
                     "start": a_index,
                     "end": b_index,
                 },
+                confirmable_at=timestamps[b_confirm],
+                confirmable_ref=b_confirm,
             )
         )
 
         for t in range(b_index + 1, len(values)):
             line_value = a_value + slope * (t - a_index)
             if (broken_below and values[t] < line_value) or (not broken_below and values[t] > line_value):
+                confirm_ref = max(t, b_confirm)
                 events.append(
                     Event(
                         event_type=RSI_TRENDLINE_BROKEN,
@@ -100,6 +109,8 @@ def _build(
                             "start": a_index,
                             "end": b_index,
                         },
+                        confirmable_at=timestamps[confirm_ref],
+                        confirmable_ref=confirm_ref,
                     )
                 )
                 break

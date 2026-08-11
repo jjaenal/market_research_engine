@@ -39,6 +39,8 @@ def detect_price_confirmation(
                     source_detector=source_detector,
                     reference=i,
                     payload={"close": close, "highest_high": highest},
+                    confirmable_at=candles[i].timestamp,
+                    confirmable_ref=i,
                 )
             )
     return tuple(events)
