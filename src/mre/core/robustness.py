@@ -9,7 +9,8 @@ from pathlib import Path
 from mre.core.experiment_runner import ExperimentConfig, compute_report
 from mre.core.segments import ensure_normalized, run_on_slice
 from mre.loaders.csv_loader import load_dataset
-from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
+from mre.loaders.normalize import RawCsvConfig, needs_normalize, normalize_raw_csv
+from mre.models.execution import ExecutionConfig
 from mre.models.statistics import TradeStatistics
 from mre.utils.markdown import heading, table
 
@@ -102,8 +103,9 @@ def run_market(
     immutable raw CSV (Article 13).
     """
     dir_path = out_dir if out_dir is not None else config.normalized_dataset.parent
-    normalized = dir_path / f"{symbol}_H1_normalized.csv"
-    normalize_raw_csv(raw_csv, normalized, RawCsvConfig())
+    normalized = dir_path / f"{symbol}_{config.data_config.timeframe}_normalized.csv"
+    if needs_normalize(raw_csv, normalized):
+        normalize_raw_csv(raw_csv, normalized, RawCsvConfig())
 
     market_config = replace(
         config,

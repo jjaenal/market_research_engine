@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 from datetime import datetime
 from pathlib import Path
 
@@ -30,7 +31,7 @@ def load_dataset(source: Path, config: DataConfig) -> Dataset:
     first = candles[0].timestamp
     last = candles[-1].timestamp
     metadata = DatasetMetadata(
-        dataset_version=_build_version(config, first, last),
+        dataset_version=_build_version(config, first, last, candles),
         symbol=config.symbol,
         timeframe=config.timeframe,
         timezone=config.timezone,
@@ -95,6 +96,24 @@ def _to_float(raw: str, column: str) -> float:
         raise ValidationError(f"column {column} is not a number: {raw!r}") from exc
 
 
-def _build_version(config: DataConfig, first: datetime, last: datetime) -> str:
-    """Generate dataset_version per ARC-004 §10: SYMBOL_TIMEFRAME_START_END_vNNN."""
-    return f"{config.symbol}_{config.timeframe}_{first.year}_{last.year}_v001"
+def _build_version(
+    config: DataConfig, first: datetime, last: datetime, candles: list[Candle]
+) -> str:
+    """Generate dataset_version per ARC-004 §10 + E-6 (content-addressed).
+
+    Format: ``SYMBOL_TIMEFRAME_START_END_vNNN_<content8>`` where the
+    trailing digest is derived from the candle content, so any change to
+    the data (not just symbol/timeframe/range) yields a new version —
+    the pre-E-6 version was content-blind and silently reused ``_v001``
+    across different files. Pure function.
+    """
+    digest = _content_digest(candles)
+    return f"{config.symbol}_{config.timeframe}_{first.year}_{last.year}_v001_{digest}"
+
+
+def _content_digest(candles: list[Candle]) -> str:
+    """First 8 hex chars of a SHA-256 over the candle content (E-6)."""
+    hasher = hashlib.sha256()
+    for candle in candles:
+        hasher.update(f"{candle.timestamp.isoformat()}|{candle.open}|{candle.high}|{candle.low}|{candle.close}|{candle.volume}\n".encode("utf-8"))
+    return hasher.hexdigest()[:8]

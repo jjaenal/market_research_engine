@@ -19,7 +19,7 @@ from mre.engines.statistics_engine import calculate
 from mre.indicators.rsi import rsi
 from mre.indicators.regime import volatility_regime
 from mre.loaders.csv_loader import load_dataset
-from mre.loaders.normalize import RawCsvConfig, normalize_raw_csv
+from mre.loaders.normalize import RawCsvConfig, needs_normalize, normalize_raw_csv
 from mre.models.candle import Candle
 from mre.models.dataset import DataConfig
 from mre.models.execution import ExecutionConfig
@@ -140,7 +140,7 @@ def compute_report(config: ExperimentConfig, dataset_path: Path | None = None) -
     and robustness runs can reuse one normalized file.
     """
     normalized = dataset_path if dataset_path is not None else config.normalized_dataset
-    if not normalized.exists():
+    if needs_normalize(config.raw_dataset, normalized):
         normalize_raw_csv(config.raw_dataset, normalized, RawCsvConfig())
 
     dataset = load_dataset(normalized, config.data_config)

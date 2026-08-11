@@ -46,7 +46,19 @@ def test_load_dataset_generates_version(tmp_path: Path) -> None:
     dataset = load_dataset(path, config)
 
     assert dataset.metadata.dataset_version.startswith("XAUUSD_H1_2020_")
-    assert dataset.metadata.dataset_version.endswith("_v001")
+    assert "_v001_" in dataset.metadata.dataset_version
+    assert len(dataset.metadata.dataset_version.rsplit("_", 1)[-1]) == 8
+
+
+def test_load_dataset_version_is_content_addressed(tmp_path: Path) -> None:
+    config = DataConfig(symbol="XAUUSD", timeframe="H1")
+    base = load_dataset(_write_csv(tmp_path, VALID_CSV, name="a.csv"), config)
+    changed = load_dataset(
+        _write_csv(tmp_path, VALID_CSV.replace("1520.10", "1520.11", 1), name="b.csv"),
+        config,
+    )
+
+    assert base.metadata.dataset_version != changed.metadata.dataset_version
 
 
 def test_load_missing_required_column_rejected(tmp_path: Path) -> None:

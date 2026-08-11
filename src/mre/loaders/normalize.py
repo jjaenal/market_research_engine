@@ -18,6 +18,18 @@ class RawCsvConfig:
     timezone: datetime.tzinfo = timezone.utc
 
 
+def needs_normalize(source: Path, target: Path) -> bool:
+    """Return True when the normalized snapshot must be (re)built.
+
+    True when ``target`` is missing or stale relative to ``source``
+    (mtime check — E-6, ARC-004: existence-based caching silently reused
+    stale snapshots when the raw dataset changed). Pure function.
+    """
+    if not target.exists():
+        return True
+    return source.stat().st_mtime > target.stat().st_mtime
+
+
 def normalize_raw_csv(source: Path, target: Path, config: RawCsvConfig | None = None) -> Path:
     """Write a compliant dataset CSV (header + timezone-aware timestamps).
 

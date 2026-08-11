@@ -15,6 +15,9 @@ def write_candle_csv(candles: Sequence[Candle], target: Path) -> Path:
 
     The output matches the normalized contract so a written segment can be
     re-loaded by ``load_dataset`` (used by out-of-sample and robustness runs).
+    Prices are serialized at full precision via ``repr`` so segment CSVs
+    round-trip exactly (E-6, SPEC-005: no ``:g`` significant-digit rounding,
+    which previously degraded OOS/robustness fidelity relative to baseline).
     Pure function: only reads ``candles``, only writes ``target``.
     """
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -25,11 +28,11 @@ def write_candle_csv(candles: Sequence[Candle], target: Path) -> Path:
             writer.writerow(
                 [
                     candle.timestamp.isoformat(),
-                    f"{candle.open:g}",
-                    f"{candle.high:g}",
-                    f"{candle.low:g}",
-                    f"{candle.close:g}",
-                    f"{candle.volume:g}",
+                    repr(candle.open),
+                    repr(candle.high),
+                    repr(candle.low),
+                    repr(candle.close),
+                    repr(candle.volume),
                 ]
             )
     return target
