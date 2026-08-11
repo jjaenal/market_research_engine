@@ -1,7 +1,7 @@
 ---
 title: Swing Breakout (Fractal Structure) — Combined Stationarity Mitigations
 document_id: EXP-008
-version: 1.0.1
+version: 1.0.2
 status: Result
 category: Experiment
 owner: Market Research Engine Core Team
@@ -652,6 +652,25 @@ namun OOS train masih negatif (tidak stasioner). Catatan kehati-hatian:
      LOW untuk period-2/3, atau filter tren jangka panjang) — memerlukan
      pre-registration terpisah, bukan mining pada EXP-008.
 
+## 18.4 Keputusan Akhir (researcher)
+
+**Line Swing Breakout DITUTUP.** Keputusan peneliti (post-EXP-008): menutup
+line Swing Breakout dan **menghentikan riset edge XAUUSD berbasis harga**
+untuk sementara. Alasan:
+
+- dua kelas strategi (momentum Price Breakout EXP-005/006 + struktur Swing
+  Breakout EXP-007/008) keduanya REJECTED per kriteria pre-registered di
+  kriteria **stasionaritas** — kegagalan **lintas kelas strategi** pada H1
+  dan H4;
+- EXP-008 membuktikan mitigasi (regime/SL-TP/cooldown) memperbaiki
+  risk/cost-tolerance namun **tidak dapat menstabilkan edge secara
+  temporal** — non-stasionaritas adalah properti struktural dari hubungan
+  price-action XAUUSD yang diuji, bukan artefak biaya/eksekusi;
+- langkah berikutnya: **audit forensik metodologi & spesifikasi eksperimen**
+  (EXP-001..EXP-008) — verifikasi bahwa rejections valid secara metodologis
+  dan spesifikasi strategi deterministik sebelum eksperimen baru (dokumen
+  audit terpisah).
+
 ---
 
 # 19. Record Lifecycle
@@ -665,9 +684,11 @@ Result (metrics dicatat)    <- 2026-08-11 (§15)
     |
 OOS / robustness            <- 2026-08-11 (§16/§17)
     |
-Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    <- saat ini (§18)
+Conclusion (interpretasi evidence — peneliti, PRD-006 §9)    <- 2026-08-11 (§18)
     |
 Reviewed (validasi, RSH-003)
+    |
+CLOSED (keputusan peneliti — line Swing Breakout ditutup, §18.4)    <- saat ini
 ```
 
 ---
@@ -739,6 +760,7 @@ Reviewed (validasi, RSH-003)
 | ------- | ---------- | -------------------------------------------- |
 | 1.0.0   | 2026-08-11 | Initial EXP-008 pre-registration (TODO-048): re-test Swing Breakout (EXP-007 REJECTED — 3/4 criteria, OOS train negatif) dengan mitigasi stasionaritas GABUNGAN — regime high (EXP-003 machinery), SL/TP ATR 1.0/4.0 (RQ-007 machinery), cooldown 10 (ENG-003 §8.1); config frozen identik EXP-007 §9 kecuali tiga mitigasi §9.3–§9.5; keputusan peneliti (EXP-007 §18.3 kandidat 1) |
 | 1.0.1   | 2026-08-11 | Result (TODO-049): REJECTED per kriteria pre-registered §13 — expectancy +2.6211 @ 1.0 bps/side (n=167 >= 30), breakeven ≈ 8.8 bps/side (keduanya terpenuhi), OOS test +9.5649 positif namun OOS train −0.6073 negatif (tidak stasioner); robustness membaik drastis — 2/4 slice positif, 5/5 combos positif, XAGUSD +0.0216 (tipis), negatif hanya di 10 bps/side; mitigasi = mekanisme risk/cost-tolerance yang sangat efektif namun BUKAN mekanisme stasionaritas (§15–§18) |
+| 1.0.2   | 2026-08-11 | Line Swing Breakout DITUTUP (§18.4) — keputusan peneliti: dua kelas strategi (momentum + struktur) keduanya REJECTED di kriteria stasionaritas (H1 + H4); mitigasi tidak dapat menstabilkan edge temporal; langkah berikutnya = audit forensik metodologi & spesifikasi eksperimen (EXP-001..EXP-008) |
 
 ---
 
@@ -746,4 +768,4 @@ Reviewed (validasi, RSH-003)
 
 **Document ID:** EXP-008
 
-**Version:** 1.0.1
+**Version:** 1.0.2
