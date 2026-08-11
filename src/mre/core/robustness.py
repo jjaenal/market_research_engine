@@ -141,6 +141,73 @@ def run_cost_grid(
     return tuple(runs)
 
 
+def _split_cost(
+    exec_config: ExecutionConfig,
+    total_bps: float,
+) -> tuple[float, float]:
+    """Map a total per-side cost (bps) onto commission/slippage rates.
+
+    The frozen config's commission:slippage ratio is scaled
+    proportionally so a total-per-side sweep preserves the venue cost
+    composition (E-3, SPEC-005). A zero-cost frozen config (EXP-001
+    baseline) defaults to a 50/50 split.
+    """
+    frozen_total = exec_config.commission_rate + exec_config.slippage_rate
+    target_total = total_bps * 1e-4
+    if frozen_total > 0:
+        ratio = target_total / frozen_total
+        return exec_config.commission_rate * ratio, exec_config.slippage_rate * ratio
+    return target_total * 0.5, target_total * 0.5
+
+
+def compute_breakeven(
+    config: ExperimentConfig,
+    dataset_path: Path | None = None,
+    *,
+    max_bps: float = 20.0,
+    tolerance_bps: float = 0.01,
+) -> float | None:
+    """Compute the per-side cost (bps) at which expectancy crosses zero (E-3).
+
+    The acceptance metric "breakeven >= X bps/side" (EXP-002..008 §13) was
+    previously hand-interpolated from printed cost grids; this makes it
+    code-executable (SPEC-005, NFR-001). Expectancy is monotonically
+    non-increasing in the total per-side cost, so the crossing is found
+    by binary search on the frozen commission:slippage ratio
+    (``_split_cost``).
+
+    Returns 0.0 when expectancy is non-positive even at zero cost (gross
+    edge absent), None when expectancy stays positive through ``max_bps``.
+    """
+    normalized = dataset_path if dataset_path is not None else ensure_normalized(config)
+
+    def expectancy_at(total_bps: float) -> float:
+        commission_rate, slippage_rate = _split_cost(config.execution_config, total_bps)
+        variant = replace(
+            config,
+            execution_config=replace(
+                config.execution_config,
+                commission_rate=commission_rate,
+                slippage_rate=slippage_rate,
+            ),
+        )
+        return compute_report(variant, normalized).statistics.expectancy or 0.0
+
+    if expectancy_at(0.0) <= 0.0:
+        return 0.0
+    if expectancy_at(max_bps) > 0.0:
+        return None
+
+    low, high = 0.0, max_bps
+    while high - low > tolerance_bps:
+        mid = (low + high) / 2.0
+        if expectancy_at(mid) > 0.0:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2.0
+
+
 def run_combo_grid(
     config: ExperimentConfig,
     combos: tuple[tuple[int, int], ...] = COMBO_GRID,

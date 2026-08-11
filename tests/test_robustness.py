@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,8 @@ import pytest
 from mre.core.experiment_runner import ExperimentConfig
 from mre.core.robustness import (
     RobustnessRun,
+    _split_cost,
+    compute_breakeven,
     run_combo_grid,
     run_cost_grid,
     run_market,
@@ -17,6 +20,7 @@ from mre.core.robustness import (
     run_robustness,
     to_markdown,
 )
+from mre.models.execution import ExecutionConfig
 from mre.loaders.csv_loader import load_dataset
 from mre.models.dataset import DataConfig
 from mre.models.event import PRICE_CONFIRMATION, RSI_TRENDLINE_BROKEN
@@ -142,7 +146,73 @@ def test_run_robustness_aggregates_all_dimensions(tmp_path: Path) -> None:
     assert len(result.combos) == 5
 
 
-def test_to_markdown_contains_sections(tmp_path: Path) -> None:
+def test_split_cost_preserves_frozen_ratio() -> None:
+    cfg = ExecutionConfig(commission_rate=0.00003, slippage_rate=0.00007)
+    comm, slip = _split_cost(cfg, 2.0)
+    assert comm == pytest.approx(0.00006)
+    assert slip == pytest.approx(0.00014)
+    assert comm + slip == pytest.approx(2.0 * 1e-4)
+
+
+def test_split_cost_zero_frozen_uses_half() -> None:
+    cfg = ExecutionConfig()
+    comm, slip = _split_cost(cfg, 2.0)
+    assert comm == pytest.approx(1.0 * 1e-4)
+    assert slip == pytest.approx(1.0 * 1e-4)
+
+
+def _flat_config(tmp_path: Path) -> ExperimentConfig:
+    raw = tmp_path / "flat_raw.csv"
+    _write_raw(raw)
+    text = raw.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    flat_lines: list[str] = []
+    for line in lines[:60]:
+        parts = line.split(",")
+        price = 100.0
+        flat_lines.append(f"{parts[0]},{price:.3f},{price:.3f},{price:.3f},{price:.3f},10")
+    (tmp_path / "flat.csv").write_text("\n".join(flat_lines) + "\n", encoding="utf-8")
+    return replace(
+        _config(tmp_path),
+        raw_dataset=tmp_path / "flat.csv",
+        normalized_dataset=tmp_path / "flat_normalized.csv",
+    )
+
+
+def test_breakeven_positive_for_edge_config(tmp_path: Path) -> None:
+    config = _config(tmp_path)
+    breakeven = compute_breakeven(config, max_bps=40.0)
+    assert breakeven is not None
+    assert 0.0 < breakeven < 40.0
+
+
+def test_breakeven_zero_cost_expectancy_positive(tmp_path: Path) -> None:
+    config = _config(tmp_path)
+    zero = run_cost_grid(config, grid=((0.0, 0.0),))[0].statistics.expectancy
+    assert zero > 0.0
+    breakeven = compute_breakeven(config, max_bps=40.0)
+    assert breakeven > 0.0
+
+
+def test_breakeven_none_when_edge_survives_max_cost(tmp_path: Path) -> None:
+    config = _config(tmp_path)
+    breakeven = compute_breakeven(config, max_bps=1.0)
+    assert breakeven is None
+
+
+def test_breakeven_zero_when_gross_edge_absent(tmp_path: Path) -> None:
+    config = _flat_config(tmp_path)
+    breakeven = compute_breakeven(config)
+    assert breakeven == 0.0
+
+
+def test_breakeven_monotonic_in_max_bps(tmp_path: Path) -> None:
+    config = _config(tmp_path)
+    narrow = compute_breakeven(config, max_bps=30.0)
+    wide = compute_breakeven(config, max_bps=40.0)
+    assert wide is not None
+    assert narrow is not None
+    assert wide >= narrow
     config = _config(tmp_path)
     market_raw = tmp_path / "market_raw.csv"
     _write_raw(market_raw, scale=2.0, freq=3.0)
