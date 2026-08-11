@@ -141,16 +141,19 @@ def _resolve_stop_take(
 
     Absolute levels (``stop_loss``/``take_profit``) are used as given.
     ATR-multiple levels (RQ-007, ARC-008 §14.2) are anchored to the entry
-    price using the ATR value at the entry bar (no lookahead: ATR at index
-    ``entry_bar`` uses only candles up to that bar). ATR-multiple levels
-    take precedence when both are configured. Warm-up (ATR is NaN) leaves
-    the level unset (no SL/TP).
+    price using the ATR at the *last closed bar* ``entry_bar - 1`` (E-2,
+    SPEC-004): ATR at the entry bar would use that bar's own OHLC — the
+    entry-bar open, at which the levels must be set, is not yet complete.
+    ``entry_bar >= 1`` always holds (entry happens at the earliest at bar
+    1), so the anchor index is valid. ATR-multiple levels take precedence
+    when both are configured. Warm-up (ATR is NaN) leaves the level unset
+    (no SL/TP).
     """
     stop_level = cfg.stop_loss
     take_level = cfg.take_profit
 
     if atr_series is not None:
-        atr_value = atr_series[entry_bar]
+        atr_value = atr_series[entry_bar - 1]
         if not math.isnan(atr_value):
             if cfg.stop_loss_atr is not None:
                 distance = cfg.stop_loss_atr * atr_value

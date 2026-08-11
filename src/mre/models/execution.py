@@ -14,8 +14,10 @@ class ExecutionConfig:
     them (PRD-006 §9). SL/TP may be given as absolute price levels
     (``stop_loss``/``take_profit``) or, for research iteration RQ-007
     (ARC-008 §14.2), as ATR multiples (``stop_loss_atr``/``take_profit_atr``)
-    applied to the ATR at the entry bar (volatility-normalized distance).
-    ATR-multiple levels take precedence when both are set.
+    applied to the ATR at the *last closed bar* ``entry_bar - 1``
+    (E-2, SPEC-004 — the entry bar's own OHLC is not yet complete when
+    the levels are set). ATR-multiple levels take precedence when both
+    are set.
     """
 
     position_size: float = 1.0

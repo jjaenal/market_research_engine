@@ -191,6 +191,26 @@ def test_atr_sl_tp_precedence_over_absolute() -> None:
     assert b.exit.price != a.exit.price  # ATR level used, not the absolute 8.0
 
 
+def test_atr_sl_tp_anchored_to_last_closed_bar_not_entry_bar() -> None:
+    candles = (
+        Candle(timestamp=_ts(0), open=10.0, high=10.0, low=10.0, close=10.0, volume=0.0),
+        Candle(timestamp=_ts(1), open=10.0, high=12.0, low=10.0, close=12.0, volume=0.0),
+        Candle(timestamp=_ts(2), open=12.0, high=12.0, low=12.0, close=12.0, volume=0.0),
+        Candle(timestamp=_ts(3), open=12.0, high=20.0, low=12.0, close=12.0, volume=0.0),
+        Candle(timestamp=_ts(4), open=12.0, high=12.0, low=10.5, close=10.5, volume=0.0),
+        Candle(timestamp=_ts(5), open=10.5, high=10.5, low=10.5, close=10.5, volume=0.0),
+    )
+    trades = simulate(
+        [_signal("LONG", 2)],
+        candles,
+        _cfg(hold_bars=10, stop_loss_atr=1.0, atr_period=2),
+    )
+    (trade,) = trades
+    assert trade.entry.price == 12.0
+    assert trade.exit.price == 11.0  # anchor atr[2]=1.0 -> SL 11.0, hit bar 4
+    assert trade.result == "LOSS"
+
+
 def test_atr_sl_tp_warmup_skipped() -> None:
     closes = [10.0, 10.0, 12.0, 14.0]
     trades = simulate(
