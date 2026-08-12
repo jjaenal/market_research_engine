@@ -15,9 +15,13 @@ from mre.models.statistics import TradeStatistics
 from mre.utils.markdown import heading, table
 
 # Cost grid (commission_rate, slippage_rate) as fractions of notional per side:
-# baseline 0 plus two realistic retail levels for XAUUSD H1 (RSH-003 §10).
+# baseline 0 (determinism control) plus realistic retail XAUUSD H1 levels
+# (RSH-003 §10). The representative venue cost of 1.0 bps/side total
+# (commission 0.3 + slippage 0.7 bps — EXP-002 §9.5) is an explicit grid
+# entry (E-7: it was previously absent while used as the baseline rate).
 COST_GRID: tuple[tuple[float, float], ...] = (
     (0.0, 0.0),
+    (0.00003, 0.00007),
     (0.0002, 0.0),
     (0.0005, 0.0),
     (0.0, 0.0002),
@@ -26,16 +30,19 @@ COST_GRID: tuple[tuple[float, float], ...] = (
     (0.0005, 0.0005),
 )
 
-# Near-baseline (price_lookback, rsi_period) combinations — the two most
-# sensitive parameters from sensitivity analysis (EXP-001 §16). The baseline
-# pair acts as the determinism control. Descriptive only, not optimization
-# (RSH-001 §12).
+# Near-baseline (price_lookback, window) combinations. These are the two
+# parameters every registered strategy actually consumes: price_lookback
+# feeds the price-confirmation detector (Donchian N-bar high/low) and window
+# is the signal confirmation window (SignalRule.window). The pre-E-7 grid
+# varied rsi_period, which price/swing strategies (EXP-005/007) do not
+# consume — 2 of 5 rows duplicated (E-7). The baseline pair acts as the
+# determinism control. Descriptive only, not optimization (RSH-001 §12).
 COMBO_GRID: tuple[tuple[int, int], ...] = (
-    (20, 14),
-    (10, 7),
-    (10, 21),
-    (30, 7),
-    (30, 21),
+    (20, 5),
+    (10, 5),
+    (30, 5),
+    (20, 3),
+    (20, 7),
 )
 
 
@@ -218,18 +225,22 @@ def run_combo_grid(
     """Run the frozen config under near-baseline parameter combinations.
 
     RSH-003 §10 — stability around the optimum: two parameters vary together
-    (sensitivity varies them one at a time, TODO-024). The baseline pair is
-    the first entry and acts as the control.
+    (sensitivity varies them one at a time, TODO-024). Only parameters the
+    registered strategy actually consumes are varied: price_lookback (the
+    Donchian confirmation N-bar) and window (the signal confirmation window,
+    applied via the E-4 ``signal_window`` machinery). The pre-E-7 grid varied
+    ``rsi_period``, inert for price/swing strategies — 2 of 5 rows duplicated
+    (E-7). The baseline pair is the first entry and acts as the control.
     """
     normalized = dataset_path if dataset_path is not None else ensure_normalized(config)
     runs: list[RobustnessRun] = []
-    for price_lookback, rsi_period in combos:
+    for price_lookback, window in combos:
         variant = replace(
             config,
             event_config=replace(config.event_config, price_lookback=price_lookback),
-            indicator_config=replace(config.indicator_config, rsi_period=rsi_period),
+            signal_window=window,
         )
-        label = f"price_lookback={price_lookback}/rsi_period={rsi_period}"
+        label = f"price_lookback={price_lookback}/window={window}"
         runs.append(RobustnessRun(label=label, statistics=compute_report(variant, normalized).statistics))
     return tuple(runs)
 
@@ -323,7 +334,7 @@ def to_markdown(
     _metrics_table(lines, "Time Period Stability (frozen config per chronological slice)", result.periods)
     _metrics_table(lines, "Cross-Market (frozen config, same timeframe)", result.markets)
     _metrics_table(lines, "Execution Cost & Slippage (per-side fraction of notional)", result.costs)
-    _metrics_table(lines, "Parameter Combinations (price_lookback / rsi_period)", result.combos)
+    _metrics_table(lines, "Parameter Combinations (price_lookback / window)", result.combos)
 
     pos_periods = _positive(result.periods)
     pos_combos = _positive(result.combos)

@@ -117,9 +117,21 @@ def test_cost_grid_reduces_net_pnl(tmp_path: Path) -> None:
     assert result.costs[0].statistics.net_pnl > result.costs[-1].statistics.net_pnl
 
 
+def test_cost_grid_includes_venue_cost(tmp_path: Path) -> None:
+    result = run_robustness(_config(tmp_path))
+    labels = [run.label for run in result.costs]
+    assert "comm=3e-05/slip=7e-05" in labels
+
+
+def test_combo_grid_has_no_duplicates(tmp_path: Path) -> None:
+    result = run_robustness(_config(tmp_path))
+    labels = [run.label for run in result.combos]
+    assert len(labels) == len(set(labels)) == 5
+
+
 def test_combo_control_matches_baseline(tmp_path: Path) -> None:
     result = run_robustness(_config(tmp_path))
-    assert result.combos[0].label == "price_lookback=20/rsi_period=14"
+    assert result.combos[0].label == "price_lookback=20/window=5"
     assert result.combos[0].statistics == result.baseline
 
 
@@ -142,7 +154,7 @@ def test_run_robustness_aggregates_all_dimensions(tmp_path: Path) -> None:
     assert result.baseline.trade_count > 0
     assert len(result.periods) == 4
     assert len(result.markets) == 1
-    assert len(result.costs) == 7
+    assert len(result.costs) == 8
     assert len(result.combos) == 5
 
 
