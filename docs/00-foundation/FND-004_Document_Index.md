@@ -1,7 +1,7 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.57
+version: 1.1.58
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
@@ -215,6 +215,7 @@ docs/06-decisions/
 | ADR-002 | Adopt Plugin-Based Architecture | `docs/06-decisions/ADR-002_Adopt_Plugin_Based_Architecture.md` | 1.0.0   | Accepted |
 | ADR-003 | Swing Detection Algorithm (Fractal Window) | `docs/06-decisions/ADR-003_Swing_Algorithm.md` | 1.0.0   | Accepted |
 | ADR-004 | RSI Trendline Algorithm (Two-Point Line) | `docs/06-decisions/ADR-004_Trendline_Algorithm.md` | 1.0.0   | Accepted |
+| ADR-005 | Event Knowability (Fact vs Confirmable Time) | `docs/06-decisions/ADR-005_Event_Knowability.md` | 1.0.0   | Accepted |
 
 > ADR numbering is sequential and chronological.
 
@@ -813,6 +814,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.57
+**Version:** 1.1.58
 
 **End of Document**

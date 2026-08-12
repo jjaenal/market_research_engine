@@ -39,11 +39,10 @@ berbasis fractal/swing.
 Dokumen ini menjawab temuan audit E-1: event swing sebelumnya di-stamp
 pada candle puncak (`i`) yang belum bisa diketahui saat itu juga —
 baru *knowable* setelah window konfirmasi kanan (`right`) ditutup.
-Pendekatan `confirmable_at`/`confirmable_ref` (rule §4.4; code docstring
-menyebut "ADR-005" namun ADR tersebut belum didaftarkan di FND-004)
-memisahkan **waktu fakta** (timestamp puncak) dari **waktu
-dapat-diketahui** (timestamp bar `i + right`); konsumen dilarang
-bertindak sebelum waktu dapat-diketahui (SPEC-003).
+Pendekatan `confirmable_at`/`confirmable_ref` (ADR-005) memisahkan
+**waktu fakta** (timestamp puncak) dari **waktu dapat-diketahui**
+(timestamp bar `i + right`); konsumen dilarang bertindak sebelum waktu
+dapat-diketahui (SPEC-003).
 
 ---
 
@@ -143,16 +142,16 @@ Di luar scope SPEC-001:
 | Event model            | `src/mre/models/event.py` (`confirmable_at`/`confirmable_ref`) |
 | Pemanggil              | `src/mre/engines/event_engine.py` (closes) dan `src/mre/detectors/rsi_trendline.py` (RSI) |
 | ADR-003                  | Semantik fractal (window `left`/`right`, strict) |
-| ADR-005 (belum terdaftar)| Knowability — dirujuk docstring `swing.py`/`signal_engine.py`; rule-nya terkodifikasi di SPEC-001 §4.4 |
+| ADR-005                  | Knowability — fakt timestamp vs confirmable time |
 | E-1                      | Audit findings (lookahead swing/fractal)   |
 
-**Catatan Implementasi:** `swing.py` saat ini belum mengimplementasikan
-aturan §4.5 — pada region NaN (`values[i]` NaN) baris perbandingan
-`<=`/`>=` bernilai False, sehingga index NaN dapat menghasilkan swing
-high **dan** low (dual event). Dalam pipeline yang ada, event NaN tersebut
-hanya muncul pada warm-up RSI dan tidak mengubah sinyal/trade strategi
-(garis trendline berslope NaN tidak pernah ter-break), namun **guard NaN
-wajib ditambahkan** agar implementasi sesuai spec ini.
+**Catatan Implementasi:** `swing.py` mengimplementasikan aturan §4.5:
+seluruh window `[i−left, i+right]` yang mengandung NaN **tidak**
+menghasilkan event di index `i` (baik NaN di puncak maupun di neighbor
+mendiskualifikasi kandidat). Sebelumnya region NaN pada warm-up RSI
+dapat menghasilkan swing high dan low spurios (dual event); guard ini
+tidak mengubah sinyal/trade (garis trendline berslope NaN tidak pernah
+ter-break), hanya menghilangkan event sampah.
 
 ---
 
@@ -172,6 +171,7 @@ wajib ditambahkan** agar implementasi sesuai spec ini.
 - `docs/00-foundation/FND-009_Project_Glossary.md`
 - `docs/03-engine/ENG-002_Event_Engine.md`
 - `docs/06-decisions/ADR-003_Swing_Algorithm.md`
+- `docs/06-decisions/ADR-005_Event_Knowability.md`
 - `src/mre/detectors/swing.py`
 
 ---
