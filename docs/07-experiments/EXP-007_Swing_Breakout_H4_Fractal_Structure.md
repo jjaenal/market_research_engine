@@ -52,7 +52,9 @@ EXP-007 menguji **Swing Breakout (Fractal Structure)**: sinyal LONG muncul
 ketika sebuah **swing-high fractal** menetapkan level resistensi struktural
 (detektor swing, left/right = 2, ADR-003) dan kemudian **price confirmation**
 (close > highest high N-bar, ENG-002 §7.3) **menembus level tersebut** dalam
-window konfirmasi. Entry pada candle breakout (price confirmation).
+window konfirmasi. Candle keputusan = candle breakout (price confirmation);
+fill terjadi di open bar berikutnya setelah seluruh konstituen knowable
+(E-1, SPEC-003, E-10).
 
 Perbedaan struktural vs Price Breakout (EXP-005/006):
 
@@ -62,7 +64,7 @@ Perbedaan struktural vs Price Breakout (EXP-005/006):
 |            | swing-high konfirmasi setelahnya  | menembus level setelahnya           |
 | Trigger    | PRICE_CONFIRMATION                | SWING_HIGH                          |
 | Confirmation | SWING_HIGH                       | PRICE_CONFIRMATION                  |
-| Entry      | candle fractal swing-high         | candle breakout (price confirmation)|
+| Candle keputusan | candle fractal swing-high    | candle breakout (price confirmation)|
 | Filosofi   | momentum murni (Donchian channel) | struktur fractal (level resistance) |
 
 Hasil (TODO-047, doc 1.0.1): **REJECTED** per kriteria pre-registered §13 —
@@ -213,6 +215,23 @@ lokal — rentangnya berbeda (mulai 2009-07-13, lebih awal dari H1; berakhir
 H4 vs agregasi 4×H1 pada rentang overlap cocok kecuali 1 bar tail (bar
 terakhir H4). Dataset immutable (Article 13, ARC-004).
 
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Export terpisah; vendor tidak terdokumentasi |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | Export terpisah (bukan agregasi H1); cross-check 4×H1 22.356 bar cocok kecuali 1 bar tail |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
+
 ---
 
 # 8. Strategy — Swing Breakout (Fractal Structure)
@@ -232,10 +251,12 @@ SIGNAL:        LONG
 Semantik: sinyal LONG muncul ketika sebuah swing-high fractal terbentuk
 (menetapkan level struktural) dan, dalam `window` (5) candle setelahnya,
 sebuah price confirmation menembus level tersebut (close > highest high
-N-bar, yang mencakup level swing-high). Entry pada candle breakout (price
-confirmation — Event konstituen terbaru, FND-009 §13.5). Parameter diukur
-per-bar: pada H4, price_lookback 20 ≈ 5 hari kalender dan hold_bars 10 ≈
-2.5 hari — horizon identik EXP-006.
+N-bar, yang mencakup level swing-high). Candle keputusan = candle breakout
+(price confirmation — Event konstituen terbaru, FND-009 §13.5); **fill**
+terjadi di open bar berikutnya setelah seluruh konstituen knowable (E-1,
+SPEC-003 — "entry pada candle breakout" merujuk candle keputusan, bukan
+fill, E-10). Parameter diukur per-bar: pada H4, price_lookback 20 ≈ 5 hari
+kalender dan hold_bars 10 ≈ 2.5 hari — horizon identik EXP-006.
 
 Perbedaan vs Price Breakout (EXP-005/006): di sana Donchian breakout
 (PRICE_CONFIRMATION) terjadi dulu dan fractal swing-high (SWING_HIGH)
@@ -312,10 +333,11 @@ identik EXP-002/005/006 §9.
 
 # 10. Execution Assumptions
 
-Identik EXP-006 §10:
+Identik EXP-006 §10 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10):
 
-- Entry: next bar open setelah sinyal;
-- Exit: hold 10 bar (harga exit = open bar ke-hold_bars, net of costs);
+- Entry: **open bar berikutnya** setelah Signal **knowable** — "entry di
+  candle breakout" merujuk candle keputusan, bukan fill (E-10);
+- Exit: hold 10 bar (**close** bar `entry_bar + hold_bars`, net of costs);
 - tanpa SL/TP absolut atau ATR-multiple;
 - biaya per sisi: commission 3e-05 + slippage 7e-05 (1.0 bps/side total).
 
@@ -365,6 +387,21 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
   strategi (momentum breakout + struktur fractal) gagal; memperkuat
   kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis untuk strategi
   berbasis harga (EXP-006 §18.2).
+
+Catatan multiple-testing (RSH-004 §8.2, E-8):
+
+```text
+- jumlah kriteria keputusan:            4 (expectancy > 0, breakeven >= 1.0 bps,
+                                         OOS test > 0, OOS train > 0);
+- jumlah kombinasi parameter (combo):   5 (price_lookback × rsi_period — grid degenerate
+                                         legacy; rsi_period inert untuk strategi tanpa RSI);
+- jumlah slice temporal / split point:  4 slice, 1 split point;
+- jumlah dimensi robustness:            4 (periods, markets, costs, combos);
+- koreksi / penalty:                    none — risiko data-snooping dinyatakan eksplisit.
+```
+
+Note: EXP-007 dijalankan sebelum standar E-8; blok ini dokumentasi
+retrospektif, bukan pre-registered.
 
 ---
 

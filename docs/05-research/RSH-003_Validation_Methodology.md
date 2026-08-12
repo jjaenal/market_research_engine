@@ -1,12 +1,12 @@
 ---
 title: Validation Methodology
 document_id: RSH-003
-version: 1.1.0
+version: 1.2.0
 status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -150,7 +150,13 @@ Istilah kunci:
 - kombinasi parameter/data beragam;
 - hasil harus stabil di sekitar titik optimum;
 - robustness dievaluasi terhadap perubahan
-  rentang data, timeframe, dan biaya transaksi.
+  rentang data, timeframe, dan biaya transaksi;
+- **grid kombinasi wajib memvariasikan parameter yang benar-benar
+  dikonsumsi strategi** (E-7) — memvariasikan parameter inert (mis.
+  `rsi_period` pada strategi tanpa RSI) menghasilkan baris duplikat
+  dan data-snooping semu;
+- **cost grid wajib memuat biaya venue aktual** yang dipakai baseline
+  (mis. 1.0 bps/side, E-7).
 
 ---
 
@@ -178,6 +184,9 @@ Evidence assessment (RSH-004)
 
 Threshold kuantitatif (mis. toleransi degradasi,
 minimum trade count) ditetapkan pada RSH-004.
+
+Kriteria keputusan experiment menggunakan **set standar** (RSH-004 §8.1)
+dengan **catatan multiple-testing** (RSH-004 §8.2) — E-8.
 
 ---
 
@@ -222,6 +231,7 @@ minimum trade count) ditetapkan pada RSH-004.
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.2.0   | 2026-08-11 | E-7/E-8: §10 requires non-degenerate combo grids (strategy-consumed params only) + venue cost in the cost grid; §12 mandates standardized criteria + multiple-testing note |
 | 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial validation methodology   |
 
@@ -231,6 +241,6 @@ minimum trade count) ditetapkan pada RSH-004.
 
 **Document ID:** RSH-003
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

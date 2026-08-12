@@ -223,6 +223,23 @@ lokal — rentangnya berbeda (mulai 2009-07-13, lebih awal dari H1; berakhir
 2026-04-14, lebih pendek dari H1 2026-05-26). Dataset immutable (Article 13,
 ARC-004). Identik EXP-006/EXP-007 §7.
 
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Export terpisah; vendor tidak terdokumentasi |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | Export terpisah (bukan agregasi H1); identik EXP-006/EXP-007 §7 |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
+
 ---
 
 # 8. Strategy — Swing Breakout (Fractal Structure)
@@ -243,8 +260,10 @@ SIGNAL:        LONG
 Semantik: sinyal LONG muncul ketika sebuah swing-high fractal terbentuk
 (menetapkan level struktural) dan, dalam `window` (5) candle setelahnya,
 sebuah price confirmation menembus level tersebut (close > highest high
-N-bar, yang mencakup level swing-high). Entry pada candle breakout (price
-confirmation). Detail lengkap: EXP-007 §8.
+N-bar, yang mencakup level swing-high). Candle keputusan = candle breakout
+(price confirmation); fill terjadi di open bar berikutnya setelah seluruh
+konstituen knowable (E-1, SPEC-003 — "entry pada candle breakout" merujuk
+candle keputusan, bukan fill, E-10). Detail lengkap: EXP-007 §8.
 
 Catatan arsitektur: EventEngine tetap menghitung RSI (kontrak pipeline) namun
 strategi `swing_breakout` **tidak mengkonsumsi** Event berbasis RSI.
@@ -320,13 +339,18 @@ identik EXP-002/005/006/007 §9.
 
 # 10. Execution Assumptions
 
-Identik EXP-007 §10, dengan tambahan SL/TP ATR-multiple:
+Identik EXP-007 §10 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10),
+dengan tambahan SL/TP ATR-multiple:
 
-- Entry: next bar open setelah sinyal;
+- Entry: **open bar berikutnya** setelah Signal **knowable** — "entry di
+  candle breakout" merujuk candle keputusan, bukan fill (E-10);
 - Exit: SL/TP ATR-multiple dievaluasi per bar (level SL = entry − 1.0 × ATR,
-  TP = entry + 4.0 × ATR, ATR period 14; di-resolve pada candle entry,
-  tanpa lookahead — `_resolve_stop_take`, RQ-007); jika tidak ter-trigger,
-  exit hold 10 bar (harga exit = open bar ke-hold_bars, net of costs);
+  TP = entry + 4.0 × ATR, ATR period 14; di-resolve pada entry dari ATR
+  `entry_bar − 1` — bar terakhir yang telah ditutup, E-2/SPEC-004 §4.1 —
+  tanpa lookahead — `_resolve_stop_take`, RQ-007); SL diprioritaskan atas
+  TP dalam bar yang sama (konservatif, SPEC-004 §4.3); gap-through-open →
+  exit di open (SPEC-004 §4.4); jika tidak ter-trigger, exit hold 10 bar
+  (**close** bar `entry_bar + hold_bars`, net of costs);
 - biaya per sisi: commission 3e-05 + slippage 7e-05 (1.0 bps/side total);
 - regime filter: hanya sinyal yang dikonfirmasi pada candle berlabel regime
   HIGH (ATR short 14 >= ATR long 100) yang ditradingkan (`select_regime`).
@@ -384,6 +408,21 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
 - jika REJECTED, khususnya jika OOS train masih negatif, kombinasi mitigasi
   tidak menstabilkan edge — kandidat berikutnya (EXP-007 §18.3): uji
   timeframe/instrument lain, atau menutup line Swing Breakout.
+
+Catatan multiple-testing (RSH-004 §8.2, E-8):
+
+```text
+- jumlah kriteria keputusan:            4 (expectancy > 0, breakeven >= 1.0 bps,
+                                         OOS test > 0, OOS train > 0);
+- jumlah kombinasi parameter (combo):   5 (price_lookback × rsi_period — grid degenerate
+                                         legacy; rsi_period inert untuk strategi tanpa RSI);
+- jumlah slice temporal / split point:  4 slice, 1 split point;
+- jumlah dimensi robustness:            4 (periods, markets, costs, combos);
+- koreksi / penalty:                    none — risiko data-snooping dinyatakan eksplisit.
+```
+
+Note: EXP-008 dijalankan sebelum standar E-8; blok ini dokumentasi
+retrospektif, bukan pre-registered.
 
 ---
 

@@ -1,12 +1,12 @@
 ---
 title: Statistical Methodology
 document_id: RSH-004
-version: 1.1.0
+version: 1.2.0
 status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -192,6 +192,55 @@ Losing Streak  = deret Trade kalah terpanjang
 
 Threshold dapat dikonfigurasi per experiment (RSH-002).
 
+## 8.1 Standardized Decision Criteria (E-8)
+
+Audit menemukan kriteria keputusan **drift** antar experiment: EXP-002
+di-declare SUPPORTED tanpa kriteria stasionaritas yang kemudian menolak
+EXP-007/008, sehingga verdict tidak saling sebanding (R-005). Mulai
+eksperimen berikutnya, set kriteria **standar** (dapat ditambah dengan
+justifikasi eksplisit, tidak boleh dikurangi tanpa justifikasi):
+
+```text
+SUPPORTED hanya jika SEMUA terpenuhi:
+  1. expectancy > 0 pada skenario representative (biaya venue aktual,
+     1.0 bps/side) dengan n >= min_sample (30);
+  2. biaya breakeven/side >= biaya venue aktual (>= 1.0 bps);
+  3. OOS test expectancy > 0 (edge bertahan out-of-sample);
+  4. OOS train expectancy > 0 (stasionaritas temporal).
+
+REJECTED jika salah satu tidak terpenuhi.
+```
+
+- Set deviasi dari set standar **harus** didokumentasikan di §13
+  experiment beserta alasannya (mis. threshold breakeven dinaikkan
+  mengikuti kontrol experiment sebelumnya — EXP-003/004).
+- Setiap experiment wajib mencantumkan seluruh kriteria di §13
+  secara eksplisit; tidak boleh mereferensikan experiment lain.
+
+## 8.2 Multiple-Testing / Data-Snooping Control (E-8)
+
+Audit menemukan **tidak ada kontrol multiple-testing** formal; grid
+robustness yang degenerate memperparahnya (R-005/R-006). Setiap
+experiment wajib mencantumkan **catatan multiple-testing** di §13:
+
+```text
+- jumlah kriteria keputusan yang diuji:  <N>;
+- jumlah kombinasi parameter (combo grid): <N>;
+- jumlah slice temporal / split point:     <N>;
+- jumlah dimensi robustness:               <N>;
+- koreksi / penalty yang diterapkan:       <none | Bonferroni | pre-registered
+                                           rule, sebutkan eksplisit>.
+```
+
+Prinsip:
+
+- tidak ada koreksi → pernyataan risiko data-snooping eksplisit;
+- jika koreksi diterapkan, threshold expectancy/kriteria disesuaikan
+  sebelum run (pre-registered), bukan sesudahnya;
+- hasil yang bertahan setelah kontrol dianggap lebih kuat evidence;
+- grid yang memvariasikan parameter yang tidak dikonsumsi strategi
+  **dilarang** (robustness harus bermakna — RSH-003 §10, E-7).
+
 ---
 
 # 9. Evidence Assessment
@@ -254,6 +303,7 @@ Per RSH-001 §13 dan FR-011:
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.2.0   | 2026-08-11 | E-8: standardized decision criteria set (§8.1) + mandatory multiple-testing/data-snooping note (§8.2); fixes audit findings R-005 (criteria drift) and R-006 (no multiple-testing control) |
 | 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial statistical methodology  |
 
@@ -263,6 +313,6 @@ Per RSH-001 §13 dan FR-011:
 
 **Document ID:** RSH-004
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

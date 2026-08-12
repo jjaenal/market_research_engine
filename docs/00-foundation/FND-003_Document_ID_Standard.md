@@ -1,12 +1,12 @@
 ---
 title: Document ID Standard
 document_id: FND-003
-version: 1.0.2
+version: 1.0.3
 status: Approved
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001_Project_Charter.md
@@ -172,6 +172,7 @@ Prefix menunjukkan kategori utama dokumen.
 | `ENG`  | Engine                       | Spesifikasi engine dan core subsystem        |
 | `DEV`  | Development                  | Development process dan engineering practice |
 | `RSH`  | Research                     | Metodologi dan penelitian                    |
+| `SPEC` | Specification                | Spesifikasi deterministik aturan riset (E-9) |
 | `ADR`  | Architecture Decision Record | Keputusan arsitektur                         |
 | `EXP`  | Experiment                   | Eksperimen dan hasil penelitian              |
 | `TMP`  | Template                     | Template dokumentasi                         |
@@ -1322,10 +1323,21 @@ dan dapat berkembang dalam jangka panjang.
 
 ---
 
+---
+
+# 32. Revision History
+
+| Version | Date       | Changes                          |
+| ------- | ---------- | -------------------------------- |
+| 1.0.3   | 2026-08-11 | E-9: add `SPEC` prefix to the prefix registry (§5) for deterministic research-rule specifications (SPEC-001..005, Specification Hardening) |
+| 1.0.2   | 2026-08-08 | Initial approved standard        |
+
+---
+
 **Document Status:** Approved
 
 **Document ID:** FND-003
 
-**Version:** 1.0.2
+**Version:** 1.0.3
 
 **End of Document**

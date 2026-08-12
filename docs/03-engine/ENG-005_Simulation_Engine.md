@@ -1,12 +1,12 @@
 ---
 title: Simulation Engine
 document_id: ENG-005
-version: 1.0.0
+version: 1.1.0
 status: Draft
 category: Engine
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -163,28 +163,39 @@ Slippage selalu konservatif (memperburuk harga).
 # 8. Simulation Semantics
 
 ```text
-Signal → entry (open bar berikutnya + slippage)
+Signal → entry (open bar berikutnya setelah signal knowable + slippage)
        → Position
-       → exit (hold_bars / SL / TP / data habis)
+       → exit (SL / TP / hold_bars / data habis)
        → Trade (pnl, result, holding_period)
 ```
 
-1. Entry: bar setelah Signal (`entry_bar = signal_index + 1`);
-   tidak ada bar berikutnya → Signal tidak dieksekusi.
+1. Entry: bar berikutnya setelah Signal **knowable** — bukan sekadar
+   `signal_index + 1`. `entry_bar = max(signal_bar + 1,
+   max(confirmable_ref signal) + 1)` sehingga seluruh constituent Event
+   (mis. swing yang baru terkonfirmasi di `i + right`) sudah dapat
+   diketahui sebelum entry (E-1, SPEC-003). Tidak ada bar berikutnya →
+   Signal tidak dieksekusi.
 2. Exit prioritas per bar:
    - SL lebih dulu (konservatif long/short);
    - lalu TP;
    - lalu scheduled `hold_bars` exit di close.
 3. Data habis sebelum exit → exit di close bar terakhir.
 4. Setiap Signal menghasilkan satu Trade independen.
+5. **"Entry di candle breakout"** merujuk pada **candle keputusan**
+   (bar sinyal), bukan fill — fill selalu di open bar berikutnya.
+6. Hold-exit price = **close** dari bar `entry_bar + hold_bars`
+   (bukan open, bukan harga lain).
 
 ## In-Bar Assumption
 
-- TP/SL dievaluasi dari entry bar (intrabar, bar-level).
+- TP/SL dievaluasi dari entry bar (intrabar, bar-level); SL/TP eligible
+  sejak entry bar (tidak ada bar amnestied) — SPEC-004 §4.5.
 - Bila SL dan TP sama-sama kena dalam satu bar:
   - long: SL dianggap lebih dulu (konservatif);
   - short: SL dianggap lebih dulu (konservatif).
 - Gap: bila open sudah melampaui level → exit di open.
+- ATR-multiple SL/TP dianchor pada ATR `entry_bar − 1` (bar terakhir
+  yang telah ditutup, E-2/SPEC-004 §4.1) — bukan ATR bar entry.
 
 ## P&L
 
@@ -266,6 +277,7 @@ Slippage termuat dalam entry/exit price.
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.1.0   | 2026-08-11 | E-1/E-9/E-10: §8 entry = next-bar open after signal is *knowable* (max of constituent confirmable_refs); hold-exit at close of `entry_bar + hold_bars`; SL/TP eligible from entry bar; ATR anchor at `entry_bar − 1`; "entry at breakout candle" clarified as decision candle, not fill. Wording now matches `simulation_engine.py` and SPEC-003/SPEC-004 |
 | 1.0.0   | 2026-08-08 | Initial simulation engine spec   |
 
 ---
@@ -274,6 +286,6 @@ Slippage termuat dalam entry/exit price.
 
 **Document ID:** ENG-005
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **End of Document**

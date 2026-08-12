@@ -1,12 +1,12 @@
 ---
 title: Experiment Specification
 document_id: RSH-002
-version: 1.1.0
+version: 1.2.0
 status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -112,6 +112,7 @@ Setiap experiment wajib mencatat (TODO-014):
 | Experiment ID           | Identitas unik experiment (RSH-002 §7)     |
 | Strategy                | Strategi/plugin yang diuji                 |
 | Dataset                 | Dataset yang digunakan (ARC-004 metadata)  |
+| Market Definition       | Blok definisi pasar wajib (RSH-002 §6.1)   |
 | Date Range              | Rentang data (start, end)                  |
 | Timeframe               | Timeframe candle (H1, H4, …)               |
 | Parameters              | Konfigurasi parameter (control + independent, RSH-001 §8) |
@@ -120,6 +121,29 @@ Setiap experiment wajib mencatat (TODO-014):
 | Code Version            | Versi kode/engine (git)                    |
 | Result                  | Metrics output                             |
 | Conclusion              | Kesimpulan dari evidence                   |
+
+## 6.1 Market Definition Block (wajib, E-5)
+
+Setiap experiment **wajib** menyertakan blok **Market Definition** di
+bagian Dataset (§7) — tidak cukup hanya tabel field dataset. Standar ini
+menutup gap audit (R-006: "market definition is thin and uniform"); blok
+H4 di EXP-006/007/008 §7 adalah model yang direplikasi. Field wajib:
+
+| Field                     | Isi yang harus dinyatakan                            |
+| ------------------------- | ---------------------------------------------------- |
+| Instrument                | Simbol + jenis instrumen (spot/futures/…); kontrak/basis |
+| Origin / Vendor           | Sumber data upstream (vendor/export); "tidak terdokumentasi" jika memang tidak diketahui — jangan dikosongkan |
+| Session / Hours           | Cakupan jam perdagangan (mis. 24×5, 24×7) atau "tanpa filter session" bila tidak difilter |
+| Timezone                  | Zona waktu candle (UTC via ISO 8601 Z, dsb.)       |
+| Ordering                  | Aturan urutan (strictly increasing timestamp)       |
+| Missing Data Handling     | Perilaku terhadap data hilang (tidak diimputasi; ambang → ditolak) |
+| Duplicate Handling        | Perilaku terhadap timestamp duplikat (ditolak)      |
+| Gap Handling              | Perilaku terhadap gap/candle hilang (tidak di-resample; tidak di-fill) |
+| OHLC Rules                | Aturan validitas harga (open/close > 0; high ≥ max(o,c); low ≤ min(o,c)) |
+| Provenance                | Catatan asal file (export terpisah vs agregasi; verifikasi silang bila ada) |
+
+Semua isi harus **konsisten dengan kode** (ARC-004 §7/§8, `validator.py`) —
+blok ini mencatat perilaku aktual, bukan perilaku yang diinginkan.
 
 ---
 
@@ -240,6 +264,7 @@ sebagai dokumen EXP (FND-003).
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.2.0   | 2026-08-11 | E-5: mandatory Market Definition block (§6.1) added to the spec fields; fixes audit finding "market definition is thin and uniform" |
 | 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial experiment specification |
 
@@ -249,6 +274,6 @@ sebagai dokumen EXP (FND-003).
 
 **Document ID:** RSH-002
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

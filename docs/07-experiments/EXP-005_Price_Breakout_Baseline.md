@@ -179,6 +179,23 @@ bertahan pada biaya realistis.
 Dataset bersifat **immutable** (Article 13, ARC-004) dan identik dengan
 EXP-001..004 §7 (kontrol).
 
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Tidak terdokumentasi (CSV export lokal) |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | CSV lokal; immutable (Article 13); identik EXP-001..004 §7 |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
+
 ---
 
 # 8. Strategy — Price Breakout (Donchian-style)
@@ -285,10 +302,11 @@ mitigasi line lama dan hanya dievaluasi lanjutan jika baseline SUPPORTED.
 
 # 10. Execution Assumptions
 
-Per RSH-001 §14:
+Per RSH-001 §14 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10):
 
-- **Entry**: open bar berikutnya setelah Signal (next bar open);
-- **Exit**: setelah `hold_bars` (10) bar (tanpa SL/TP pada baseline);
+- **Entry**: open bar berikutnya setelah Signal **knowable** (E-1);
+- **Exit**: setelah `hold_bars` (10) bar di **close** bar scheduled
+  (tanpa SL/TP pada baseline);
 - **Sizing**: `position_size = 1.0` (fixed);
 - **Transaction cost**: model venue §9.5 (identik EXP-002);
 - **Slippage**: `slippage_rate` pada entry dan exit (conservative);
@@ -360,6 +378,21 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
 - jika REJECTED, bukti menolak kelas momentum breakout ini juga pada biaya
   venue — memperkuat kesimpulan bahwa edge XAUUSD H1 tidak tradable pada
   biaya realistis (EXP-001 §19.8, ARC-008 §14.4).
+
+Catatan multiple-testing (RSH-004 §8.2, E-8):
+
+```text
+- jumlah kriteria keputusan:            4 (expectancy > 0, breakeven >= 1.0 bps,
+                                         OOS test > 0, OOS train > 0);
+- jumlah kombinasi parameter (combo):   5 (price_lookback × rsi_period — grid degenerate
+                                         legacy; rsi_period inert untuk strategi tanpa RSI);
+- jumlah slice temporal / split point:  4 slice, 1 split point;
+- jumlah dimensi robustness:            4 (periods, markets, costs, combos);
+- koreksi / penalty:                    none — risiko data-snooping dinyatakan eksplisit.
+```
+
+Note: EXP-005 dijalankan sebelum standar E-8; blok ini dokumentasi
+retrospektif, bukan pre-registered.
 
 ---
 

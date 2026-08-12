@@ -1,12 +1,12 @@
 ---
 title: Document Index
 document_id: FND-004
-version: 1.1.52
+version: 1.1.57
 status: Active
 category: Foundation
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-10
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -85,7 +85,7 @@ Status dokumen menggunakan nilai berikut.
 | ------- | ---------------------- | ------------------------------------------------------ | ------- | -------- |
 | FND-001 | Project Charter        | `docs/00-foundation/FND-001_Project_Charter.md`        | 1.0.1   | Draft    |
 | FND-002 | Documentation Standard | `docs/00-foundation/FND-002_Documentation_Standard.md` | 1.0.2   | Approved |
-| FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.2   | Approved |
+| FND-003 | Document ID Standard   | `docs/00-foundation/FND-003_Document_ID_Standard.md`   | 1.0.3   | Approved |
 | FND-004 | Document Index         | `docs/00-foundation/FND-004_Document_Index.md`         | 1.0.3   | Active   |
 | FND-005 | Project Context        | `docs/00-foundation/FND-005_Project_Context.md`        | 1.0.1   | Active   |
 | FND-006 | Project Status      | `docs/00-foundation/FND-006_Project_Status.md`      | 1.3.35   | Active   |
@@ -152,7 +152,7 @@ docs/03-engine/
 | ENG-002 | Event Engine       | `docs/03-engine/ENG-002_Event_Engine.md`       | 1.0.0   | Draft |
 | ENG-003 | Signal Engine      | `docs/03-engine/ENG-003_Signal_Engine.md`      | 1.2.0   | Draft |
 | ENG-004 | Probability Engine | `docs/03-engine/ENG-004_Probability_Engine.md` | —       | Planned |
-| ENG-005 | Simulation Engine  | `docs/03-engine/ENG-005_Simulation_Engine.md`  | 1.0.0   | Draft |
+| ENG-005 | Simulation Engine  | `docs/03-engine/ENG-005_Simulation_Engine.md`  | 1.1.0   | Draft |
 | ENG-006 | Statistics Engine  | `docs/03-engine/ENG-006_Statistics_Engine.md`  | 1.0.0   | Draft |
 | ENG-007 | Reporting Engine   | `docs/03-engine/ENG-007_Reporting_Engine.md`   | 1.0.0   | Draft |
 | ENG-008 | Indicator Layer    | `docs/03-engine/ENG-008_Indicator_Layer.md`    | 1.0.0   | Draft |
@@ -187,12 +187,17 @@ docs/05-research/
 
 | ID      | Document                | Path                                                  | Version | Status  |
 | ------- | ----------------------- | ----------------------------------------------------- | ------- | ------- |
-| RSH-001 | Research Methodology    | `docs/05-research/RSH-001_Research_Methodology.md`    | 1.1.0   | Approved |
-| RSH-002 | Experiment Specification | `docs/05-research/RSH-002_Experiment_Specification.md` | 1.1.0   | Approved |
-| RSH-003 | Validation Methodology  | `docs/05-research/RSH-003_Validation_Methodology.md`  | 1.1.0   | Approved |
-| RSH-004 | Statistical Methodology | `docs/05-research/RSH-004_Statistical_Methodology.md` | 1.1.0   | Approved |
+| RSH-001 | Research Methodology    | `docs/05-research/RSH-001_Research_Methodology.md`    | 1.2.0   | Approved |
+| RSH-002 | Experiment Specification | `docs/05-research/RSH-002_Experiment_Specification.md` | 1.2.0   | Approved |
+| RSH-003 | Validation Methodology  | `docs/05-research/RSH-003_Validation_Methodology.md`  | 1.2.0   | Approved |
+| RSH-004 | Statistical Methodology | `docs/05-research/RSH-004_Statistical_Methodology.md` | 1.2.0   | Approved |
 | RSH-005 | Research Reporting      | `docs/05-research/RSH-005_Research_Reporting.md`      | 1.1.0   | Approved |
 | RSH-006 | Research Review         | `docs/05-research/RSH-006_Research_Review.md`         | 1.1.0   | Approved |
+| SPEC-001 | Swing Detection        | `docs/05-research/SPEC-001_Swing_Detection.md`        | 1.0.0   | Draft |
+| SPEC-002 | Breakout Detection     | `docs/05-research/SPEC-002_Breakout_Detection.md`     | 1.0.0   | Draft |
+| SPEC-003 | Signal Timing & Execution | `docs/05-research/SPEC-003_Signal_Timing_Execution.md` | 1.0.0   | Draft |
+| SPEC-004 | SL/TP & Exit Rules     | `docs/05-research/SPEC-004_SL_TP_Exit_Rules.md`       | 1.0.0   | Draft |
+| SPEC-005 | Cost Model             | `docs/05-research/SPEC-005_Cost_Model.md`             | 1.0.0   | Draft |
 
 ---
 
@@ -808,6 +813,6 @@ Sprint 1
 
 **Document ID:** FND-004
 
-**Version:** 1.1.55
+**Version:** 1.1.57
 
 **End of Document**

@@ -172,6 +172,17 @@ def _find_exit(
     stop_level: float | None = None,
     take_level: float | None = None,
 ) -> tuple[int, float]:
+    """Find the exit bar and price (SPEC-004, deterministic rules).
+
+    Within a bar, checks are ordered SL first, then TP (conservative
+    assumption: the stop is filled before the take-profit in a
+    same-bar collision). Gap handling: if the bar opens through the SL
+    (``open`` at/below for long, at/above for short) or through the TP
+    (``open`` at/above for long, at/below for short), the exit price is
+    the bar open (no intrabar path reconstruction). If the scheduled
+    ``hold_bars`` close bar is reached without a stop/take, exit at that
+    bar's close. If data is exhausted first, exit at the last close.
+    """
     stop_level = cfg.stop_loss if stop_level is None else stop_level
     take_level = cfg.take_profit if take_level is None else take_level
     scheduled = entry_bar + cfg.hold_bars

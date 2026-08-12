@@ -1,12 +1,12 @@
 ---
 title: Research Methodology
 document_id: RSH-001
-version: 1.1.0
+version: 1.2.0
 status: Approved
 category: Research
 owner: Market Research Engine Core Team
 created: 2026-08-08
-last_updated: 2026-08-08
+last_updated: 2026-08-11
 
 depends_on:
   - FND-001
@@ -253,7 +253,10 @@ RSH-003 (Validation Methodology).
 - kesimpulan diturunkan dari evidence, bukan rekomendasi (PRD-003 §7.9);
 - evidence tidak cukup ditandai secara eksplisit (FR-011);
 - decision priority: Research Evidence (FND-005 §37);
-- backtest adalah evidence, bukan bukti (FND-009).
+- backtest adalah evidence, bukan bukti (FND-009);
+- kriteria keputusan menggunakan **set standar** (RSH-004 §8.1);
+- setiap experiment wajib mencantumkan **catatan multiple-testing**
+  (RSH-004 §8.2) sehingga verdict antar experiment sebanding (E-8).
 
 ---
 
@@ -317,6 +320,7 @@ dan dilaporkan (PRD-003 §7.8).
 
 | Version | Date       | Changes                          |
 | ------- | ---------- | -------------------------------- |
+| 1.2.0   | 2026-08-11 | E-8: §13 now mandates the standardized decision criteria (RSH-004 §8.1) and the multiple-testing note (RSH-004 §8.2) |
 | 1.1.0   | 2026-08-08 | Approved via M3 Research Review (RSH-006) |
 | 1.0.0   | 2026-08-08 | Initial research methodology     |
 
@@ -326,6 +330,6 @@ dan dilaporkan (PRD-003 §7.8).
 
 **Document ID:** RSH-001
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 **End of Document**

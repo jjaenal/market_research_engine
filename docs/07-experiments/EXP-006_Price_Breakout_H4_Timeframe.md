@@ -190,6 +190,23 @@ lokal — rentangnya berbeda (mulai 2009-07-13, lebih awal dari H1; berakhir
 H4 vs agregasi 4×H1 pada rentang overlap cocok kecuali 1 bar tail (bar
 terakhir H4). Dataset immutable (Article 13, ARC-004).
 
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Export terpisah; vendor tidak terdokumentasi |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | Export terpisah (bukan agregasi H1); cross-check 4×H1 22.356 bar cocok kecuali 1 bar tail |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
+
 ---
 
 # 8. Strategy — Price Breakout (Donchian-style)
@@ -281,10 +298,11 @@ identik EXP-002/005 §9.
 
 # 10. Execution Assumptions
 
-Identik EXP-005 §10:
+Identik EXP-005 §10 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10):
 
-- Entry: next bar open setelah sinyal;
-- Exit: hold 10 bar (harga exit = open bar ke-hold_bars, net of costs);
+- Entry: **open bar berikutnya** setelah Signal **knowable** — "entry di
+  candle breakout" merujuk candle keputusan, bukan fill (E-10);
+- Exit: hold 10 bar (**close** bar `entry_bar + hold_bars`, net of costs);
 - tanpa SL/TP absolut atau ATR-multiple;
 - biaya per sisi: commission 3e-05 + slippage 7e-05 (1.0 bps/side total).
 
@@ -329,6 +347,21 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
   menunjukkan kegagalan **lintas timeframe** pada kelas strategi ini —
   memperkuat kesimpulan bahwa XAUUSD tidak tradable pada biaya realistis
   (EXP-005 §18.2).
+
+Catatan multiple-testing (RSH-004 §8.2, E-8):
+
+```text
+- jumlah kriteria keputusan:            4 (expectancy > 0, breakeven >= 1.0 bps,
+                                         OOS test > 0, OOS train > 0);
+- jumlah kombinasi parameter (combo):   5 (price_lookback × rsi_period — grid degenerate
+                                         legacy; rsi_period inert untuk strategi tanpa RSI);
+- jumlah slice temporal / split point:  4 slice, 1 split point;
+- jumlah dimensi robustness:            4 (periods, markets, costs, combos);
+- koreksi / penalty:                    none — risiko data-snooping dinyatakan eksplisit.
+```
+
+Note: EXP-006 dijalankan sebelum standar E-8; blok ini dokumentasi
+retrospektif, bukan pre-registered.
 
 ---
 

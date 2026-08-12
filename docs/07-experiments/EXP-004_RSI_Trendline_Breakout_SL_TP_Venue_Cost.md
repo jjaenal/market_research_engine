@@ -120,7 +120,7 @@ Terminologi mengikuti **FND-009** (One Concept, One Name).
 | Result         | Output terukur (metrics) dari experiment              |
 | Regime         | Klasifikasi volatilitas candle: high/low (ARC-008 §14)|
 | Regime high    | ATR short (14) >= ATR long (100) - volatilitas mengembang |
-| SL/TP ATR      | Exit rule dini: level dari entry +/- N x ATR entry bar (RQ-007) |
+| SL/TP ATR      | Exit rule dini: level dari entry +/- N x ATR bar terakhir yang ditutup (SPEC-004 §4.1) |
 | bps/side       | Basis point biaya per sisi (1 bps = 0.01%)            |
 
 ---
@@ -169,6 +169,23 @@ menaikkan breakeven lebih jauh - memperkuat kandidat tradable.
 
 Dataset bersifat **immutable** (Article 13, ARC-004) dan identik dengan
 EXP-001/EXP-002/EXP-003 §7 (kontrol).
+
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Tidak terdokumentasi (CSV export lokal) |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | CSV lokal; immutable (Article 13); identik EXP-001..003 §7 |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
 
 ---
 
@@ -226,7 +243,8 @@ Konfigurasi dikunci (frozen) sebelum run (RSH-002 §9). Seluruh parameter
 | take_profit_atr | 4.0   |
 | atr_period      | 14    |
 
-SL/TP ATR-multiple di-resolve di entry bar dari ATR (period 14) dengan
+SL/TP ATR-multiple di-resolve pada entry dari ATR `entry_bar − 1` (bar
+terakhir yang telah ditutup — E-2, SPEC-004 §4.1; period 14) dengan
 no lookahead (`_resolve_stop_take()` di `simulation_engine.py`, RQ-007
 machinery, ARC-008 §14.2). SL 1.0 / TP 4.0 adalah kombinasi terkuat M7
 (EXP-001 §19.7, ARC-008 §14.3).
@@ -258,17 +276,28 @@ berlabel regime `high` (identik EXP-003 §9.7).
 
 # 10. Execution Assumptions
 
-Per RSH-001 §14:
+Per RSH-001 §14 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10):
 
-- **Entry**: open bar berikutnya setelah Signal (next bar open);
-- **Exit**: SL/TP ATR-multiple diprioritaskan (mana yang tersentuh lebih
-  dulu); jika tidak, exit setelah `hold_bars` (10) bar;
+- **Entry**: open bar berikutnya setelah Signal **knowable**
+  (`max(signal_bar + 1, max(confirmable_ref) + 1)` — seluruh constituent
+  Event sudah dapat diketahui; E-1);
+- **Exit**: SL diresolusi **lebih dulu** dari TP dalam bar yang sama
+  (konservatif); jika tidak ada SL/TP tersentuh, exit setelah `hold_bars`
+  (10) bar di **close** bar scheduled;
 - **Sizing**: `position_size = 1.0` (fixed);
 - **Transaction cost**: model venue §9.5 (identik EXP-003);
 - **Slippage**: `slippage_rate` pada entry dan exit (conservative);
 - **Regime label**: candle pada timestamp konfirmasi sinyal (no lookahead);
-- **SL/TP level**: dari ATR di entry bar (no lookahead, ARC-008 §14.2);
+- **SL/TP level**: dari ATR di `entry_bar − 1` (bar terakhir yang telah
+  ditutup — E-2, SPEC-004 §4.1); gap-through-open → exit di open;
+  SL/TP eligible sejak entry bar (SPEC-004 §4.5);
 - Eksekusi adalah simulasi, bukan live (PRD-006 §9).
+
+Catatan E-9: revisi §10 ini merekonsiliasi dokumentasi dengan kode
+(`simulation_engine.py`, SPEC-004). Angka §15–§18 dihasilkan oleh kode
+yang sama; kalimat lama ("mana yang tersentuh lebih dulu", "ATR di entry
+bar") adalah deskripsi yang keliru dan **tidak** mengubah hasil yang
+dicatat.
 
 ---
 
@@ -341,6 +370,20 @@ Interpretasi tambahan (bukan keputusan, untuk konteks):
   pada biaya venue nyata) - memperkuat kandidat tradable;
 - jika REJECTED, SL/TP tidak memperbaiki edge high regime pada biaya
   venue nyata (kontrol EXP-003 tetap lebih baik).
+
+Catatan multiple-testing (RSH-004 §8.2, E-8):
+
+```text
+- jumlah kriteria keputusan:            4 (expectancy > 0, breakeven >= 3.44 bps,
+                                         OOS test > 0, OOS train > 0);
+- jumlah kombinasi parameter (combo):   5 (price_lookback × rsi_period — EXP-001 legacy grid);
+- jumlah slice temporal / split point:  4 slice (+ 8 fine slice, 4 split point);
+- jumlah dimensi robustness:            4 (periods, markets, costs, combos);
+- koreksi / penalty:                    none — risiko data-snooping dinyatakan eksplisit.
+```
+
+Note: EXP-004 dijalankan sebelum standar E-8; blok ini dokumentasi
+retrospektif, bukan pre-registered.
 
 ---
 

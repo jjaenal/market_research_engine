@@ -143,6 +143,23 @@ Kriteria (RSH-001 §7.2):
 Dataset bersifat **immutable** (Article 13, ARC-004).
 Rentang data dipakai penuh untuk baseline.
 
+## Market Definition (RSH-002 §6.1, E-5)
+
+| Field                     | Value                                   |
+| ------------------------- | --------------------------------------- |
+| Instrument                | XAUUSD (spot gold)                      |
+| Origin / Vendor           | Tidak terdokumentasi (CSV export lokal) |
+| Session / Hours           | Tanpa filter session (seluruh bar tersedia) |
+| Timezone                  | UTC (ISO 8601 `Z`)                      |
+| Ordering                  | Strictly increasing timestamp           |
+| Missing Data Handling     | Tidak diimputasi; ambang → ditolak      |
+| Duplicate Handling        | Timestamp duplikat ditolak              |
+| Gap Handling              | Tidak di-resample / tidak di-fill       |
+| OHLC Rules                | open/close > 0; high ≥ max(o,c); low ≤ min(o,c) |
+| Provenance                | CSV lokal; immutable (Article 13)       |
+
+Aturan tertera konsisten dengan ARC-004 §7/§8 dan `validator.py`.
+
 ---
 
 # 8. Strategy — RSI Trendline Breakout
@@ -226,10 +243,10 @@ tanpa exit berbasis harga, hanya hold-based.
 
 # 10. Execution Assumptions
 
-Per RSH-001 §14:
+Per RSH-001 §14 (semantik terinci di SPEC-003/SPEC-004, E-9/E-10):
 
-- **Entry**: open bar berikutnya setelah Signal (next bar open);
-- **Exit**: setelah `hold_bars` (10) bar;
+- **Entry**: open bar berikutnya setelah Signal **knowable** (E-1);
+- **Exit**: setelah `hold_bars` (10) bar di **close** bar scheduled;
 - **Sizing**: `position_size = 1.0` (fixed);
 - **Transaction cost**: 0 (baseline murni, tanpa biaya);
 - **Slippage**: 0;
@@ -637,8 +654,10 @@ Expectancy per skenario (n = jumlah signal setelah filter):
 Ditambahkan pada iterasi M7 (ARC-008 §14.2/§14.3): RQ-007 — apakah
 SL/TP berbasis ATR-multiple memulihkan expectancy positif pada biaya
 eksekusi realistis. Mekanisme: `stop_loss_atr`/`take_profit_atr` baru di
-`ExecutionConfig`; SL/TP dihitung dari ATR (period 14) pada entry bar
-(no lookahead), `src/mre/engines/simulation_engine.py`. Baseline tanpa
+`ExecutionConfig`; level SL/TP di-resolve dari ATR (period 14) di
+`entry_bar − 1` (bar terakhir yang telah ditutup, no lookahead, E-2/SPEC-004
+§4.1) dan eligible sejak entry bar (SPEC-004 §4.5),
+`src/mre/engines/simulation_engine.py`. Baseline tanpa
 SL/TP sebagai control (RQ-007 pre-registered, RSH-001 §7.2).
 
 Expectancy per skenario (n = 1403 signal, cooldown 0, tanpa regime):
