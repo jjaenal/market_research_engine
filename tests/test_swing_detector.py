@@ -55,6 +55,21 @@ def test_flat_series_produces_no_swings() -> None:
     assert detect_swings(flat, _timestamps(len(flat)), left=2, right=2) == ()
 
 
+def test_nan_warmup_region_produces_no_swings() -> None:
+    import math
+
+    nan_series = [math.nan] * 14 + [10, 12, 11, 13, 12, 14]
+    assert detect_swings(nan_series, _timestamps(len(nan_series)), left=2, right=2) == ()
+
+
+def test_nan_neighbor_disqualifies_candidate() -> None:
+    import math
+
+    values = [3.0, math.nan, 3.0, 2.0, 4.0, 1.0, 3.0, 2.0, 5.0, 2.0, 3.0, 4.0, 2.0, 1.0, 3.0]
+    events = detect_swings(values, _timestamps(len(values)), left=2, right=2)
+    assert all(e.reference != 2 for e in events)
+
+
 def test_configurable_window() -> None:
     events = detect_swings(VALUES, _timestamps(len(VALUES)), left=1, right=1)
     highs = [e.reference for e in events if e.event_type == SWING_HIGH]

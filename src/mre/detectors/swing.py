@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from datetime import datetime
 
@@ -19,7 +20,9 @@ def detect_swings(
 
     A swing_high at index i requires values[i] > every value in
     [i-left, i+right] (excluding i); swing_low is symmetric. Windows at
-    the series edges that are not full produce no swings.
+    the series edges that are not full produce no swings. Any NaN in
+    the window disqualifies the candidate (SPEC-001 §4.5): an unknown
+    value cannot certify an extremum, so warm-up regions emit no events.
 
     No lookahead (SPEC-001, ADR-005): the event timestamp is the peak
     bar ``i`` (the fact), but the swing is only *knowable* after the
@@ -41,6 +44,9 @@ def detect_swings(
     events: list[Event] = []
     n = len(values)
     for i in range(left, n - right):
+        window = values[i - left : i + right + 1]
+        if any(math.isnan(v) for v in window):
+            continue
         high = True
         low = True
         for j in range(i - left, i + right + 1):
